@@ -16,6 +16,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		46472F322C37DD3E00766FFA /* CoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreKit; sourceTree = "<group>"; };
 		6A3776EC2C37CF8300D657F9 /* Yakgwa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yakgwa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -37,6 +38,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		46472F312C37DCA000766FFA /* Core */ = {
+			isa = PBXGroup;
+			children = (
+				46472F322C37DD3E00766FFA /* CoreKit */,
+			);
+			path = Core;
+			sourceTree = "<group>";
+		};
 		6A3776E32C37CF8300D657F9 = {
 			isa = PBXGroup;
 			children = (
@@ -56,6 +65,7 @@
 		6A3776EE2C37CF8300D657F9 /* Yakgwa */ = {
 			isa = PBXGroup;
 			children = (
+				46472F312C37DCA000766FFA /* Core */,
 				6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */,
 				6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */,
 				6A3776F32C37CF8300D657F9 /* ViewController.swift */,
