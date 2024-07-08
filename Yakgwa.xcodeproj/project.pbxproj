@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		464CF2042C3B757E00938891 /* CoreKit in Frameworks */ = {isa = PBXBuildFile; productRef = 464CF2032C3B757E00938891 /* CoreKit */; };
 		6A3776F02C37CF8300D657F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */; };
 		6A3776F22C37CF8300D657F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */; };
 		6A3776F42C37CF8300D657F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776F32C37CF8300D657F9 /* ViewController.swift */; };
@@ -17,6 +18,7 @@
 
 /* Begin PBXFileReference section */
 		46472F322C37DD3E00766FFA /* CoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreKit; sourceTree = "<group>"; };
+		464CF2012C3B751C00938891 /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DesignSystem; sourceTree = "<group>"; };
 		6A3776EC2C37CF8300D657F9 /* Yakgwa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yakgwa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -32,6 +34,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				464CF2042C3B757E00938891 /* CoreKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -41,9 +44,17 @@
 		46472F312C37DCA000766FFA /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				464CF2012C3B751C00938891 /* DesignSystem */,
 				46472F322C37DD3E00766FFA /* CoreKit */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		464CF2022C3B757E00938891 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 		6A3776E32C37CF8300D657F9 = {
@@ -51,6 +62,7 @@
 			children = (
 				6A3776EE2C37CF8300D657F9 /* Yakgwa */,
 				6A3776ED2C37CF8300D657F9 /* Products */,
+				464CF2022C3B757E00938891 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -93,6 +105,9 @@
 			dependencies = (
 			);
 			name = Yakgwa;
+			packageProductDependencies = (
+				464CF2032C3B757E00938891 /* CoreKit */,
+			);
 			productName = Yakgwa;
 			productReference = 6A3776EC2C37CF8300D657F9 /* Yakgwa.app */;
 			productType = "com.apple.product-type.application";
@@ -373,6 +388,13 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		464CF2032C3B757E00938891 /* CoreKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = CoreKit;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6A3776E42C37CF8300D657F9 /* Project object */;
 }

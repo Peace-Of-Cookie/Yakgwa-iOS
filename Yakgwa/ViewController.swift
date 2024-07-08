@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreKit
 
 class ViewController: UIViewController {
 
