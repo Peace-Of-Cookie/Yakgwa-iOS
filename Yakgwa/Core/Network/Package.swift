@@ -12,15 +12,15 @@ let package = Package(
             targets: ["Network"]),
     ],
     dependencies: [
+        .package(path: "./Util"),
         .package(url: "https://github.com/Moya/Moya.git", .upToNextMajor(from: "15.0.0")),
-        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0"))
     ],
     targets: [
         .target(
             name: "Network",
             dependencies: [
-                .product(name: "RxMoya", package: "Moya"),
-                .product(name: "RxSwift", package: "RxSwift")
+                .product(name: "Util", package: "Util"),
+                .product(name: "RxMoya", package: "Moya")
             ]
         ),
         .testTarget(
