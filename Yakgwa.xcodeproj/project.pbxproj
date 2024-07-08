@@ -22,6 +22,7 @@
 		464CF2052C3B779D00938891 /* Network */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Network; sourceTree = "<group>"; };
 		464CF2062C3B7FEC00938891 /* Util */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Util; sourceTree = "<group>"; };
 		464CF2072C3BB61700938891 /* Local */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Local; sourceTree = "<group>"; };
+		464CF20A2C3BC90400938891 /* SceneKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SceneKit; sourceTree = "<group>"; };
 		6A3776EC2C37CF8300D657F9 /* Yakgwa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yakgwa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -63,6 +64,14 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		464CF2092C3BC85100938891 /* Scene */ = {
+			isa = PBXGroup;
+			children = (
+				464CF20A2C3BC90400938891 /* SceneKit */,
+			);
+			path = Scene;
+			sourceTree = "<group>";
+		};
 		6A3776E32C37CF8300D657F9 = {
 			isa = PBXGroup;
 			children = (
@@ -83,6 +92,7 @@
 		6A3776EE2C37CF8300D657F9 /* Yakgwa */ = {
 			isa = PBXGroup;
 			children = (
+				464CF2092C3BC85100938891 /* Scene */,
 				46472F312C37DCA000766FFA /* Core */,
 				6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */,
 				6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */,
