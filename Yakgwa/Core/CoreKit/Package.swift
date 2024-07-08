@@ -11,13 +11,15 @@ let package = Package(
             targets: ["CoreKit"]),
     ],
     dependencies: [
-        .package(path: "./DesignSystem")
+        .package(path: "./DesignSystem"),
+        .package(path: "./Network")
     ],
     targets: [
         .target(
             name: "CoreKit",
             dependencies: [
-                .product(name: "DesignSystem", package: "DesignSystem")
+                .product(name: "DesignSystem", package: "DesignSystem"),
+                .product(name: "Network", package: "Network")
             ]
         ),
         .testTarget(
