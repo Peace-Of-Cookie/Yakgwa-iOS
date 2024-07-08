@@ -4,23 +4,25 @@
 import PackageDescription
 
 let package = Package(
-    name: "Util",
+    name: "Local",
     platforms: [.iOS(.v17)],
     products: [
         .library(
-            name: "Util",
-            targets: ["Util"]),
+            name: "Local",
+            targets: ["Local"]),
     ],
     dependencies: [
+        .package(path: "./Util")
     ],
     targets: [
         .target(
-            name: "Util",
+            name: "Local",
             dependencies: [
+                .product(name: "Util", package: "Util")
             ]
         ),
         .testTarget(
-            name: "UtilTests",
-            dependencies: ["Util"]),
+            name: "LocalTests",
+            dependencies: ["Local"]),
     ]
 )
