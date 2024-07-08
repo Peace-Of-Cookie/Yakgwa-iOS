@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import CoreKit
 
 class ViewController: UIViewController {
 
@@ -17,3 +18,6 @@ class ViewController: UIViewController {
 
 }
 
+#Preview {
+    ViewController()
+}
