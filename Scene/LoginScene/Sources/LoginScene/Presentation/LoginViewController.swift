@@ -7,6 +7,7 @@
 
 import UIKit
 
+import CoreKit
 import SnapKit
 
 public class LoginViewController: UIViewController {
@@ -14,7 +15,8 @@ public class LoginViewController: UIViewController {
     private lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.text = "Login"
-        label.font = .systemFont(ofSize: 24, weight: .bold)
+        label.font = .h2
+        label.backgroundColor = .primary800
         return label
     }()
     
