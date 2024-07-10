@@ -19,7 +19,8 @@ let package = Package(
             name: "HomeScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit")
-            ]
+            ],
+            resources: [.process("Assets")]
         ),
         .testTarget(
             name: "HomeSceneTests",

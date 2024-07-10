@@ -14,11 +14,11 @@ public class HomeViewController: UIViewController {
     // MARK: - Properties
     
     // MARK: - UI Components
-    private lazy var testLabel: UILabel = {
-        let label = UILabel()
-        label.text = "HOME"
-        label.font = .h3
-        return label
+    
+    private lazy var appointmentView: AppointmentView = {
+        let view = AppointmentView()
+        view.backgroundColor = .red
+        return view
     }()
     
     // MARK: - Initializers
@@ -40,9 +40,9 @@ public class HomeViewController: UIViewController {
     
     // MARK: - Privates
     private func setUI() {
-        view.addSubview(testLabel)
-        testLabel.snp.makeConstraints {
-            $0.center.equalToSuperview()
+        view.addSubview(appointmentView)
+        appointmentView.snp.makeConstraints {
+            $0.centerX.centerY.equalToSuperview()
         }
     }
 }

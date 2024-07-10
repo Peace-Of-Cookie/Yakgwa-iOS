@@ -21,6 +21,10 @@ extension UIFont {
         return .pretendard(size: ._18, weight: .semibold)
     }
     
+    public static var sb20: UIFont {
+        return .pretendard(size: ._20, weight: .semibold)
+    }
+    
     public static var sb18: UIFont {
         return .pretendard(size: ._18, weight: .semibold)
     }
