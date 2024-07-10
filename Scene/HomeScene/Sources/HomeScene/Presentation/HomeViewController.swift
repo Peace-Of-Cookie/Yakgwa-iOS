@@ -17,7 +17,6 @@ public class HomeViewController: UIViewController {
     
     private lazy var appointmentView: AppointmentView = {
         let view = AppointmentView()
-        view.backgroundColor = .red
         return view
     }()
     

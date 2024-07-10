@@ -132,17 +132,18 @@ public class AppointmentView: UIView {
         label.font = .r16
         return label
     }()
-
-    private lazy var testButtonLabel: UILabel = {
-        let label = UILabel()
-        label.text = "버튼 테스트"
-        return label
+    
+    private lazy var testButton: YakGwaButton = {
+        let button = YakGwaButton(style: .primary)
+        button.title = "모임 내용 자세히 보기"
+        button.buttonImage = UIImage(named: "arrow_icon", in: .module, with: nil)
+        return button
     }()
 
     // MARK: - Initializers
     public init(state: AppointmentState = .voted) {
         self.viewState = state
-        super.init(frame: CGRect(x: 0, y: 0, width: 200, height: 300))  // 기본 사이즈 설정
+        super.init(frame: CGRect(x: 0, y: 0, width: 308, height: 256))  // 기본 사이즈 설정
         setUI()
     }
 
@@ -152,6 +153,13 @@ public class AppointmentView: UIView {
 
     private func setUI() {
         self.backgroundColor = .neutralWhite
+        
+        self.snp.makeConstraints {
+            $0.width.equalTo(308)
+            $0.height.equalTo(256)
+        }
+        
+        self.layer.cornerRadius = 16
         
         self.addSubview(tagStack)
         tagStack.snp.makeConstraints {
@@ -184,8 +192,8 @@ public class AppointmentView: UIView {
 
             infoStack.addArrangedSubview(infoLabel)
 
-            self.addSubview(testButtonLabel)
-            testButtonLabel.snp.makeConstraints {
+            self.addSubview(testButton)
+            testButton.snp.makeConstraints {
                 $0.top.equalTo(infoStack.snp.bottom).offset(16)
                 $0.bottom.equalToSuperview().offset(-16)
                 $0.centerX.equalToSuperview()
@@ -209,13 +217,14 @@ public class AppointmentView: UIView {
             infoStack.addArrangedSubview(locationStack)
             locationStack.addArrangedSubview(locationImageView)
             locationStack.addArrangedSubview(locationLabel)
-        }
-        
-        self.addSubview(testButtonLabel)
-        testButtonLabel.snp.makeConstraints {
-            $0.top.equalTo(infoStack.snp.bottom).offset(16)
-            $0.bottom.equalToSuperview().offset(-16)
-            $0.centerX.equalToSuperview()
+            
+            self.addSubview(testButton)
+            testButton.snp.makeConstraints {
+                $0.top.equalTo(infoStack.snp.bottom).offset(16)
+                $0.bottom.equalToSuperview().offset(-16)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
         }
     }
 }
