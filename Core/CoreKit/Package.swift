@@ -13,14 +13,16 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./DesignSystem"),
-        .package(path: "./Network")
+        .package(path: "./Network"),
+        .package(url: "https://github.com/ReactorKit/ReactorKit.git", .upToNextMajor(from: "3.0.0"))
     ],
     targets: [
         .target(
             name: "CoreKit",
             dependencies: [
                 .product(name: "DesignSystem", package: "DesignSystem"),
-                .product(name: "Network", package: "Network")
+                .product(name: "Network", package: "Network"),
+                .product(name: "ReactorKit", package: "ReactorKit")
             ]
         ),
         .testTarget(
