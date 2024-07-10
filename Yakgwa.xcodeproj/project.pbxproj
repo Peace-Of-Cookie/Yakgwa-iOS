@@ -14,6 +14,7 @@
 		6A3776F42C37CF8300D657F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776F32C37CF8300D657F9 /* ViewController.swift */; };
 		6A3776F92C37CF8400D657F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776F82C37CF8400D657F9 /* Assets.xcassets */; };
 		6A3776FC2C37CF8400D657F9 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776FB2C37CF8400D657F9 /* Base */; };
+		6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AAA08AB2C3EB45D007F723E /* SplashScene */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		6A3776F82C37CF8400D657F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6A3776FB2C37CF8400D657F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6A3776FD2C37CF8400D657F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AAA08AA2C3EB3A9007F723E /* SplashScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SplashScene; sourceTree = "<group>"; };
 		6AFFBF322C3D89A1007E191E /* CoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreKit; sourceTree = "<group>"; };
 		6AFFBF332C3D89BC007E191E /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DesignSystem; sourceTree = "<group>"; };
 		6AFFBF342C3D89CE007E191E /* Util */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Util; sourceTree = "<group>"; };
@@ -41,6 +43,7 @@
 			files = (
 				461A87702C3E20D8007AEEAF /* HomeScene in Frameworks */,
 				46F2E3D52C3E1C100033530C /* SceneKit in Frameworks */,
+				6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -101,6 +104,7 @@
 		6AFFBF372C3D8A1B007E191E /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				6AAA08AA2C3EB3A9007F723E /* SplashScene */,
 				46B12B3C2C3E19F800B969FC /* HomeScene */,
 				6AFFBF3B2C3D8EE6007E191E /* SceneKit */,
 				6AFFBF382C3D8A34007E191E /* LoginScene */,
@@ -127,6 +131,7 @@
 			packageProductDependencies = (
 				46F2E3D42C3E1C100033530C /* SceneKit */,
 				461A876F2C3E20D8007AEEAF /* HomeScene */,
+				6AAA08AB2C3EB45D007F723E /* SplashScene */,
 			);
 			productName = Yakgwa;
 			productReference = 6A3776EC2C37CF8300D657F9 /* Yakgwa.app */;
@@ -406,6 +411,10 @@
 		46F2E3D42C3E1C100033530C /* SceneKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SceneKit;
+		};
+		6AAA08AB2C3EB45D007F723E /* SplashScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SplashScene;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
