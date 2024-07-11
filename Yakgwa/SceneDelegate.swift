@@ -9,6 +9,7 @@ import UIKit
 
 import SceneKit
 import HomeScene
+import MainScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -19,7 +20,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         
-        let homeViewController = HomeViewController()
+        let homeViewController = MainTabBarController(reactor: MainTabBarViewReactor())
         window.rootViewController = homeViewController
         self.window = window
         window.makeKeyAndVisible()
