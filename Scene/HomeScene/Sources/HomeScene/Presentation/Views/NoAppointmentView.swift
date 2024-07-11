@@ -49,7 +49,7 @@ public class NoAppointmentView: UIView {
         self.backgroundColor = .neutralWhite
         
         self.snp.makeConstraints {
-            $0.width.equalTo(308)
+            // $0.width.equalTo(308)
             $0.height.equalTo(256)
         }
         
