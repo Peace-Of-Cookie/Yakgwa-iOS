@@ -7,24 +7,28 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		460130952C40AA00003B31BD /* MainScene in Frameworks */ = {isa = PBXBuildFile; productRef = 460130942C40AA00003B31BD /* MainScene */; };
+		461A87702C3E20D8007AEEAF /* HomeScene in Frameworks */ = {isa = PBXBuildFile; productRef = 461A876F2C3E20D8007AEEAF /* HomeScene */; };
+		46F2E3D52C3E1C100033530C /* SceneKit in Frameworks */ = {isa = PBXBuildFile; productRef = 46F2E3D42C3E1C100033530C /* SceneKit */; };
 		6A3776F02C37CF8300D657F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */; };
 		6A3776F22C37CF8300D657F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */; };
 		6A3776F42C37CF8300D657F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776F32C37CF8300D657F9 /* ViewController.swift */; };
-		6A3776F72C37CF8300D657F9 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776F62C37CF8300D657F9 /* Base */; };
 		6A3776F92C37CF8400D657F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776F82C37CF8400D657F9 /* Assets.xcassets */; };
 		6A3776FC2C37CF8400D657F9 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776FB2C37CF8400D657F9 /* Base */; };
-		6AFFBF3D2C3D90BE007E191E /* SceneKit in Frameworks */ = {isa = PBXBuildFile; productRef = 6AFFBF3C2C3D90BE007E191E /* SceneKit */; };
+		6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AAA08AB2C3EB45D007F723E /* SplashScene */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		460130932C40A997003B31BD /* MainScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MainScene; sourceTree = "<group>"; };
+		46B12B3C2C3E19F800B969FC /* HomeScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeScene; sourceTree = "<group>"; };
 		6A3776EC2C37CF8300D657F9 /* Yakgwa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yakgwa.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		6A3776F32C37CF8300D657F9 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		6A3776F62C37CF8300D657F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6A3776F82C37CF8400D657F9 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		6A3776FB2C37CF8400D657F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6A3776FD2C37CF8400D657F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		6AAA08AA2C3EB3A9007F723E /* SplashScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SplashScene; sourceTree = "<group>"; };
 		6AFFBF322C3D89A1007E191E /* CoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreKit; sourceTree = "<group>"; };
 		6AFFBF332C3D89BC007E191E /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DesignSystem; sourceTree = "<group>"; };
 		6AFFBF342C3D89CE007E191E /* Util */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Util; sourceTree = "<group>"; };
@@ -39,7 +43,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6AFFBF3D2C3D90BE007E191E /* SceneKit in Frameworks */,
+				460130952C40AA00003B31BD /* MainScene in Frameworks */,
+				461A87702C3E20D8007AEEAF /* HomeScene in Frameworks */,
+				46F2E3D52C3E1C100033530C /* SceneKit in Frameworks */,
+				6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,7 +85,6 @@
 				6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */,
 				6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */,
 				6A3776F32C37CF8300D657F9 /* ViewController.swift */,
-				6A3776F52C37CF8300D657F9 /* Main.storyboard */,
 				6A3776F82C37CF8400D657F9 /* Assets.xcassets */,
 				6A3776FA2C37CF8400D657F9 /* LaunchScreen.storyboard */,
 				6A3776FD2C37CF8400D657F9 /* Info.plist */,
@@ -101,6 +107,9 @@
 		6AFFBF372C3D8A1B007E191E /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				460130932C40A997003B31BD /* MainScene */,
+				6AAA08AA2C3EB3A9007F723E /* SplashScene */,
+				46B12B3C2C3E19F800B969FC /* HomeScene */,
 				6AFFBF3B2C3D8EE6007E191E /* SceneKit */,
 				6AFFBF382C3D8A34007E191E /* LoginScene */,
 			);
@@ -124,7 +133,10 @@
 			);
 			name = Yakgwa;
 			packageProductDependencies = (
-				6AFFBF3C2C3D90BE007E191E /* SceneKit */,
+				46F2E3D42C3E1C100033530C /* SceneKit */,
+				461A876F2C3E20D8007AEEAF /* HomeScene */,
+				6AAA08AB2C3EB45D007F723E /* SplashScene */,
+				460130942C40AA00003B31BD /* MainScene */,
 			);
 			productName = Yakgwa;
 			productReference = 6A3776EC2C37CF8300D657F9 /* Yakgwa.app */;
@@ -170,7 +182,6 @@
 			files = (
 				6A3776F92C37CF8400D657F9 /* Assets.xcassets in Resources */,
 				6A3776FC2C37CF8400D657F9 /* Base in Resources */,
-				6A3776F72C37CF8300D657F9 /* Base in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,14 +201,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		6A3776F52C37CF8300D657F9 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				6A3776F62C37CF8300D657F9 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		6A3776FA2C37CF8400D657F9 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -340,7 +343,6 @@
 				INFOPLIST_FILE = Yakgwa/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -368,7 +370,6 @@
 				INFOPLIST_FILE = Yakgwa/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
-				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -408,9 +409,21 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		6AFFBF3C2C3D90BE007E191E /* SceneKit */ = {
+		460130942C40AA00003B31BD /* MainScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MainScene;
+		};
+		461A876F2C3E20D8007AEEAF /* HomeScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = HomeScene;
+		};
+		46F2E3D42C3E1C100033530C /* SceneKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SceneKit;
+		};
+		6AAA08AB2C3EB45D007F723E /* SplashScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SplashScene;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
