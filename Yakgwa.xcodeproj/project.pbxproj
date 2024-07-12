@@ -16,6 +16,7 @@
 		6A3776F92C37CF8400D657F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776F82C37CF8400D657F9 /* Assets.xcassets */; };
 		6A3776FC2C37CF8400D657F9 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776FB2C37CF8400D657F9 /* Base */; };
 		6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AAA08AB2C3EB45D007F723E /* SplashScene */; };
+		6AEFDE612C41A69200B427B2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6AEFDE602C41A69200B427B2 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,6 +30,8 @@
 		6A3776FB2C37CF8400D657F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6A3776FD2C37CF8400D657F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6AAA08AA2C3EB3A9007F723E /* SplashScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SplashScene; sourceTree = "<group>"; };
+		6AEFDE602C41A69200B427B2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
+		6AEFDE622C41B32500B427B2 /* Yakgwa.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Yakgwa.entitlements; sourceTree = "<group>"; };
 		6AFFBF322C3D89A1007E191E /* CoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreKit; sourceTree = "<group>"; };
 		6AFFBF332C3D89BC007E191E /* DesignSystem */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DesignSystem; sourceTree = "<group>"; };
 		6AFFBF342C3D89CE007E191E /* Util */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Util; sourceTree = "<group>"; };
@@ -82,12 +85,14 @@
 		6A3776EE2C37CF8300D657F9 /* Yakgwa */ = {
 			isa = PBXGroup;
 			children = (
+				6AEFDE622C41B32500B427B2 /* Yakgwa.entitlements */,
 				6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */,
 				6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */,
 				6A3776F32C37CF8300D657F9 /* ViewController.swift */,
 				6A3776F82C37CF8400D657F9 /* Assets.xcassets */,
 				6A3776FA2C37CF8400D657F9 /* LaunchScreen.storyboard */,
 				6A3776FD2C37CF8400D657F9 /* Info.plist */,
+				6AEFDE602C41A69200B427B2 /* GoogleService-Info.plist */,
 			);
 			path = Yakgwa;
 			sourceTree = "<group>";
@@ -182,6 +187,7 @@
 			files = (
 				6A3776F92C37CF8400D657F9 /* Assets.xcassets in Resources */,
 				6A3776FC2C37CF8400D657F9 /* Base in Resources */,
+				6AEFDE612C41A69200B427B2 /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,6 +342,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Yakgwa/Yakgwa.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 34JS69S5XZ;
@@ -363,6 +370,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = Yakgwa/Yakgwa.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 34JS69S5XZ;
