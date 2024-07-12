@@ -7,13 +7,14 @@
 
 import UIKit
 
+import CoreKit
+import KakaoSDKCommon
+
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
-
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        Font.registerYakgwaFont()
+        KakaoSDK.initSDK(appKey: "6125fa6ae1efc29d385873c2b891e24e")
         return true
     }
 
