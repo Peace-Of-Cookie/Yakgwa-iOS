@@ -8,10 +8,14 @@
 import UIKit
 
 import CoreKit
-import SnapKit
 
-public class LoginViewController: UIViewController {
+import SnapKit
+import ReactorKit
+import RxCocoa
+
+public class LoginViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
     
     // MARK: - UI Components
     private lazy var titleImageView: UIImageView = {
@@ -27,7 +31,10 @@ public class LoginViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    public init(
+        reactor: LoginReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -60,8 +67,22 @@ public class LoginViewController: UIViewController {
             $0.leading.equalToSuperview().offset(16)
         }
     }
-}
-
-#Preview {
-    LoginViewController()
+    
+    public func bind(reactor: LoginReactor) {
+        // Action
+        kakaoLoginButton.rx.tap
+            .map { Reactor.Action.kakaoLogin }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        reactor.state
+            .map { $0.isLoggedIn }
+            .distinctUntilChanged()
+            .filter { $0 }
+            .subscribe(onNext: {[weak self] _ in
+                // TODO: 화면 이동
+            })
+            .disposed(by: disposeBag)
+    }
 }

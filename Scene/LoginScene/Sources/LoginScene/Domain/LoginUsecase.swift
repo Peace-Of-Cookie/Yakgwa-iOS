@@ -6,18 +6,18 @@
 //
 import RxSwift
 
-protocol LoginUseCaseProtocol {
+public protocol LoginUseCaseProtocol {
     func kakaoLogin() -> Observable<Bool>
 }
 
-final class LoginUseCase: LoginUseCaseProtocol {
+public final class LoginUseCase: LoginUseCaseProtocol {
     private let loginService: LoginServiceType
     
-    init(loginService: LoginServiceType) {
+    public init(loginService: LoginServiceType) {
         self.loginService = loginService
     }
     
-    func kakaoLogin() -> Observable<Bool> {
+    public func kakaoLogin() -> Observable<Bool> {
         return loginService.requestKakaoLogin()
     }
 }

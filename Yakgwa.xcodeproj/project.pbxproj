@@ -10,6 +10,7 @@
 		460130952C40AA00003B31BD /* MainScene in Frameworks */ = {isa = PBXBuildFile; productRef = 460130942C40AA00003B31BD /* MainScene */; };
 		461A87702C3E20D8007AEEAF /* HomeScene in Frameworks */ = {isa = PBXBuildFile; productRef = 461A876F2C3E20D8007AEEAF /* HomeScene */; };
 		46F2E3D52C3E1C100033530C /* SceneKit in Frameworks */ = {isa = PBXBuildFile; productRef = 46F2E3D42C3E1C100033530C /* SceneKit */; };
+		6A1A512C2C425B5A00D6D386 /* LoginScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6A1A512B2C425B5A00D6D386 /* LoginScene */; };
 		6A3776F02C37CF8300D657F9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776EF2C37CF8300D657F9 /* AppDelegate.swift */; };
 		6A3776F22C37CF8300D657F9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776F12C37CF8300D657F9 /* SceneDelegate.swift */; };
 		6A3776F42C37CF8300D657F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776F32C37CF8300D657F9 /* ViewController.swift */; };
@@ -47,6 +48,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				460130952C40AA00003B31BD /* MainScene in Frameworks */,
+				6A1A512C2C425B5A00D6D386 /* LoginScene in Frameworks */,
 				461A87702C3E20D8007AEEAF /* HomeScene in Frameworks */,
 				46F2E3D52C3E1C100033530C /* SceneKit in Frameworks */,
 				6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */,
@@ -142,6 +144,7 @@
 				461A876F2C3E20D8007AEEAF /* HomeScene */,
 				6AAA08AB2C3EB45D007F723E /* SplashScene */,
 				460130942C40AA00003B31BD /* MainScene */,
+				6A1A512B2C425B5A00D6D386 /* LoginScene */,
 			);
 			productName = Yakgwa;
 			productReference = 6A3776EC2C37CF8300D657F9 /* Yakgwa.app */;
@@ -428,6 +431,10 @@
 		46F2E3D42C3E1C100033530C /* SceneKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = SceneKit;
+		};
+		6A1A512B2C425B5A00D6D386 /* LoginScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = LoginScene;
 		};
 		6AAA08AB2C3EB45D007F723E /* SplashScene */ = {
 			isa = XCSwiftPackageProductDependency;

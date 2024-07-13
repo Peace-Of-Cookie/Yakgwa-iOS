@@ -8,10 +8,12 @@
 import UIKit
 
 import SceneKit
+import Network
 
 import KakaoSDKAuth
 
 import HomeScene
+import LoginScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -22,7 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
         
-        let homeViewController = HomeViewController()
+        let reactor: LoginReactor = LoginReactor(loginUseCase: LoginUseCase(loginService: KakaoLoginService(apiDataSource: BaseRemoteDataSource<LoginAPI>())))
+        let homeViewController = LoginViewController(reactor: reactor)
         window.rootViewController = homeViewController
         self.window = window
         window.makeKeyAndVisible()

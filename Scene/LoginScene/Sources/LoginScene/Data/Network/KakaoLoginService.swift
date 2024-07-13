@@ -16,19 +16,19 @@ import KakaoSDKAuth
 import KakaoSDKCommon
 import KakaoSDKUser
 
-protocol LoginServiceType {
+public protocol LoginServiceType {
     func requestKakaoLogin() -> Observable<Bool>
 }
 
-class KakaoLoginService: LoginServiceType {
+public class KakaoLoginService: LoginServiceType {
     private let apiDataSource: BaseRemoteDataSource<LoginAPI>
     private let disposeBag = DisposeBag()
     
-    init(apiDataSource: BaseRemoteDataSource<LoginAPI>) {
+    public init(apiDataSource: BaseRemoteDataSource<LoginAPI>) {
         self.apiDataSource = apiDataSource
     }
     
-    func requestKakaoLogin() -> Observable<Bool> {
+    public func requestKakaoLogin() -> Observable<Bool> {
             return Observable<Bool>.create { observer in
                 if UserApi.isKakaoTalkLoginAvailable() {
                     UserApi.shared.loginWithKakaoTalk { (oauthToken, error) in
@@ -56,7 +56,6 @@ class KakaoLoginService: LoginServiceType {
                                     do {
                                         let loginResponse = try JSONDecoder().decode(LoginResponseDTO.self, from: response.data)
                                         let tokenSet = loginResponse.result.tokenSet
-                                        print("로그인 결과: \(loginResponse)")
                                         
                                         AccessTokenManager.saveAccessToken(token: tokenSet.accessToken)
                                         AccessTokenManager.saveRefreshToken(token: tokenSet.refreshToken)
