@@ -13,4 +13,9 @@ public final class FCMTokenManager {
     public static func saveFCMToken(token: String) {
         KeyChainManager.save(key: "fcmToken", value: token)
     }
+    
+    /// FCM Token을 Keychain에서 읽어옴
+    public static func readFCMToken() -> String? {
+        return KeyChainManager.read(key: "fcmToken")
+    }
 }

@@ -8,6 +8,7 @@
 import UIKit
 
 import CoreKit
+import Local
 
 import KakaoSDKCommon
 import FirebaseCore
@@ -67,5 +68,7 @@ extension AppDelegate: UNUserNotificationCenterDelegate, MessagingDelegate {
     // 파이어베이스 MessagingDelegate 설정
     func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(String(describing: fcmToken))")
+        
+        FCMTokenManager.saveFCMToken(token: fcmToken ?? "")
     }
 }

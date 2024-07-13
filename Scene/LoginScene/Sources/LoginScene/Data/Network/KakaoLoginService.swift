@@ -9,6 +9,7 @@ import Foundation
 
 import Network
 import Util
+import Local
 
 import RxSwift
 import KakaoSDKAuth
@@ -36,9 +37,11 @@ class KakaoLoginService: LoginServiceType {
                             observer.onError(error)
                         } else if let token = oauthToken?.accessToken {
                             // Configure Request Body
+                            let fcmToken: String = FCMTokenManager.readFCMToken() ?? ""
+                            
                             let body: [String: Any] = [
                                 "loginType": "KAKAO",
-                                "fcmToken" : "string"
+                                "fcmToken" : fcmToken
                             ]
                             guard let bodyData = try? JSONSerialization.data(withJSONObject: body, options: []) else {
                                 observer.onError(NSError(domain: "KakaoLoginService",
@@ -55,9 +58,8 @@ class KakaoLoginService: LoginServiceType {
                                         let tokenSet = loginResponse.result.tokenSet
                                         print("로그인 결과: \(loginResponse)")
                                         
-//                                        AccessTokenManager.saveAccessToken(token: tokenSet.accessToken)
-//                                        AccessTokenManager.saveRefreshToken(token: tokenSet.refreshToken)
-//                                        KeyChainManager.save(key: "userId", value: "\(loginResponse.result.userId)")
+                                        AccessTokenManager.saveAccessToken(token: tokenSet.accessToken)
+                                        AccessTokenManager.saveRefreshToken(token: tokenSet.refreshToken)
                                         
                                         observer.onNext(true)
                                         observer.onCompleted()
