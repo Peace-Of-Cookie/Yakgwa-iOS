@@ -29,6 +29,7 @@ public final class YakgwaNavigationDetailBar: UIView {
     private lazy var previousViewTitle: UILabel = {
         let label = UILabel()
         label.font = .sb18
+        label.textColor = .neutralBlack
         return label
     }()
     
@@ -54,8 +55,13 @@ public final class YakgwaNavigationDetailBar: UIView {
     
     // MARK: - Privates
     private func setUI() {
+        self.snp.makeConstraints {
+            $0.height.equalTo(36)
+        }
+        
         self.addSubview(leftButton)
         leftButton.snp.makeConstraints {
+            $0.width.height.equalTo(20)
             $0.centerY.equalToSuperview()
             $0.leading.equalTo(horizontalInset)
         }
