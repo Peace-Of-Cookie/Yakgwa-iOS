@@ -21,11 +21,27 @@ public final class SplashReactor: Reactor {
         var isAuthenticated: Bool?
     }
     
-    public var initialState = State()
+    public var initialState: State = State()
     
     // TODO: Add Auth Service
     
-    public init() {
+    public init() { }
+    
+    public func mutate(action: Action) -> Observable<Mutation> {
+        switch action {
+        case .checkIfAuthenticated:
+            return .just(Mutation.setAutenticated(false))
+        }
+    }
+    
+    public func reduce(state: State, mutation: Mutation) -> State {
+        var newState = state
+        switch mutation {
+        case let .setAutenticated(inAuthenticated):
+            newState.isAuthenticated = inAuthenticated
+        }
+        
+        return newState
         
     }
 }

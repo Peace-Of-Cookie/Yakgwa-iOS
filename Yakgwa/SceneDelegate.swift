@@ -8,21 +8,31 @@
 import UIKit
 
 import SceneKit
+import Network
+
+import KakaoSDKAuth
+
+import SplashScene
 import HomeScene
+import LoginScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
+    var appCoordinator: SplashCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         let window = UIWindow(windowScene: windowScene)
-        
-        let homeViewController = HomeViewController()
-        window.rootViewController = homeViewController
         self.window = window
-        window.makeKeyAndVisible()
+        
+        let splashReactor = SplashReactor()
+        let splashViewController = SplashViewController(reactor: splashReactor)
+        appCoordinator = SplashCoordinator(
+            window: window, viewController: splashViewController)
+
+        appCoordinator?.start()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -53,6 +63,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // to restore the scene back to its current state.
     }
 
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url {
+            if (AuthApi.isKakaoTalkLoginUrl(url)) {
+                let _ = AuthController.handleOpenUrl(url: url)
+            }
+        }
+    }
 
 }
 

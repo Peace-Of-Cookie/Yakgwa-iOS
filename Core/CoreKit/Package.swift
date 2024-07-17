@@ -14,6 +14,7 @@ let package = Package(
     dependencies: [
         .package(path: "./DesignSystem"),
         .package(path: "./Network"),
+        .package(path: "./Local"),
         .package(url: "https://github.com/ReactorKit/ReactorKit.git", .upToNextMajor(from: "3.0.0"))
     ],
     targets: [
@@ -22,7 +23,8 @@ let package = Package(
             dependencies: [
                 .product(name: "DesignSystem", package: "DesignSystem"),
                 .product(name: "Network", package: "Network"),
-                .product(name: "ReactorKit", package: "ReactorKit")
+                .product(name: "ReactorKit", package: "ReactorKit"),
+                .product(name: "Local", package: "Local")
             ]
         ),
         .testTarget(
