@@ -22,6 +22,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
+        .package(url: "https://github.com/airbnb/HorizonCalendar.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
         .target(
@@ -45,7 +46,8 @@ let package = Package(
         .target(
             name: "SelectAppointmentDateScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "HorizonCalendar", package: "HorizonCalendar")
             ]
         ),
         .testTarget(
