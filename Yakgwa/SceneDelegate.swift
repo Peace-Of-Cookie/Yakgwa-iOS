@@ -15,6 +15,7 @@ import KakaoSDKAuth
 import SplashScene
 import HomeScene
 import LoginScene
+import AddAppointmentLocationScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -27,12 +28,17 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let window = UIWindow(windowScene: windowScene)
         self.window = window
         
-        let splashReactor = SplashReactor()
-        let splashViewController = SplashViewController(reactor: splashReactor)
-        appCoordinator = SplashCoordinator(
-            window: window, viewController: splashViewController)
-
-        appCoordinator?.start()
+//        let splashReactor = SplashReactor()
+//        let splashViewController = SplashViewController(reactor: splashReactor)
+//        appCoordinator = SplashCoordinator(
+//            window: window, viewController: splashViewController)
+//
+//        appCoordinator?.start()
+        
+        let testViewController = AddAppointmentLocationViewController()
+        
+        window.rootViewController = testViewController
+        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

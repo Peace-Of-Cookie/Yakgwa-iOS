@@ -12,6 +12,7 @@ let package = Package(
             targets: ["DesignSystem"]),
     ],
     dependencies: [
+        .package(path: "./Util"),
         .package(url: "https://github.com/SnapKit/SnapKit.git", .upToNextMajor(from: "5.0.1")),
         .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0"))
     ],
@@ -19,6 +20,7 @@ let package = Package(
         .target(
             name: "DesignSystem",
             dependencies: [
+                .product(name: "Util", package: "Util"),
                 .product(name: "SnapKit", package: "SnapKit"),
                 .product(name: "RxSwift", package: "RxSwift"),
                 .product(name: "RxCocoa", package: "RxSwift")
