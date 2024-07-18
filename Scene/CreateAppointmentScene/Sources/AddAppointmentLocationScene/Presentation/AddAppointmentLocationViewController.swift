@@ -47,6 +47,11 @@ public final class AddAppointmentLocationViewController: UIViewController {
         return textView
     }()
     
+    private lazy var bottomSheetButton: BottomSheetButton = {
+        let button = BottomSheetButton(title: "다음으로")
+        return button
+    }()
+    
     // MARK: - Initializers
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -103,6 +108,13 @@ public final class AddAppointmentLocationViewController: UIViewController {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(16)
             $0.trailing.equalToSuperview().offset(-16)
+        }
+        
+        self.view.addSubview(bottomSheetButton)
+        bottomSheetButton.snp.makeConstraints {
+            $0.height.equalTo(92)
+            $0.bottom.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
         }
     }
     

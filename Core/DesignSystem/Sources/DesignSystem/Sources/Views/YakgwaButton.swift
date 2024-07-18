@@ -45,11 +45,11 @@ public class YakGwaButton: UIButton {
         switch style {
         case .primary:
             self.backgroundColor = UIColor.primary700
-            self.layer.cornerRadius = 12
+            self.layer.cornerRadius = 15
             self.setTitleColor(UIColor.white, for: .normal)
         case .secondary:
             self.backgroundColor = UIColor.primary100
-            self.layer.cornerRadius = 12
+            self.layer.cornerRadius = 15
             self.setTitleColor(UIColor.black, for: .normal)
         }
         
