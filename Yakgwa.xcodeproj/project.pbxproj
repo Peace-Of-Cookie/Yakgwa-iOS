@@ -16,6 +16,8 @@
 		6A3776F42C37CF8300D657F9 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A3776F32C37CF8300D657F9 /* ViewController.swift */; };
 		6A3776F92C37CF8400D657F9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776F82C37CF8400D657F9 /* Assets.xcassets */; };
 		6A3776FC2C37CF8400D657F9 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776FB2C37CF8400D657F9 /* Base */; };
+		6A4B38772C48D0BD004745F3 /* InputAppointmentInfoScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6A4B38762C48D0BD004745F3 /* InputAppointmentInfoScene */; };
+		6A4B38792C48D1DD004745F3 /* SelectAppointmentThemeScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6A4B38782C48D1DD004745F3 /* SelectAppointmentThemeScene */; };
 		6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AAA08AB2C3EB45D007F723E /* SplashScene */; };
 		6ADDE6DD2C4786B300DA0246 /* AddAppointmentLocationScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6ADDE6DC2C4786B300DA0246 /* AddAppointmentLocationScene */; };
 		6AEFDE612C41A69200B427B2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6AEFDE602C41A69200B427B2 /* GoogleService-Info.plist */; };
@@ -50,7 +52,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				460130952C40AA00003B31BD /* MainScene in Frameworks */,
+				6A4B38772C48D0BD004745F3 /* InputAppointmentInfoScene in Frameworks */,
 				6A1A512C2C425B5A00D6D386 /* LoginScene in Frameworks */,
+				6A4B38792C48D1DD004745F3 /* SelectAppointmentThemeScene in Frameworks */,
 				6ADDE6DD2C4786B300DA0246 /* AddAppointmentLocationScene in Frameworks */,
 				461A87702C3E20D8007AEEAF /* HomeScene in Frameworks */,
 				46F2E3D52C3E1C100033530C /* SceneKit in Frameworks */,
@@ -150,6 +154,8 @@
 				460130942C40AA00003B31BD /* MainScene */,
 				6A1A512B2C425B5A00D6D386 /* LoginScene */,
 				6ADDE6DC2C4786B300DA0246 /* AddAppointmentLocationScene */,
+				6A4B38762C48D0BD004745F3 /* InputAppointmentInfoScene */,
+				6A4B38782C48D1DD004745F3 /* SelectAppointmentThemeScene */,
 			);
 			productName = Yakgwa;
 			productReference = 6A3776EC2C37CF8300D657F9 /* Yakgwa.app */;
@@ -440,6 +446,14 @@
 		6A1A512B2C425B5A00D6D386 /* LoginScene */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = LoginScene;
+		};
+		6A4B38762C48D0BD004745F3 /* InputAppointmentInfoScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = InputAppointmentInfoScene;
+		};
+		6A4B38782C48D1DD004745F3 /* SelectAppointmentThemeScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = SelectAppointmentThemeScene;
 		};
 		6AAA08AB2C3EB45D007F723E /* SplashScene */ = {
 			isa = XCSwiftPackageProductDependency;

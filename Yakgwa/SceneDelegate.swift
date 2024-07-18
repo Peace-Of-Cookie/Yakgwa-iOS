@@ -15,7 +15,8 @@ import KakaoSDKAuth
 import SplashScene
 import HomeScene
 import LoginScene
-import AddAppointmentLocationScene
+import InputAppointmentInfoScene
+import SelectAppointmentThemeScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -35,7 +36,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //
 //        appCoordinator?.start()
         
-        let testViewController = AddAppointmentLocationViewController()
+        let testViewController = SelectAppointmentThemeViewController()
         
         window.rootViewController = testViewController
         window.makeKeyAndVisible()

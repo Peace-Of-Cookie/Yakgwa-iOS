@@ -44,7 +44,6 @@ public final class BottomSheetButton: UIView {
         self.addSubview(button)
         button.snp.makeConstraints {
             $0.top.equalToSuperview().offset(8)
-            $0.bottom.equalToSuperview().offset(-32)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
