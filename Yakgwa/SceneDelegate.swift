@@ -18,6 +18,7 @@ import LoginScene
 import InputAppointmentInfoScene
 import SelectAppointmentThemeScene
 import AddAppointmentLocationScene
+import SelectAppointmentDateScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -37,7 +38,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //
 //        appCoordinator?.start()
         
-        let testViewController = AddAppointmentLocationViewController()
+        let testViewController = SelectAppointmentDateViewController()
         
         window.rootViewController = testViewController
         window.makeKeyAndVisible()
