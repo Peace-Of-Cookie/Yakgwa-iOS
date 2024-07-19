@@ -64,6 +64,16 @@ public final class SelectAppointmentDateViewController: UIViewController {
         return calendarView
     }()
     
+    private lazy var dateSearchTextField: YakgwaSearchTextField = {
+        let textField = YakgwaSearchTextField(placeholder: "날짜를 입력해주세요")
+        return textField
+    }()
+    
+    private lazy var timeSearchTextField: YakgwaSearchTextField = {
+        let textField = YakgwaSearchTextField(placeholder: "시간를 입력해주세요")
+        return textField
+    }()
+    
     // MARK: - Initializers
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -122,6 +132,39 @@ public final class SelectAppointmentDateViewController: UIViewController {
     }
     
     private func changeMode(state: YakgwaSwitchViewState) {
+        if state == .first {
+            titleLabel.text = "투표에 올릴 기간을 선택해주세요"
+            titleStack.addArrangedSubview(descriptionLabel)
+            descriptionLabel.isHidden = false
+            calendarView.isHidden = false
+            
+            dateSearchTextField.removeFromSuperview()
+            timeSearchTextField.removeFromSuperview()
+        } else {
+            titleLabel.text = "정해진 양속 장소를 입력해주세요"
+            descriptionLabel.isHidden = true
+            calendarView.isHidden = true
+            titleStack.removeArrangedSubview(descriptionLabel)
+            self.view.addSubview(dateSearchTextField)
+            dateSearchTextField.snp.makeConstraints {
+                $0.top.equalTo(titleStack.snp.bottom).offset(8)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+            
+            self.view.addSubview(timeSearchTextField)
+            timeSearchTextField.snp.makeConstraints {
+                $0.top.equalTo(dateSearchTextField.snp.bottom).offset(8)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+        }
+    }
+    
+    private func setInputUI() {
+        titleLabel.text = "정해진 약속 시간을 입력해주세요"
+        titleStack.removeArrangedSubview(descriptionLabel)
+        
         
     }
     
@@ -251,7 +294,7 @@ extension SelectAppointmentDateViewController: YakgwaNavigationDetailDelegate {
 extension SelectAppointmentDateViewController: YakgwaSwitchViewDelegate {
     public func yakgwaSwitchView(state: YakgwaSwitchViewState) {
         print("yakgwaSwitchMode: \(state)")
-        // self.changeMode(state: state)
+        self.changeMode(state: state)
     }
 }
 
