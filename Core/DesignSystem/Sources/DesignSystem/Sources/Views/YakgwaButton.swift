@@ -16,6 +16,8 @@ public enum YakgwaButtonStyle {
 
 public enum YakgwaButtonImage: String {
     case share = "share_icon"
+    case rightArrow = "arrow_icon"
+    case rightArrowBlack = "arrow_icon_black"
 }
 
 public class YakGwaButton: UIButton {
