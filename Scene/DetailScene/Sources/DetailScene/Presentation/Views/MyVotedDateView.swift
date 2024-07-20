@@ -105,5 +105,5 @@ public final class MyVotedDateView: UIView {
 }
 
 #Preview {
-    VotedDateView()
+    MyVotedDateView()
 }
