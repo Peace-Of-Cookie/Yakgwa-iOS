@@ -14,6 +14,12 @@ public enum YakgwaButtonStyle {
     case secondary
 }
 
+public enum YakgwaButtonImage: String {
+    case share = "share_icon"
+    case rightArrow = "arrow_icon"
+    case rightArrowBlack = "arrow_icon_black"
+}
+
 public class YakGwaButton: UIButton {
     
     /// 버튼 타이틀
@@ -51,6 +57,27 @@ public class YakGwaButton: UIButton {
             self.backgroundColor = UIColor.primary100
             self.layer.cornerRadius = 15
             self.setTitleColor(UIColor.black, for: .normal)
+        }
+        
+        self.style = style
+    }
+    
+    public convenience init(
+        style: YakgwaButtonStyle,
+        image: YakgwaButtonImage
+    ) {
+        self.init(frame: .zero)
+        switch style {
+        case .primary:
+            self.backgroundColor = UIColor.primary700
+            self.layer.cornerRadius = 15
+            self.setTitleColor(UIColor.white, for: .normal)
+            self.buttonImage = UIImage(named: image.rawValue, in: .module, with: nil)
+        case .secondary:
+            self.backgroundColor = UIColor.primary100
+            self.layer.cornerRadius = 15
+            self.setTitleColor(UIColor.black, for: .normal)
+            self.buttonImage = UIImage(named: image.rawValue, in: .module, with: nil)
         }
         
         self.style = style
