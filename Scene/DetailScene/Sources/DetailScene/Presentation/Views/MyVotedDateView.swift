@@ -9,7 +9,7 @@ import UIKit
 
 import CoreKit
 
-public final class VotedDateView: UIView {
+public final class MyVotedDateView: UIView {
     // MARK: - Properties
     
     // MARK: - UI Components
