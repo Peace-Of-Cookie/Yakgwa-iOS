@@ -19,6 +19,8 @@ import InputAppointmentInfoScene
 import SelectAppointmentThemeScene
 import AddAppointmentLocationScene
 import SelectAppointmentDateScene
+import MyPageScene
+import MainScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -38,10 +40,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //
 //        appCoordinator?.start()
         
-        let testViewController = SelectAppointmentDateViewController()
+        let mainTabBarReactor = MainTabBarViewReactor()
+        let mainTabBarController = MainTabBarController(reactor: mainTabBarReactor)
+        let mainTabBarCoordinator = MainTabBarCoordinator(window: window, viewController: mainTabBarController)
+        mainTabBarCoordinator.start()
         
-        window.rootViewController = testViewController
-        window.makeKeyAndVisible()
+//        let testViewController = MyPageViewController()
+//        
+//        window.rootViewController = testViewController
+//        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

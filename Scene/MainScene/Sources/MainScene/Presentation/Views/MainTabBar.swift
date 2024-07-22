@@ -19,8 +19,10 @@ final class MainTabBar: UITabBar {
     // MARK: - Layout
     private struct Appearance {
         static let height: CGFloat = 61.0
-        static let buttonHeight: CGFloat = 70.0
-        static let buttonWidth: CGFloat = 70.0
+        static let buttonHeight: CGFloat = 61
+        static let buttonWidth: CGFloat = 61
+        static let buttonHitAreaHeight: CGFloat = 61
+        static let buttonHitAreaWidth: CGFloat = 61
     }
     
     // MARK: - UI Components
@@ -29,8 +31,8 @@ final class MainTabBar: UITabBar {
         button.backgroundColor = .clear
         let image = UIImage(named: "yakgwa_plus", in: .module, with: nil)
         button.setImage(image, for: .normal)
-        button.layer.cornerRadius = Appearance.buttonHeight / 2
         button.layer.masksToBounds = true
+        button.addTarget(self, action: #selector(centerButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -50,8 +52,10 @@ final class MainTabBar: UITabBar {
     private func setUI() {
         self.addSubview(centerButton)
         centerButton.snp.makeConstraints {
-            $0.center.equalToSuperview()
-            $0.width.height.equalTo(Appearance.buttonHeight)
+            $0.centerX.equalToSuperview()
+            $0.top.equalToSuperview()
+            $0.width.equalTo(Appearance.buttonWidth)
+            $0.height.equalTo(Appearance.buttonHeight)
         }
     }
     
@@ -70,5 +74,13 @@ final class MainTabBar: UITabBar {
     @objc
     func centerButtonTapped() {
         customDelegate?.centerButtonTapped()
+    }
+    
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        let translatedPoint = centerButton.convert(point, from: self)
+        if centerButton.bounds.contains(translatedPoint) {
+            return centerButton.hitTest(translatedPoint, with: event)
+        }
+        return super.hitTest(point, with: event)
     }
 }
