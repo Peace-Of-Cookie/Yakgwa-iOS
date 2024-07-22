@@ -13,9 +13,14 @@ import SnapKit
 import ReactorKit
 import RxCocoa
 
+public protocol LoginSceneDelegate: AnyObject {
+    func presentMainScene()
+}
+
 public class LoginViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
+    weak var delegate: LoginSceneDelegate?
     
     // MARK: - UI Components
     private lazy var titleImageView: UIImageView = {
@@ -81,7 +86,7 @@ public class LoginViewController: UIViewController, View {
             .distinctUntilChanged()
             .filter { $0 }
             .subscribe(onNext: {[weak self] _ in
-                // TODO: 화면 이동
+                self?.delegate?.presentMainScene()
             })
             .disposed(by: disposeBag)
     }

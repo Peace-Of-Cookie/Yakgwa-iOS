@@ -33,3 +33,16 @@ public final class LoginCoordinator: Coordinator {
         self.window.makeKeyAndVisible()
     }
 }
+
+//extension LoginCoordinator: LoginSceneDelegate {
+//    public func presentMainScene() {
+//        let mainTabBarViewController = MainTabBarController(reactor: MainTabBarViewReactor())
+//        
+//        let mainTabBarCoordinator = MainTabBarCoordinator (
+//            window: self.window,
+//            viewController: mainTabBarViewController
+//        )
+//        
+//        mainTabBarCoordinator.start()
+//    }
+//}
