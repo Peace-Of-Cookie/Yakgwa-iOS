@@ -40,6 +40,7 @@
 		6A5FDE1F2C475473007B0696 /* CreateAppointmentScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CreateAppointmentScene; sourceTree = "<group>"; };
 		6AAA08AA2C3EB3A9007F723E /* SplashScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SplashScene; sourceTree = "<group>"; };
 		6AB295D92C4BB6560002B0F0 /* VoteScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = VoteScene; sourceTree = "<group>"; };
+		6AE6D8722C4DE8A10061B8CC /* MyPageScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MyPageScene; sourceTree = "<group>"; };
 		6AEFDE602C41A69200B427B2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6AEFDE622C41B32500B427B2 /* Yakgwa.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Yakgwa.entitlements; sourceTree = "<group>"; };
 		6AFFBF322C3D89A1007E191E /* CoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreKit; sourceTree = "<group>"; };
@@ -129,6 +130,7 @@
 		6AFFBF372C3D8A1B007E191E /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				6AE6D8722C4DE8A10061B8CC /* MyPageScene */,
 				6AB295D92C4BB6560002B0F0 /* VoteScene */,
 				6A005FA52C4A891100F59C16 /* DetailScene */,
 				6A5FDE1F2C475473007B0696 /* CreateAppointmentScene */,
