@@ -14,8 +14,8 @@ import RxSwift
 import RxCocoa
 
 public protocol SplashSceneDelegate: AnyObject {
-    func presentLoginScene()
-    func presentMainScene()
+    func routeToLoginScene()
+    func routeToMainScene()
 }
 
 public final class SplashViewController: UIViewController, View {
@@ -87,10 +87,10 @@ public final class SplashViewController: UIViewController, View {
             .compactMap { $0 }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] isAuthenticated in
-                if !isAuthenticated {
-                    self?.delegate?.presentLoginScene()
+                if !(isAuthenticated) {
+                    self?.delegate?.routeToLoginScene()
                 } else {
-                    print("자동 로그인")
+                    self?.delegate?.routeToMainScene()
                 }
             })
             .disposed(by: self.disposeBag)

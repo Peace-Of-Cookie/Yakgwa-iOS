@@ -10,8 +10,13 @@ import CoreKit
 
 import SnapKit
 
+public protocol HomeSceneDelegate: AnyObject {
+    func routeToCreateAppointment()
+}
+
 public class HomeViewController: UIViewController {
     // MARK: - Properties
+    weak var delegate: HomeSceneDelegate?
     
     // MARK: - UI Components
     private lazy var yakgwaLogo: UIImageView = {

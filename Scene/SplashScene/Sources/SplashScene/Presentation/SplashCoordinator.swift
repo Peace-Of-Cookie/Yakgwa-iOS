@@ -32,36 +32,11 @@ public final class SplashCoordinator: Coordinator {
     ) {
         self.window = window
         self.viewController = viewController
-        
-        self.viewController.delegate = self
     }
     
     // MARK: - Functions
     public func start() {
         self.window.rootViewController = self.viewController
         self.window.makeKeyAndVisible()
-    }
-}
-
-extension SplashCoordinator: SplashSceneDelegate {
-    public func presentLoginScene() {
-        let kakaoLoginService: KakaoLoginService = KakaoLoginService(apiDataSource: BaseRemoteDataSource<LoginAPI>())
-        
-        let loginUsecase: LoginUseCaseProtocol = LoginUseCase(loginService: kakaoLoginService)
-        
-        let reactor: LoginReactor = LoginReactor(loginUseCase: loginUsecase)
-        
-        let loginViewController = LoginViewController(reactor: reactor)
-        
-        let loginCoordinator = LoginCoordinator (
-            window: self.window,
-            viewController: loginViewController
-        )
-        
-        loginCoordinator.start()
-    }
-    
-    public func presentMainScene() {
-        print("SplashCoordinator - presentMainScene()")
     }
 }

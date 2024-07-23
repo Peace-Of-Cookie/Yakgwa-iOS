@@ -13,10 +13,9 @@ import Util
 import HomeScene
 import MyPageScene
 
-public final class MainTabBarCoordinator: Coordinator {
+@MainActor
+public final class MainTabBarCoordinator: BaseCoordinator {
     // MARK: - Properties
-    public var navigationController: UINavigationController?
-    public var childCoordinators: [Coordinator] = []
     private let window: UIWindow
     
     let viewController: MainTabBarController
@@ -28,10 +27,11 @@ public final class MainTabBarCoordinator: Coordinator {
     ) {
         self.window = window
         self.viewController = viewController
+        super.init(navigationController: nil)
     }
     
     // MARK: - Public
-    public func start() {
+    public override func start() {
         configureTabBar()
         self.window.rootViewController = self.viewController
         self.window.makeKeyAndVisible()

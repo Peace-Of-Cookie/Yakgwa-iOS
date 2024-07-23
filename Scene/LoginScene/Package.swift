@@ -13,6 +13,7 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
+        .package(path: "./MainScene"),
         .package(url: "https://github.com/kakao/kakao-ios-sdk", .upToNextMajor(from: "2.0.0")),
         .package(url: "https://github.com/firebase/firebase-ios-sdk", .upToNextMajor(from: "10.0.0"))
     ],
@@ -21,6 +22,7 @@ let package = Package(
             name: "LoginScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "MainScene", package: "MainScene"),
                 .product(name: "KakaoSDK", package: "kakao-ios-sdk"),
                 .product(name: "FirebaseMessaging", package: "firebase-ios-sdk"),
                 .product(name: "FirebaseCrashlytics", package: "firebase-ios-sdk"),

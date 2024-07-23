@@ -13,14 +13,16 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
-        .package(path: "./LoginScene")
+        .package(path: "./LoginScene"),
+        .package(path: "./CreateAppointmentScene")
     ],
     targets: [
         .target(
             name: "SplashScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
-                .product(name: "LoginScene", package: "LoginScene")
+                .product(name: "LoginScene", package: "LoginScene"),
+                .product(name: "InputAppointmentInfoScene", package: "CreateAppointmentScene")
             ],
             resources: [.process("Assets")]
         ),

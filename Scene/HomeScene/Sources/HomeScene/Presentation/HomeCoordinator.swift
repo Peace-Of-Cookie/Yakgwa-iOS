@@ -10,7 +10,9 @@ import UIKit
 import CoreKit
 import Util
 
-public final class HomeCoordinator: Coordinator {
+import InputAppointmentInfoScene
+
+public final class HomeCoordinator: NSObject, Coordinator {
     // MARK: - Properties
     public var navigationController: UINavigationController?
     public var childCoordinators: [Coordinator] = []

@@ -14,13 +14,13 @@ import ReactorKit
 import RxCocoa
 
 public protocol LoginSceneDelegate: AnyObject {
-    func presentMainScene()
+    func loginSceneToMainScene()
 }
 
 public class LoginViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
-    weak var delegate: LoginSceneDelegate?
+    public weak var delegate: LoginSceneDelegate?
     
     // MARK: - UI Components
     private lazy var titleImageView: UIImageView = {
@@ -86,7 +86,7 @@ public class LoginViewController: UIViewController, View {
             .distinctUntilChanged()
             .filter { $0 }
             .subscribe(onNext: {[weak self] _ in
-                self?.delegate?.presentMainScene()
+                self?.delegate?.loginSceneToMainScene()
             })
             .disposed(by: disposeBag)
     }
