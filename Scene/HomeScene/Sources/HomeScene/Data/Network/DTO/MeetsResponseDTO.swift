@@ -1,6 +1,6 @@
 //
-//  File.swift
-//  
+//  MeetResponseDTO.swift
+//
 //
 //  Created by Ekko on 7/24/24.
 //
@@ -50,5 +50,25 @@ public struct MeetResponseDTO: Codable {
                 let meetId: Int
             }
         }
+    }
+}
+
+extension MeetResponseDTO {
+    /// MeetResponseDTO -> [Appointment]([Entity])
+    func toDomain() -> [Appointment] {
+        return result.meetInfosWithStatus.map { $0.toDomain() }
+    }
+}
+
+extension MeetResponseDTO.MeetResultDTO.MeetInfoWithStatusDTO {
+    func toDomain() -> Appointment {
+        return Appointment(
+            status: meetStatus,
+            theme: meetInfo.meetThemeName,
+            dateTime: meetInfo.meetDateTime,
+            location: meetInfo.placeName,
+            title: meetInfo.meetTitle,
+            id: meetInfo.meetId
+        )
     }
 }
