@@ -12,14 +12,19 @@ let package = Package(
             targets: ["MainScene"]),
     ],
     dependencies: [
-        .package(path: "./CoreKit")
+        .package(path: "./CoreKit"),
+        .package(path: "./HomeScene"),
+        .package(path: "./MyPageScene")
     ],
     targets: [
         .target(
             name: "MainScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
-            ]
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "HomeScene", package: "HomeScene"),
+                .product(name: "MyPageScene", package: "MyPageScene")
+            ],
+            resources: [.process("Assets")]
         ),
         .testTarget(
             name: "MainSceneTests",

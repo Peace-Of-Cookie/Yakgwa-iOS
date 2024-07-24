@@ -19,29 +19,36 @@ import InputAppointmentInfoScene
 import SelectAppointmentThemeScene
 import AddAppointmentLocationScene
 import SelectAppointmentDateScene
+import MyPageScene
+import MainScene
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
 
-    var appCoordinator: SplashCoordinator?
+    var appCoordinator: AppCoordinator?
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         guard let windowScene = (scene as? UIWindowScene) else { return }
-        let window = UIWindow(windowScene: windowScene)
-        self.window = window
+        window = UIWindow(windowScene: windowScene)
         
 //        let splashReactor = SplashReactor()
 //        let splashViewController = SplashViewController(reactor: splashReactor)
-//        appCoordinator = SplashCoordinator(
-//            window: window, viewController: splashViewController)
-//
-//        appCoordinator?.start()
+        appCoordinator = AppCoordinator(window: self.window!)
+
+        appCoordinator?.start()
         
-        let testViewController = SelectAppointmentDateViewController()
         
-        window.rootViewController = testViewController
-        window.makeKeyAndVisible()
+        
+//        let mainTabBarReactor = MainTabBarViewReactor()
+//        let mainTabBarController = MainTabBarController(reactor: mainTabBarReactor)
+//        let mainTabBarCoordinator = MainTabBarCoordinator(window: self.window, viewController: mainTabBarController)
+//        mainTabBarCoordinator.start()
+        
+//        let testViewController = MyPageViewController()
+//        
+//        window.rootViewController = testViewController
+//        window.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

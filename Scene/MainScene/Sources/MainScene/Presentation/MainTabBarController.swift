@@ -23,15 +23,8 @@ public final class MainTabBarController: UITabBarController, View {
         defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
         let tabBar = MainTabBar()
+        tabBar.customDelegate = self
         self.setValue(tabBar, forKey: "tabBar")
-        
-//        self.viewControllers = [homeViewController, splashViewController]
-//            .map { viewController -> UINavigationController in
-//                let navigationController = UINavigationController(rootViewController: viewController)
-//                navigationController.tabBarItem.imageInsets.top = 5
-//                navigationController.tabBarItem.imageInsets.bottom = -5
-//                return navigationController
-//            }
     }
     
     required init?(coder: NSCoder) {
@@ -46,6 +39,12 @@ public final class MainTabBarController: UITabBarController, View {
     // MARK: - Privates
     public func bind(reactor: MainTabBarViewReactor) {
         print("bind")
+    }
+}
+
+extension MainTabBarController: MainTabBarDelegate {
+    func centerButtonTapped() {
+        print("약속 생성 화면으로 이동")
     }
 }
 

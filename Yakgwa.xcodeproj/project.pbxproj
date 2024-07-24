@@ -19,10 +19,12 @@
 		6A3776FC2C37CF8400D657F9 /* Base in Resources */ = {isa = PBXBuildFile; fileRef = 6A3776FB2C37CF8400D657F9 /* Base */; };
 		6A4B38772C48D0BD004745F3 /* InputAppointmentInfoScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6A4B38762C48D0BD004745F3 /* InputAppointmentInfoScene */; };
 		6A4B38792C48D1DD004745F3 /* SelectAppointmentThemeScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6A4B38782C48D1DD004745F3 /* SelectAppointmentThemeScene */; };
+		6A774CF82C4F25EE001E7AF1 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A774CF72C4F25EE001E7AF1 /* AppCoordinator.swift */; };
 		6A7DBD1F2C499416008EFD1F /* SelectAppointmentDateScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6A7DBD1E2C499416008EFD1F /* SelectAppointmentDateScene */; };
 		6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AAA08AB2C3EB45D007F723E /* SplashScene */; };
 		6AC58F572C4BBF000080EFC6 /* VoteScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AC58F562C4BBF000080EFC6 /* VoteScene */; };
 		6ADDE6DD2C4786B300DA0246 /* AddAppointmentLocationScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6ADDE6DC2C4786B300DA0246 /* AddAppointmentLocationScene */; };
+		6AE6D8742C4DF0340061B8CC /* MyPageScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AE6D8732C4DF0340061B8CC /* MyPageScene */; };
 		6AEFDE612C41A69200B427B2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6AEFDE602C41A69200B427B2 /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
@@ -38,8 +40,10 @@
 		6A3776FB2C37CF8400D657F9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		6A3776FD2C37CF8400D657F9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6A5FDE1F2C475473007B0696 /* CreateAppointmentScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CreateAppointmentScene; sourceTree = "<group>"; };
+		6A774CF72C4F25EE001E7AF1 /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		6AAA08AA2C3EB3A9007F723E /* SplashScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = SplashScene; sourceTree = "<group>"; };
 		6AB295D92C4BB6560002B0F0 /* VoteScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = VoteScene; sourceTree = "<group>"; };
+		6AE6D8722C4DE8A10061B8CC /* MyPageScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MyPageScene; sourceTree = "<group>"; };
 		6AEFDE602C41A69200B427B2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		6AEFDE622C41B32500B427B2 /* Yakgwa.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Yakgwa.entitlements; sourceTree = "<group>"; };
 		6AFFBF322C3D89A1007E191E /* CoreKit */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = CoreKit; sourceTree = "<group>"; };
@@ -56,6 +60,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6AE6D8742C4DF0340061B8CC /* MyPageScene in Frameworks */,
 				6A005FA72C4A8A0400F59C16 /* DetailScene in Frameworks */,
 				460130952C40AA00003B31BD /* MainScene in Frameworks */,
 				6A4B38772C48D0BD004745F3 /* InputAppointmentInfoScene in Frameworks */,
@@ -110,6 +115,7 @@
 				6A3776FA2C37CF8400D657F9 /* LaunchScreen.storyboard */,
 				6A3776FD2C37CF8400D657F9 /* Info.plist */,
 				6AEFDE602C41A69200B427B2 /* GoogleService-Info.plist */,
+				6A774CF72C4F25EE001E7AF1 /* AppCoordinator.swift */,
 			);
 			path = Yakgwa;
 			sourceTree = "<group>";
@@ -129,6 +135,7 @@
 		6AFFBF372C3D8A1B007E191E /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				6AE6D8722C4DE8A10061B8CC /* MyPageScene */,
 				6AB295D92C4BB6560002B0F0 /* VoteScene */,
 				6A005FA52C4A891100F59C16 /* DetailScene */,
 				6A5FDE1F2C475473007B0696 /* CreateAppointmentScene */,
@@ -169,6 +176,7 @@
 				6A7DBD1E2C499416008EFD1F /* SelectAppointmentDateScene */,
 				6A005FA62C4A8A0400F59C16 /* DetailScene */,
 				6AC58F562C4BBF000080EFC6 /* VoteScene */,
+				6AE6D8732C4DF0340061B8CC /* MyPageScene */,
 			);
 			productName = Yakgwa;
 			productReference = 6A3776EC2C37CF8300D657F9 /* Yakgwa.app */;
@@ -225,6 +233,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A774CF82C4F25EE001E7AF1 /* AppCoordinator.swift in Sources */,
 				6A3776F42C37CF8300D657F9 /* ViewController.swift in Sources */,
 				6A3776F02C37CF8300D657F9 /* AppDelegate.swift in Sources */,
 				6A3776F22C37CF8300D657F9 /* SceneDelegate.swift in Sources */,
@@ -487,6 +496,10 @@
 		6ADDE6DC2C4786B300DA0246 /* AddAppointmentLocationScene */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AddAppointmentLocationScene;
+		};
+		6AE6D8732C4DF0340061B8CC /* MyPageScene */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = MyPageScene;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

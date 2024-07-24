@@ -10,6 +10,12 @@ import UIKit
 import CoreKit
 import Util
 
+import MainScene
+
+protocol SceneFlowDelegate {
+    func presentMainScene()
+}
+
 public final class LoginCoordinator: Coordinator {
     // MARK: - Properties
     public var navigationController: UINavigationController?
