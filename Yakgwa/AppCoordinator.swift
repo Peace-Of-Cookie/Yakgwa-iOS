@@ -16,8 +16,7 @@ import MainScene
 import LoginScene
 
 final class AppCoordinator: Coordinator {
-    // MARK: - Properties
-    weak var finishDelegate: CoordinatorFinishDelegate? = nil
+    // MARK: - Properties 
     var navigationController: UINavigationController?
     var childCoordinators: [Coordinator] = []
     private let window: UIWindow
