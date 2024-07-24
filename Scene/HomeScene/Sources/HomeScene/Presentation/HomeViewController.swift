@@ -9,14 +9,17 @@ import UIKit
 import CoreKit
 
 import SnapKit
+import ReactorKit
 
-public protocol HomeSceneDelegate: AnyObject {
-    func routeToCreateAppointment()
-}
+//protocol HomeSceneDelegate: AnyObject {
+//    var sendRoutingEvent: ((HomeRouter) -> Void) { get set }
+//}
 
-public class HomeViewController: UIViewController {
+public class HomeViewController: UIViewController, View {
     // MARK: - Properties
-    weak var delegate: HomeSceneDelegate?
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((HomeRouter) -> Void)?
+    var testSubject: PublishSubject<HomeRouter> = PublishSubject<HomeRouter>()
     
     // MARK: - UI Components
     private lazy var yakgwaLogo: UIImageView = {
@@ -45,7 +48,10 @@ public class HomeViewController: UIViewController {
     private var homeCollectionView: UICollectionView!
     
     // MARK: - Initializers
-    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+    public init(
+        reactor: HomeReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -86,8 +92,31 @@ public class HomeViewController: UIViewController {
     private func setCollectionView() {
         
     }
-}
-
-#Preview {
-    HomeViewController()
+    
+    public func bind(reactor: HomeReactor) {
+        // Action
+        noAppointmentView.createButton.rx.tap
+            .map { Reactor.Action.didTapCreateAppointmentButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                switch router {
+                case .create:
+                    print("탕후루")
+                    self?.sendRoutingEvent?(.create)
+                    if let sendRoutingEvent = self?.sendRoutingEvent {
+                        print("sendRoutingEvent is set")
+                    } else {
+                        print("sendRoutingEvent is nil")
+                    }
+                    // self?.testSubject.onNext(.create)
+                }
+            })
+            .disposed(by: disposeBag)
+    }
 }

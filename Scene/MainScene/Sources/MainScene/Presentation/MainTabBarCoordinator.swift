@@ -39,12 +39,15 @@ public final class MainTabBarCoordinator: BaseCoordinator {
     
     // MARK: - Privates
     public func configureTabBar() {
-        let homeViewController = HomeViewController()
+        let reactor = HomeReactor()
+        let homeViewController = HomeViewController(reactor: reactor)
         let homeCoordinator = HomeCoordinator(
             navigationController: UINavigationController(),
             viewController: homeViewController
         )
         homeCoordinator.start()
+        homeCoordinator.parentCoordinator = self
+        childCoordinators.append(homeCoordinator)
         
         let myPageViewController = MyPageViewController()
         let myPageCoordinator = MyPageCoordinator(
@@ -52,6 +55,8 @@ public final class MainTabBarCoordinator: BaseCoordinator {
             viewController: myPageViewController
         )
         myPageCoordinator.start()
+        // myPageCoordinator.parentCoordinator = self
+        childCoordinators.append(myPageCoordinator)
         
         guard let homeNavController = homeCoordinator.navigationController,
               let myPageNavController = myPageCoordinator.navigationController else {
@@ -70,17 +75,29 @@ public final class MainTabBarCoordinator: BaseCoordinator {
             homeNavController,
             myPageNavController
         ]
+        
+        // Set delegates
+//        homeNavController.delegate = self
+//        myPageNavController.delegate = self
     }
     
     private func createNavController(for rootViewController: UIViewController, title: String?, image: UIImage, selectedImage: UIImage) -> UIViewController {
-            
-            let navController = UINavigationController(rootViewController:  rootViewController)
-            navController.navigationBar.isTranslucent = false
-            navController.navigationBar.backgroundColor = .white
-            navController.tabBarItem.title = title
-            navController.tabBarItem.image = image
-            navController.tabBarItem.selectedImage = selectedImage
-            // navController.interactivePopGestureRecognizer?.delegate = nil // 스와이프 제스처 enable true
-            return navController
+        
+        let navController = UINavigationController(rootViewController:  rootViewController)
+        navController.navigationBar.isTranslucent = false
+        navController.navigationBar.backgroundColor = .white
+        navController.tabBarItem.title = title
+        navController.tabBarItem.image = image
+        navController.tabBarItem.selectedImage = selectedImage
+        // navController.interactivePopGestureRecognizer?.delegate = nil // 스와이프 제스처 enable true
+        return navController
+    }
+    
+    // UINavigationControllerDelegate 메서드 오버라이드
+    public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if let tabBarController = navigationController.tabBarController {
+            let isRootViewController = navigationController.viewControllers.first == viewController
+            tabBarController.tabBar.isHidden = !isRootViewController
         }
+    }
 }

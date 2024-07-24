@@ -28,7 +28,7 @@ public class NoAppointmentView: UIView {
         return label
     }()
     
-    private lazy var createButton: YakGwaButton = {
+    lazy var createButton: YakGwaButton = {
         let button = YakGwaButton()
         button.title = "약속 만들러 가기"
         return button

@@ -17,6 +17,7 @@ import LoginScene
 
 final class AppCoordinator: Coordinator {
     // MARK: - Properties
+    weak var finishDelegate: CoordinatorFinishDelegate? = nil
     var navigationController: UINavigationController?
     var childCoordinators: [Coordinator] = []
     private let window: UIWindow
@@ -28,7 +29,8 @@ final class AppCoordinator: Coordinator {
     
     // MARK: - Functions
     func start() {
-        presentSplashScene()
+        // presentSplashScene()
+        presentMainScene()
     }
 }
 

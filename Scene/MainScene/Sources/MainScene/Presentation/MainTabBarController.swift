@@ -44,7 +44,7 @@ public final class MainTabBarController: UITabBarController, View {
 
 extension MainTabBarController: MainTabBarDelegate {
     func centerButtonTapped() {
-        print("약속 추가 버튼 탭")
+        print("약속 생성 화면으로 이동")
     }
 }
 
