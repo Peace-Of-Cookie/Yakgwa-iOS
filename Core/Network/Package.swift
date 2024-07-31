@@ -13,14 +13,12 @@ let package = Package(
             targets: ["Network"]),
     ],
     dependencies: [
-        .package(path: "./Util"),
         .package(url: "https://github.com/Moya/Moya.git", .upToNextMajor(from: "15.0.0")),
     ],
     targets: [
         .target(
             name: "Network",
             dependencies: [
-                .product(name: "Util", package: "Util"),
                 .product(name: "RxMoya", package: "Moya")
             ]
         ),

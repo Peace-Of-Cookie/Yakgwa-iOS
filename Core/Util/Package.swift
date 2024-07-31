@@ -12,11 +12,14 @@ let package = Package(
             targets: ["Util"]),
     ],
     dependencies: [
+        .package(url: "https://github.com/ReactiveX/RxSwift.git", .upToNextMajor(from: "6.0.0"))
     ],
     targets: [
         .target(
             name: "Util",
             dependencies: [
+                .product(name: "RxSwift", package: "RxSwift"),
+                .product(name: "RxCocoa", package: "RxSwift")
             ]
         ),
         .testTarget(

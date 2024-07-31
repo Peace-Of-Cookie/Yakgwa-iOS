@@ -10,8 +10,7 @@ import UIKit
 import CoreKit
 import SnapKit
 import ReactorKit
-import RxSwift
-import RxCocoa
+import Util
 
 public protocol SplashSceneDelegate: AnyObject {
     func routeToLoginScene()
@@ -94,13 +93,5 @@ public final class SplashViewController: UIViewController, View {
                 }
             })
             .disposed(by: self.disposeBag)
-    }
-}
-
-extension Reactive where Base: UIViewController {
-    var viewDidAppear: ControlEvent<Bool> {
-        let source = self.methodInvoked(#selector(Base.viewDidAppear(_:)))
-            .map { $0.first as? Bool ?? false }
-        return ControlEvent(events: source)
     }
 }
