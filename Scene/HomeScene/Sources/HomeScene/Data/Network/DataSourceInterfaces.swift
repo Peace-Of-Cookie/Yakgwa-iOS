@@ -9,6 +9,6 @@ import Network
 
 import RxSwift
 
-protocol RemoteFetchAppointmentDataSourceProtocol {
+public protocol RemoteFetchAppointmentDataSourceProtocol {
     func fetchAppointments() -> Single<MeetResponseDTO>
 }

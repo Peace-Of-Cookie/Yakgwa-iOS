@@ -11,11 +11,11 @@ import RxSwift
 public final class FetchAppointmentRepository: FetchAppointmentRepositoryProtocol {
     private let remoteDataSource: RemoteFetchAppointmentDataSourceProtocol
     
-    init(remoteDataSource: RemoteFetchAppointmentDataSourceProtocol) {
+    public init(remoteDataSource: RemoteFetchAppointmentDataSourceProtocol) {
         self.remoteDataSource = remoteDataSource
     }
     
-    func fetchAppointment() -> Single<[Appointment]> {
+    public func fetchAppointment() -> Single<[Appointment]> {
         return remoteDataSource
             .fetchAppointments()
             .map {

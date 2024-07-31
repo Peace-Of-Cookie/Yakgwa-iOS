@@ -8,6 +8,6 @@
 import Network
 import RxSwift
 
-protocol FetchAppointmentRepositoryProtocol {
+public protocol FetchAppointmentRepositoryProtocol {
     func fetchAppointment() -> Single<[Appointment]>
 }

@@ -7,13 +7,11 @@
 
 import UIKit
 import CoreKit
+import Util
+import Local
 
 import SnapKit
 import ReactorKit
-
-//protocol HomeSceneDelegate: AnyObject {
-//    var sendRoutingEvent: ((HomeRouter) -> Void) { get set }
-//}
 
 public class HomeViewController: UIViewController, View {
     // MARK: - Properties
@@ -95,12 +93,24 @@ public class HomeViewController: UIViewController, View {
     
     public func bind(reactor: HomeReactor) {
         // Action
+        self.rx.viewDidAppear
+            .map { _ in Reactor.Action.viewDidAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         noAppointmentView.createButton.rx.tap
             .map { Reactor.Action.didTapCreateAppointmentButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
         // State
+        reactor.state
+            .map { $0.appointments }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] appointments in
+                print("약속: \(appointments)")
+            })
+            .disposed(by: disposeBag)
         
         // Routing
         reactor.route

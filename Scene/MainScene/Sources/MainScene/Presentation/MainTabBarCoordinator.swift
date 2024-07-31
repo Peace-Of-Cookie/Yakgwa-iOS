@@ -39,7 +39,13 @@ public final class MainTabBarCoordinator: BaseCoordinator {
     
     // MARK: - Privates
     public func configureTabBar() {
-        let reactor = HomeReactor()
+        let reactor = HomeReactor(
+            fetchAppointmentUsecase: DefaultFetchAppointmentUsecase(
+                repository: FetchAppointmentRepository(
+                    remoteDataSource: RemoteFetchAppointmentDataSource()
+                )
+            )
+        )
         let homeViewController = HomeViewController(reactor: reactor)
         let homeCoordinator = HomeCoordinator(
             navigationController: UINavigationController(),

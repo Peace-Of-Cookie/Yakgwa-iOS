@@ -21,26 +21,38 @@ enum HomeRouter {
 public final class HomeReactor: Reactor, HomeRouting {
     public enum Action {
         case didTapCreateAppointmentButton
+        case viewDidAppear
     }
     
     public enum Mutation {
+        case fetchAppointments([Appointment])
         case setLoading(Bool)
     }
     
     public struct State {
         var isLoading: Bool = false
+        var appointments: [Appointment] = []
     }
     
     public let initialState: State = State()
     let route: PublishSubject<HomeRouter> = PublishSubject<HomeRouter>()
+    let fetchAppointmentUsecase: FetchAppointmentUsecase
     
-    public init() { }
+    public init(fetchAppointmentUsecase: FetchAppointmentUsecase) {
+        self.fetchAppointmentUsecase = fetchAppointmentUsecase
+    }
     
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
+            // Routing
         case .didTapCreateAppointmentButton:
             route.onNext(.create)
             return Observable.empty()
+        case .viewDidAppear:
+            return fetchAppointmentUsecase
+                .execute()
+                .map { Mutation.fetchAppointments($0) }
+                .asObservable()
         }
     }
     
@@ -50,6 +62,8 @@ public final class HomeReactor: Reactor, HomeRouting {
         switch mutation {
         case let .setLoading(isLoading):
             newState.isLoading = isLoading
+        case let .fetchAppointments(appointments):
+            newState.appointments = appointments
         }
         
         return newState

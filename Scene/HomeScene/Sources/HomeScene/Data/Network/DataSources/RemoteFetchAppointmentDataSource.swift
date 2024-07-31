@@ -9,8 +9,8 @@ import Network
 
 import RxSwift
 
-final class RemoteFetchAppointmentDataSource: BaseRemoteDataSource<HomeAPI>, RemoteFetchAppointmentDataSourceProtocol {
-    func fetchAppointments() -> Single<MeetResponseDTO> {
+final public class RemoteFetchAppointmentDataSource: BaseRemoteDataSource<HomeAPI>, RemoteFetchAppointmentDataSourceProtocol {
+    public func fetchAppointments() -> Single<MeetResponseDTO> {
         request(
             .fetchAppointments
         ).map(MeetResponseDTO.self)

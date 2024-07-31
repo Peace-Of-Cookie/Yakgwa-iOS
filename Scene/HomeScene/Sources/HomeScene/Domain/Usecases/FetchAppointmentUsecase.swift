@@ -8,18 +8,18 @@
 import Network
 import RxSwift
 
-protocol FetchAppointmentUsecase {
+public protocol FetchAppointmentUsecase {
     func execute() -> Single<[Appointment]>
 }
 
 public final class DefaultFetchAppointmentUsecase: FetchAppointmentUsecase {
     private let repository: FetchAppointmentRepositoryProtocol
 
-    init(repository: FetchAppointmentRepositoryProtocol) {
+    public init(repository: FetchAppointmentRepositoryProtocol) {
         self.repository = repository
     }
 
-    func execute() -> Single<[Appointment]> {
-        repository.fetchAppointment()
+    public func execute() -> Single<[Appointment]> {
+        return repository.fetchAppointment()
     }
 }
