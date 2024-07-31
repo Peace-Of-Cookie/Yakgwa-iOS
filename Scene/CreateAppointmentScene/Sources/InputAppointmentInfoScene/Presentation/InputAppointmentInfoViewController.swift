@@ -7,9 +7,12 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
 
-public final class InputAppointmentInfoViewController: UIViewController {
+public final class InputAppointmentInfoViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((InputAppointmentInfoRouter) -> Void)?
     
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
@@ -52,7 +55,10 @@ public final class InputAppointmentInfoViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: InputAppointmentReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -120,6 +126,23 @@ public final class InputAppointmentInfoViewController: UIViewController {
     override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         self.view.endEditing(true)
     }
+    
+    public func bind(reactor: InputAppointmentReactor) {
+        // Action
+        bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapNextButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
 extension InputAppointmentInfoViewController: YakgwaNavigationDetailDelegate {
@@ -137,10 +160,4 @@ extension InputAppointmentInfoViewController: YakgwaTextViewDelegate {
     public func textViewDidChange(text: String) {
         print("textViewDidChange: \(text)")
     }
-    
-    
-}
-
-#Preview {
-    InputAppointmentInfoViewController()
 }

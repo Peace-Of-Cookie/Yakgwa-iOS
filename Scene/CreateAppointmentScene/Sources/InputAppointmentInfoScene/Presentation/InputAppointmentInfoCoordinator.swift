@@ -9,6 +9,7 @@ import UIKit
 
 import CoreKit
 import Util
+import SelectAppointmentThemeScene
 
 public final class InputAppointmentInfoCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -26,6 +27,36 @@ public final class InputAppointmentInfoCoordinator: BaseCoordinator {
     // MARK: - Public
     public override func start() {
         self.navigationController?.pushViewController(self.viewController, animated: true)
+        self.setRoute()
     }
+    
     // MARK: - Private
+    private func setRoute() {
+        self.viewController.sendRoutingEvent = { [weak self] event in
+            switch event {
+            case .back:
+                print("뒤로 가기")
+            case .theme:
+                self?.routeSelectAppointmentTheme()
+            }
+        }
+    }
+}
+
+extension InputAppointmentInfoCoordinator {
+    private func routeSelectAppointmentTheme() {
+        let selectAppointmentThemeViewController = SelectAppointmentThemeViewController()
+        if let navigationController = self.navigationController {
+            let selectAppointmentThemeCoordinator = SelectAppointmentThemeCoordinator(
+                navigationController: navigationController,
+                viewController: selectAppointmentThemeViewController
+            )
+            navigationController.delegate = self
+            selectAppointmentThemeCoordinator.parentCoordinator = self
+            selectAppointmentThemeCoordinator.start()
+            addChildCoordinator(selectAppointmentThemeCoordinator)
+        }
+        
+        selectAppointmentThemeViewController.tabBarController?.tabBar.isHidden = true
+    }
 }

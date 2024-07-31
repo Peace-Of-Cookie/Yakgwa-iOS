@@ -28,7 +28,8 @@ let package = Package(
         .target(
             name: "InputAppointmentInfoScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                "SelectAppointmentThemeScene"
             ]
         ),
         .target(
