@@ -77,6 +77,10 @@ final class MainTabBar: UITabBar {
     }
     
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        if self.isHidden {
+            return nil
+        }
+        
         let translatedPoint = centerButton.convert(point, from: self)
         if centerButton.bounds.contains(translatedPoint) {
             return centerButton.hitTest(translatedPoint, with: event)
