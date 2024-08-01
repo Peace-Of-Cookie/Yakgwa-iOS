@@ -53,6 +53,7 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
     public init(
         reactor: SelectAppointmentThemeReactor
     ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
         setUI()
     }
@@ -126,6 +127,13 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             .disposed(by: disposeBag)
         
         // State
+        reactor.state
+            .map { $0.themes }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] themes in
+                print("테마: \(themes)")
+            })
+            .disposed(by: disposeBag)
         
         // Routing
     }

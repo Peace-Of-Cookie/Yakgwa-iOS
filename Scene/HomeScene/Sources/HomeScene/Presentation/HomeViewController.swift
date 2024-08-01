@@ -118,12 +118,6 @@ public class HomeViewController: UIViewController, View {
                 switch router {
                 case .create:
                     self?.sendRoutingEvent?(.create)
-                    if let sendRoutingEvent = self?.sendRoutingEvent {
-                        print("sendRoutingEvent is set")
-                    } else {
-                        print("sendRoutingEvent is nil")
-                    }
-                    // self?.testSubject.onNext(.create)
                 }
             })
             .disposed(by: disposeBag)

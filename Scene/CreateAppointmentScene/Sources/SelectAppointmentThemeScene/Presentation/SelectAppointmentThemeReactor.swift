@@ -44,4 +44,30 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
     public init(fetchThemeUseCase: FetchThemeUsecaseProtocol) {
         self.fetchThemeUseCase = fetchThemeUseCase
     }
+    
+    public func mutate(action: Action) -> Observable<Mutation> {
+        switch action {
+        case .viewDidAppear:
+            return fetchThemeUseCase
+                .execute()
+                .map { Mutation.fetchThemes($0) }
+                .asObservable()
+            
+        case .didTapNextButton:
+            return Observable.empty()
+        }
+    }
+    
+    public func reduce(state: State, mutation: Mutation) -> State {
+        var newState = state
+        
+        switch mutation {
+        case .fetchThemes(let themes):
+            newState.themes = themes
+        case .setLoading(let isLoading):
+            newState.isLoading = isLoading
+        }
+        
+        return newState
+    }
 }

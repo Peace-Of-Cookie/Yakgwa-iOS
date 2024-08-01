@@ -47,7 +47,18 @@ public final class InputAppointmentInfoCoordinator: BaseCoordinator {
 
 extension InputAppointmentInfoCoordinator {
     private func routeSelectAppointmentTheme(with newAppointment: NewAppointment) {
-        let selectAppointmentThemeViewController = SelectAppointmentThemeViewController()
+        let reactor = SelectAppointmentThemeReactor(
+            fetchThemeUseCase: FetchThemeUsecase(
+                repository: FetchThemeRepository(
+                    remoteDataSource: RemoteFetchThemeDataSource()
+                )
+            )
+        )
+        
+        let selectAppointmentThemeViewController = SelectAppointmentThemeViewController(
+            reactor: reactor
+        )
+        
         if let navigationController = self.navigationController {
             let selectAppointmentThemeCoordinator = SelectAppointmentThemeCoordinator(
                 navigationController: navigationController,
