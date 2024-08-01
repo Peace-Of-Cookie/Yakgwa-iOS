@@ -40,7 +40,6 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
         view.clipsToBounds = true
         view.register(ThemeCell.self, forCellWithReuseIdentifier: ThemeCell.identifier)
         view.delegate = self
-        view.dataSource = self
         return view
     }()
     
@@ -130,26 +129,20 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
         reactor.state
             .map { $0.themes }
             .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] themes in
-                print("테마: \(themes)")
-            })
+            .bind(to: collectionView.rx.items(
+                cellIdentifier: "ThemeCell",
+                cellType: ThemeCell.self)
+            ) { index, theme, cell in
+                cell.configure(with: theme, isSelected: false)
+            }
             .disposed(by: disposeBag)
         
         // Routing
     }
 }
 
-extension SelectAppointmentThemeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThemeCell.identifier, for: indexPath) as? ThemeCell else {
-            return UICollectionViewCell()
-        }
-        return cell
-    }
+extension SelectAppointmentThemeViewController: UICollectionViewDelegate {
+
 }
 
 extension SelectAppointmentThemeViewController: YakgwaNavigationDetailDelegate {
