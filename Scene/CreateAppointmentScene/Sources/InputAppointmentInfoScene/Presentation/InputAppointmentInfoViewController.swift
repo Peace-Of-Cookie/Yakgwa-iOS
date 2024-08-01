@@ -134,8 +134,18 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        // State
+        titleTextField.rx.text
+            .map { Reactor.Action.updateTitle($0 ?? "") }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        descriptionTextView.rx.text
+            .map { Reactor.Action.updateDescription($0 ?? "") }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+    
         // Routing
         reactor.route
             .subscribe(onNext: { [weak self] router in
@@ -147,17 +157,18 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
 
 extension InputAppointmentInfoViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
-        print("didTapDetailLeftButton")
+        // print("didTapDetailLeftButton")
         self.navigationController?.popViewController(animated: true)
     }
 }
 
 extension InputAppointmentInfoViewController: YakgwaTextViewDelegate {
     public func textViewDidEndEditing(text: String) {
-        print("textViewDidEndEditing: \(text)")
+        // print("textViewDidEndEditing: \(text)")
+        
     }
     
     public func textViewDidChange(text: String) {
-        print("textViewDidChange: \(text)")
+        // print("textViewDidChange: \(text)")
     }
 }

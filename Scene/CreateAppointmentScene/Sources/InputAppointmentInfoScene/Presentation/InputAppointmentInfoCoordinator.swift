@@ -36,15 +36,15 @@ public final class InputAppointmentInfoCoordinator: BaseCoordinator {
             switch event {
             case .back:
                 print("뒤로 가기")
-            case .theme:
-                self?.routeSelectAppointmentTheme()
+            case .theme(let newAppointment):
+                self?.routeSelectAppointmentTheme(with: newAppointment)
             }
         }
     }
 }
 
 extension InputAppointmentInfoCoordinator {
-    private func routeSelectAppointmentTheme() {
+    private func routeSelectAppointmentTheme(with newAppointment: NewAppointment) {
         let selectAppointmentThemeViewController = SelectAppointmentThemeViewController()
         if let navigationController = self.navigationController {
             let selectAppointmentThemeCoordinator = SelectAppointmentThemeCoordinator(

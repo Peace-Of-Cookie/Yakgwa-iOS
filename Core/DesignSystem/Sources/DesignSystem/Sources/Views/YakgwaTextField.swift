@@ -8,6 +8,8 @@
 import UIKit
 
 import Util
+import RxSwift
+import RxCocoa
 
 final public class YakgwaTextField: UIView {
     // MARK: - Properties
@@ -103,5 +105,12 @@ extension YakgwaTextField: UITextFieldDelegate {
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         self.returnValueAction?(textField.text ?? "")
         return true
+    }
+}
+
+// Reactive Extension
+public extension Reactive where Base: YakgwaTextField {
+    var text: ControlProperty<String?> {
+        return base.textField.rx.text
     }
 }
