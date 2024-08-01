@@ -15,4 +15,10 @@ public struct NewAppointment: Equatable {
     var description: String?
     /// 시작일
     var date: Date?
+    
+    public init(title: String? = nil, description: String? = nil, date: Date? = nil) {
+        self.title = title
+        self.description = description
+        self.date = date
+    }
 }

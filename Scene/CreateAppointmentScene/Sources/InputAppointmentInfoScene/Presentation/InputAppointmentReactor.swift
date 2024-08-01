@@ -6,6 +6,7 @@
 //
 
 import CoreKit
+import Domain
 
 import ReactorKit
 

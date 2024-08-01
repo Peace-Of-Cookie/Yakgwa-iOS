@@ -30,6 +30,7 @@
 
 /* Begin PBXFileReference section */
 		460130932C40A997003B31BD /* MainScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = MainScene; sourceTree = "<group>"; };
+		4620886B2C5B4B69000630BB /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		46B12B3C2C3E19F800B969FC /* HomeScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeScene; sourceTree = "<group>"; };
 		6A005FA52C4A891100F59C16 /* DetailScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DetailScene; sourceTree = "<group>"; };
 		6A3776EC2C37CF8300D657F9 /* Yakgwa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yakgwa.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -123,6 +124,7 @@
 		6AFFBF312C3D897E007E191E /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				4620886B2C5B4B69000630BB /* Domain */,
 				6AFFBF362C3D8A06007E191E /* Local */,
 				6AFFBF352C3D89F1007E191E /* Network */,
 				6AFFBF342C3D89CE007E191E /* Util */,
