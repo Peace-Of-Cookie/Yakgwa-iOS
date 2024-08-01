@@ -20,3 +20,28 @@ enum SelectAppointmentThemeRouter {
     /// 날짜 선택 화면
     case date(NewAppointment)
 }
+
+public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThemeRouting {
+    public enum Action {
+        case viewDidAppear
+        case didTapNextButton
+    }
+    
+    public enum Mutation {
+        case fetchThemes([Theme])
+        case setLoading(Bool)
+    }
+    
+    public struct State {
+        var isLoading: Bool = false
+        var themes: [Theme] = []
+    }
+    
+    public let initialState: State = State()
+    let route: PublishSubject<SelectAppointmentThemeRouter> = PublishSubject<SelectAppointmentThemeRouter>()
+    let fetchThemeUseCase: FetchThemeUsecaseProtocol
+    
+    public init(fetchThemeUseCase: FetchThemeUsecaseProtocol) {
+        self.fetchThemeUseCase = fetchThemeUseCase
+    }
+}

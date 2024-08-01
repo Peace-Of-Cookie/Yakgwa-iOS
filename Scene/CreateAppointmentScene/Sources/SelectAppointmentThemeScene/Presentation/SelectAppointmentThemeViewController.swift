@@ -8,9 +8,12 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
 
-public final class SelectAppointmentThemeViewController: UIViewController {
+public final class SelectAppointmentThemeViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((SelectAppointmentThemeRouter) -> Void)?
     
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
@@ -47,7 +50,9 @@ public final class SelectAppointmentThemeViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: SelectAppointmentThemeReactor
+    ) {
         super.init(nibName: nil, bundle: nil)
         setUI()
     }
@@ -112,6 +117,18 @@ public final class SelectAppointmentThemeViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
+    
+    public func bind(reactor: SelectAppointmentThemeReactor) {
+        // Action
+        self.rx.viewDidAppear
+            .map { _ in Reactor.Action.viewDidAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        
+        // Routing
+    }
 }
 
 extension SelectAppointmentThemeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
@@ -131,8 +148,4 @@ extension SelectAppointmentThemeViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
         navigationController?.popViewController(animated: true)
     }
-}
-
-#Preview {
-    SelectAppointmentThemeViewController()
 }
