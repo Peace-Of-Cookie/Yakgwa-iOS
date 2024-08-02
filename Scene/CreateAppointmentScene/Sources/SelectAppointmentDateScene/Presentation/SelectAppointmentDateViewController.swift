@@ -10,14 +10,19 @@ import UIKit
 import CoreKit
 import ReactorKit
 import HorizonCalendar
+import RxCocoa
 
 public final class SelectAppointmentDateViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
     private var selectedDayRange: DayRange?
+    private let selectedDayRangeObserver = PublishRelay<DayRange?>()
     
     // Calendar properties
-    private lazy var calendar = Calendar.current
+    private lazy var calendar: Calendar = {
+        var calendar = Calendar.current
+        return calendar
+    }()
     let startDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
     let endDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())!
     
@@ -139,7 +144,20 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
     }
     
     public func bind(reactor: SelectAppointmentDateReactor) {
-        
+        // Action
+        selectedDayRangeObserver
+            .map { dayRange -> SelectAppointmentDateReactor.Action in
+                guard let dayRange else { return .selectDateRange(nil) }
+                let calendar = Calendar.current
+                guard
+                    let lowerBound = calendar.date(from: dayRange.lowerBound.components),
+                    let upperBound = calendar.date(from: dayRange.upperBound.components)
+                else { return .selectDateRange(nil) }
+                
+                return .selectDateRange([lowerBound...upperBound])
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
     
     private func changeMode(state: YakgwaSwitchViewState) {
@@ -183,7 +201,7 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
         let dateRanges: Set<ClosedRange<Date>>
         let selectedDayRange = selectedDayRange
         
-        let calendar = Calendar.current
+        let calendar = self.calendar
         
         if let selectedDayRange,
            let lowerBound = calendar.date(from: selectedDayRange.lowerBound.components),
@@ -288,11 +306,9 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
                 existingDayRange: &self.selectedDayRange
             )
             
-            // self.selectedDayRangeObserver.accept(self.selectedDayRange)
+            self.selectedDayRangeObserver.accept(self.selectedDayRange)
             
             self.calendarView.setContent(self.makeContent())
-            
-            print("selectedDayRange: \(self.selectedDayRange)")
         }
     }
 }

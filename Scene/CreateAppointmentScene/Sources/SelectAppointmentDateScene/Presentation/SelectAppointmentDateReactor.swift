@@ -9,6 +9,7 @@ import CoreKit
 
 import ReactorKit
 import Domain
+import Foundation
 
 protocol SelectAppointmentDateRouting {
     var route: PublishSubject<SelectAppointmentDateRouter> { get }
@@ -25,11 +26,12 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
     
     
     public enum Action {
-        
+        case selectDateRange(Set<ClosedRange<Date>>?)
     }
     
     public enum Mutation {
-        
+        case updateDateRange(Set<ClosedRange<Date>>?)
+        case showPopUp(String)
     }
     
     public struct State { 
@@ -46,5 +48,19 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
         newAppointment: NewAppointment
     ) {
         self.newAppointment = newAppointment
+    }
+    
+    public func mutate(action: Action) -> Observable<Mutation> {
+        switch action {
+        case .selectDateRange(let dateRange):
+            guard let dateRange = dateRange else {
+                return .just(.showPopUp("날짜를 선택해주세요"))
+            }
+            guard let startDate = dateRange.first?.lowerBound else { return .empty() }
+            guard let endDate = dateRange.first?.upperBound else { return .empty() }
+            
+            newAppointment.setVoteDate(startDate: startDate, endDate: endDate)
+            return .empty()
+        }
     }
 }

@@ -33,4 +33,9 @@ public extension NewAppointment {
     mutating func setThemeId(_ themeId: Int) {
         self.themeId = themeId
     }
+    
+    mutating func setVoteDate(startDate: Date, endDate: Date) {
+        self.startDate = startDate
+        self.endDate = endDate
+    }
 }
