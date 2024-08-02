@@ -17,6 +17,7 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
     private var selectedDayRange: DayRange?
     private let selectedDayRangeObserver = PublishRelay<DayRange?>()
+    private let modeObserver = BehaviorRelay<YakgwaSwitchViewState>(value: .first)
     
     // Calendar properties
     private lazy var calendar: Calendar = {
@@ -156,6 +157,11 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
                 
                 return .selectDateRange([lowerBound...upperBound])
             }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        modeObserver
+            .map { Reactor.Action.changeMode($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
     }
@@ -324,5 +330,6 @@ extension SelectAppointmentDateViewController: YakgwaSwitchViewDelegate {
     public func yakgwaSwitchView(state: YakgwaSwitchViewState) {
         print("yakgwaSwitchMode: \(state)")
         self.changeMode(state: state)
+        self.modeObserver.accept(state)
     }
 }

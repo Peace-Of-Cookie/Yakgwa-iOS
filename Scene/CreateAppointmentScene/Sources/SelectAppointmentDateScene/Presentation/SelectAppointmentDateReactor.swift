@@ -27,15 +27,17 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
     
     public enum Action {
         case selectDateRange(Set<ClosedRange<Date>>?)
+        case changeMode(YakgwaSwitchViewState)
     }
     
     public enum Mutation {
         case updateDateRange(Set<ClosedRange<Date>>?)
+        case updateMode(YakgwaSwitchViewState)
         case showPopUp(String)
     }
     
     public struct State { 
-        
+        var mode: YakgwaSwitchViewState = .first
     }
     
     // MARK: - Properties
@@ -61,6 +63,17 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
             
             newAppointment.setVoteDate(startDate: startDate, endDate: endDate)
             return .empty()
+        
+        case .changeMode(let mode):
+            if mode == .first {
+                // 투표 후보 입력 모드
+                newAppointment.setDateToVote()
+            } else {
+                // 직접 입력 모드
+                newAppointment.setDateToDirectInput()
+            }
+            print("엔터티 결과: \(newAppointment)")
+            return .just(.updateMode(mode))
         }
     }
 }

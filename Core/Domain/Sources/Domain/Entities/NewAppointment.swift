@@ -38,4 +38,13 @@ public extension NewAppointment {
         self.startDate = startDate
         self.endDate = endDate
     }
+    
+    mutating func setDateToDirectInput() {
+        self.startDate = nil
+        self.endDate = nil
+    }
+    
+    mutating func setDateToVote() {
+        self.date = nil
+    }
 }
