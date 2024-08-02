@@ -164,6 +164,18 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
             .map { Reactor.Action.changeMode($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+        // State
+        reactor.state
+            .map { $0.mode }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] mode in
+                guard let self = self else { return }
+                self.selectedDayRange = nil
+                self.calendarView.setContent(self.makeContent())
+            })
+            .disposed(by: disposeBag)
+        
     }
     
     private func changeMode(state: YakgwaSwitchViewState) {

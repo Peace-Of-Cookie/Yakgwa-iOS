@@ -76,4 +76,17 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
             return .just(.updateMode(mode))
         }
     }
+    
+    public func reduce(state: State, mutation: Mutation) -> State {
+        var newState = state
+        
+        switch mutation {
+        case .updateMode(let mode):
+            newState.mode = mode
+        default:
+            break
+        }
+        
+        return newState
+    }
 }
