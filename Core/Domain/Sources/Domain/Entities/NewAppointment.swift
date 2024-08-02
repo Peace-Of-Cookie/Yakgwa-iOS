@@ -15,7 +15,11 @@ public struct NewAppointment: Equatable {
     var description: String?
     /// 테마 ID
     var themeId: Int?
-    /// 시작일
+    /// (투표) 시작일
+    var startDate: Date?
+    /// (투표) 종료일
+    var endDate: Date?
+    /// 직접 입력 일자
     var date: Date?
     
     public init(title: String? = nil, description: String? = nil, date: Date? = nil) {

@@ -16,9 +16,11 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
     public var disposeBag: DisposeBag = DisposeBag()
     private var selectedDayRange: DayRange?
     
+    // Calendar properties
     private lazy var calendar = Calendar.current
-    let startDate = Calendar.current.date(byAdding: .year, value: 0, to: Date())!
-    let endDate = Calendar.current.date(byAdding: .year, value: 2, to: Date())!
+    let startDate = Calendar.current.date(byAdding: .day, value: -1, to: Date())!
+    let endDate = Calendar.current.date(byAdding: .year, value: 1, to: Date())!
+    
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
         let nav = YakgwaNavigationDetailBar()
@@ -264,7 +266,7 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
         }
         // Day Range
         .dayRangeItemProvider(for: dateRanges) { dayRangeLayoutContext in
-            DayRangeView.calendarItemModel(
+            DayRangeIndicatorView.calendarItemModel(
               invariantViewProperties: .init(),
               viewModel: .init(
                 framesOfDaysToHighlight: dayRangeLayoutContext.daysAndFrames.map { $0.frame })
@@ -289,6 +291,8 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
             // self.selectedDayRangeObserver.accept(self.selectedDayRange)
             
             self.calendarView.setContent(self.makeContent())
+            
+            print("selectedDayRange: \(self.selectedDayRange)")
         }
     }
 }
