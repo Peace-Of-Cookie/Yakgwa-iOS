@@ -9,7 +9,9 @@ import UIKit
 
 import CoreKit
 import Util
-// import SelectAppointmentDateScene
+import Domain
+
+import SelectAppointmentDateScene
 
 public final class SelectAppointmentThemeCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -32,6 +34,33 @@ public final class SelectAppointmentThemeCoordinator: BaseCoordinator {
     
     // MARK: - Private
     private func setRoute() {
+        self.viewController.sendRoutingEvent = { [weak self] event in
+            switch event {
+            case .back:
+                print("뒤로 가기")
+            case .date(let newAppointment):
+                self?.routeToSelectAppointmentDateScene(with: newAppointment)
+            }
+        }
+    }
+}
+
+extension SelectAppointmentThemeCoordinator {
+    private func routeToSelectAppointmentDateScene(with newAppointment: NewAppointment) {
+        let reactor = SelectAppointmentDateReactor(newAppointment: newAppointment)
+        let selectAppointmentDateViewController = SelectAppointmentDateViewController(reactor: reactor)
+        if let navigationController = self.navigationController {
+            let selectAppointmentDateCoordinator = SelectAppointmentDateCoordinator(
+                navigationController: navigationController,
+                viewController: selectAppointmentDateViewController
+            )
+            navigationController.delegate = self
         
+            selectAppointmentDateCoordinator.parentCoordinator = self
+            selectAppointmentDateCoordinator.start()
+            addChildCoordinator(selectAppointmentDateCoordinator)
+        }
+        
+        selectAppointmentDateViewController.tabBarController?.tabBar.isHidden = true
     }
 }

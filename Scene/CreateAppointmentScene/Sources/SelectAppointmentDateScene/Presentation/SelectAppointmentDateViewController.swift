@@ -8,10 +8,12 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
 import HorizonCalendar
 
-public final class SelectAppointmentDateViewController: UIViewController {
+public final class SelectAppointmentDateViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
     private var selectedDayRange: DayRange?
     
     private lazy var calendar = Calendar.current
@@ -75,7 +77,10 @@ public final class SelectAppointmentDateViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: SelectAppointmentDateReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
         
     }
@@ -129,6 +134,10 @@ public final class SelectAppointmentDateViewController: UIViewController {
             $0.top.equalTo(titleStack.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
         }
+    }
+    
+    public func bind(reactor: SelectAppointmentDateReactor) {
+        
     }
     
     private func changeMode(state: YakgwaSwitchViewState) {
@@ -296,8 +305,4 @@ extension SelectAppointmentDateViewController: YakgwaSwitchViewDelegate {
         print("yakgwaSwitchMode: \(state)")
         self.changeMode(state: state)
     }
-}
-
-#Preview {
-    SelectAppointmentDateViewController()
 }

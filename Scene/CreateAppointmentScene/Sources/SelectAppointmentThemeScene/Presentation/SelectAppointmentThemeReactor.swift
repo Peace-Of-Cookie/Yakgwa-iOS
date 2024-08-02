@@ -69,6 +69,7 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
                 .asObservable()
             
         case .didTapNextButton:
+            route.onNext(.date(newAppointment))
             return Observable.empty()
             
         case .selectTheme(let index):

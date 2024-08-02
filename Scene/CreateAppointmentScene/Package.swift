@@ -38,7 +38,8 @@ let package = Package(
             name: "SelectAppointmentThemeScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
-                .product(name: "Domain", package: "Domain")
+                .product(name: "Domain", package: "Domain"),
+                "SelectAppointmentDateScene"
                 
             ]
         ),

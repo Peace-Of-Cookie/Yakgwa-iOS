@@ -130,6 +130,11 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapNextButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .map { $0.themes }
@@ -153,6 +158,11 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             .disposed(by: disposeBag)
         
         // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
