@@ -13,6 +13,8 @@ public struct NewAppointment: Equatable {
     var title: String?
     /// 설명
     var description: String?
+    /// 테마 ID
+    var themeId: Int?
     /// 시작일
     var date: Date?
     
@@ -20,5 +22,11 @@ public struct NewAppointment: Equatable {
         self.title = title
         self.description = description
         self.date = date
+    }
+}
+
+public extension NewAppointment {
+    mutating func setThemeId(_ themeId: Int) {
+        self.themeId = themeId
     }
 }

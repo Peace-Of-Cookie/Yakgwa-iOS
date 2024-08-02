@@ -25,26 +25,41 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
     public enum Action {
         case viewDidAppear
         case didTapNextButton
+        case selectTheme(Int)
     }
     
     public enum Mutation {
         case fetchThemes([Theme])
+        case setTheme(Int)
         case setLoading(Bool)
     }
     
     public struct State {
         var isLoading: Bool = false
+        var selectedTheme: Int?
         var themes: [Theme] = []
     }
     
-    public let initialState: State = State()
+    // MARK: - Properties
+    public let initialState: State
     let route: PublishSubject<SelectAppointmentThemeRouter> = PublishSubject<SelectAppointmentThemeRouter>()
-    let fetchThemeUseCase: FetchThemeUsecaseProtocol
+    private let fetchThemeUseCase: FetchThemeUsecaseProtocol
     
-    public init(fetchThemeUseCase: FetchThemeUsecaseProtocol) {
+    private var newAppointment: NewAppointment
+    
+    // MARK: - Initializers
+    public init(
+        fetchThemeUseCase: FetchThemeUsecaseProtocol,
+        newAppointment: NewAppointment
+    ) {
         self.fetchThemeUseCase = fetchThemeUseCase
+        
+        self.initialState = State()
+        
+        self.newAppointment = newAppointment
     }
     
+    // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .viewDidAppear:
@@ -55,9 +70,16 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
             
         case .didTapNextButton:
             return Observable.empty()
+            
+        case .selectTheme(let index):
+            print("테마 선택: \(index)")
+            newAppointment.setThemeId(currentState.themes[index].id)
+            print("엔터티 확인 : \(newAppointment)")
+            return Observable.just(Mutation.setTheme(index))
         }
     }
     
+    // MARK: - Reduce
     public func reduce(state: State, mutation: Mutation) -> State {
         var newState = state
         
@@ -66,6 +88,8 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
             newState.themes = themes
         case .setLoading(let isLoading):
             newState.isLoading = isLoading
+        case .setTheme(let index):
+            newState.selectedTheme = index
         }
         
         return newState

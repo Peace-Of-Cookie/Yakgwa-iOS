@@ -125,6 +125,11 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.collectionView.rx.itemSelected
+            .map { Reactor.Action.selectTheme($0.item) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .map { $0.themes }
@@ -133,8 +138,18 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
                 cellIdentifier: "ThemeCell",
                 cellType: ThemeCell.self)
             ) { index, theme, cell in
-                cell.configure(with: theme, isSelected: false)
+                let isSelected = (index == reactor.currentState.selectedTheme)
+                cell.configure(with: theme, isSelected: isSelected)
             }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.selectedTheme }
+            .distinctUntilChanged()
+            .asDriver(onErrorJustReturn: nil)
+            .drive(onNext: { [weak self] _ in
+                self?.collectionView.reloadData()
+            })
             .disposed(by: disposeBag)
         
         // Routing

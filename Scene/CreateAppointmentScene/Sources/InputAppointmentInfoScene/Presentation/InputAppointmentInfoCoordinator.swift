@@ -52,7 +52,8 @@ extension InputAppointmentInfoCoordinator {
                 repository: FetchThemeRepository(
                     remoteDataSource: RemoteFetchThemeDataSource()
                 )
-            )
+            ), 
+            newAppointment: newAppointment
         )
         
         let selectAppointmentThemeViewController = SelectAppointmentThemeViewController(
