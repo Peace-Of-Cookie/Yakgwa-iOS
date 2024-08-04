@@ -79,8 +79,8 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
         return textField
     }()
     
-    private lazy var timeSearchTextField: YakgwaSearchTextField = {
-        let textField = YakgwaSearchTextField(placeholder: "시간를 입력해주세요")
+    private lazy var timeSearchTextField: YakgwaSearchView = {
+        let textField = YakgwaSearchView(placeholder: "시간를 입력해주세요")
         return textField
     }()
     
@@ -195,6 +195,7 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
             self.view.addSubview(dateSearchTextField)
             dateSearchTextField.snp.makeConstraints {
                 $0.top.equalTo(titleStack.snp.bottom).offset(8)
+                $0.height.equalTo(48)
                 $0.leading.equalToSuperview().offset(16)
                 $0.centerX.equalToSuperview()
             }
@@ -343,5 +344,58 @@ extension SelectAppointmentDateViewController: YakgwaSwitchViewDelegate {
         print("yakgwaSwitchMode: \(state)")
         self.changeMode(state: state)
         self.modeObserver.accept(state)
+    }
+}
+
+extension SelectAppointmentDateViewController {
+    enum PickerSheetType {
+        case date
+        case time
+    }
+    private func setPickerSheet(type: PickerSheetType) {
+        let pickerSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        
+        let datePicker = UIDatePicker()
+        
+        datePicker.preferredDatePickerStyle = .wheels
+        datePicker.locale = Locale(identifier: "ko_KR")
+        
+        switch type {
+        case .date:
+            datePicker.datePickerMode = .date
+        case .time:
+            datePicker.datePickerMode = .time
+            datePicker.minuteInterval = 5
+        }
+        
+        let dateFormatter = DateFormatter()
+        
+        let doneAction = UIAlertAction(title: "확인", style: .default) { _ in
+            switch type {
+            case .date:
+                dateFormatter.dateFormat = "yyyy-MM-dd"
+//                dateSearchTextField.rx.
+//                self.daySelectionView.firstLabel.text = dateFormatter.string(from: datePicker.date)
+//                self.daySelectionView.firstLabel.textColor = .neutralBlack
+//                self.reactor?.action.onNext(.updateStartDate(datePicker.date))
+            case .time:
+                dateFormatter.dateFormat = "HH:mm"
+//                self.timeSelectionView.firstLabel.text = dateFormatter.string(from: datePicker.date)
+//                self.timeSelectionView.firstLabel.textColor = .neutralBlack
+//                self.reactor?.action.onNext(.updateStartTime(datePicker.date))
+            }
+        }
+        
+        let cancelAction = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        
+        pickerSheet.addAction(doneAction)
+        pickerSheet.addAction(cancelAction)
+        
+        let vc = UIViewController()
+        vc.view = datePicker
+        
+        pickerSheet.setValue(vc, forKey: "contentViewController")
+        
+        self.present(pickerSheet, animated: true, completion: nil)
     }
 }

@@ -25,6 +25,7 @@
 		6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AAA08AB2C3EB45D007F723E /* SplashScene */; };
 		6AC58F572C4BBF000080EFC6 /* VoteScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AC58F562C4BBF000080EFC6 /* VoteScene */; };
 		6ADDE6DD2C4786B300DA0246 /* AddAppointmentLocationScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6ADDE6DC2C4786B300DA0246 /* AddAppointmentLocationScene */; };
+		6AE36CB32C5FAAD6002021E9 /* DesignSystem in Frameworks */ = {isa = PBXBuildFile; productRef = 6AE36CB22C5FAAD6002021E9 /* DesignSystem */; };
 		6AE6D8742C4DF0340061B8CC /* MyPageScene in Frameworks */ = {isa = PBXBuildFile; productRef = 6AE6D8732C4DF0340061B8CC /* MyPageScene */; };
 /* End PBXBuildFile section */
 
@@ -73,6 +74,7 @@
 				461A87702C3E20D8007AEEAF /* HomeScene in Frameworks */,
 				46F2E3D52C3E1C100033530C /* SceneKit in Frameworks */,
 				6AAA08AC2C3EB45D007F723E /* SplashScene in Frameworks */,
+				6AE36CB32C5FAAD6002021E9 /* DesignSystem in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -179,6 +181,7 @@
 				6A005FA62C4A8A0400F59C16 /* DetailScene */,
 				6AC58F562C4BBF000080EFC6 /* VoteScene */,
 				6AE6D8732C4DF0340061B8CC /* MyPageScene */,
+				6AE36CB22C5FAAD6002021E9 /* DesignSystem */,
 			);
 			productName = Yakgwa;
 			productReference = 6A3776EC2C37CF8300D657F9 /* Yakgwa.app */;
@@ -498,6 +501,10 @@
 		6ADDE6DC2C4786B300DA0246 /* AddAppointmentLocationScene */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = AddAppointmentLocationScene;
+		};
+		6AE36CB22C5FAAD6002021E9 /* DesignSystem */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = DesignSystem;
 		};
 		6AE6D8732C4DF0340061B8CC /* MyPageScene */ = {
 			isa = XCSwiftPackageProductDependency;
