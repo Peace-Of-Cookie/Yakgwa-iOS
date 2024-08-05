@@ -15,6 +15,8 @@ import RxCocoa
 public final class SelectAppointmentDateViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((SelectAppointmentDateRouter) -> Void)?
+    
     private var selectedDayRange: DayRange?
     private let selectedDayRangeObserver = PublishRelay<DayRange?>()
     private let modeObserver = BehaviorRelay<YakgwaSwitchViewState>(value: .first)
@@ -175,6 +177,11 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapNextButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .map { $0.mode }
@@ -195,6 +202,13 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
             .compactMap { $0 }
             .subscribe(onNext: { [weak self] type in
                 self?.setPickerSheet(type: type)
+            })
+            .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
             })
             .disposed(by: disposeBag)
     }

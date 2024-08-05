@@ -30,6 +30,7 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
         case didTapDateInputField(PickerSheetType)
         case setAppointmentDate(Date)
         case setAppointmentTime(Date)
+        case didTapNextButton
     }
     
     public enum Mutation {
@@ -88,6 +89,10 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
         case .setAppointmentTime(let time):
             newAppointment.setTime(time)
             return .empty()
+            
+        case .didTapNextButton:
+            route.onNext(.location(newAppointment))
+            return Observable.empty()
         }
     }
     

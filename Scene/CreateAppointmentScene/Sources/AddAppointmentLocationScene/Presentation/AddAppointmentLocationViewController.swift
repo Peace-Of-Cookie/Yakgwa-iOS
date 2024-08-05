@@ -9,6 +9,7 @@ import UIKit
 
 import CoreKit
 import ReactorKit
+import Domain
 
 public final class AddAppointmentLocationViewController: UIViewController, View {
     // MARK: - Properties
@@ -176,5 +177,5 @@ extension AddAppointmentLocationViewController: YakgwaSwitchViewDelegate {
 }
 
 #Preview {
-    AddAppointmentLocationViewController(reactor: AddAppointmentLocationReactor())
+    AddAppointmentLocationViewController(reactor: AddAppointmentLocationReactor(newAppointment: NewAppointment()))
 }

@@ -55,7 +55,8 @@ let package = Package(
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
                 .product(name: "Domain", package: "Domain"),
-                .product(name: "HorizonCalendar", package: "HorizonCalendar")
+                .product(name: "HorizonCalendar", package: "HorizonCalendar"),
+                "AddAppointmentLocationScene"
             ]
         ),
         .testTarget(

@@ -38,6 +38,12 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     public let initialState: State = State()
     let route: PublishSubject<AddAppointmentLocationRouter> = PublishSubject<AddAppointmentLocationRouter>()
     
+    private var newAppointment: NewAppointment
+    
     // MARK: - Initializers
-    public init() { }
+    public init(
+        newAppointment: NewAppointment
+    ) {
+        self.newAppointment = newAppointment
+    }
 }
