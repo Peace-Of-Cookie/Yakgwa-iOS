@@ -390,11 +390,15 @@ extension SelectAppointmentDateViewController {
         let doneAction = UIAlertAction(title: "확인", style: .default) { _ in
             switch type {
             case .date:
-                dateFormatter.dateFormat = "yyyy-MM-dd"
+                dateFormatter.locale = Locale(identifier: "ko_KR")
+                dateFormatter.dateFormat = "yyyy년 MM월 dd일"
                 self.dateSearchTextField.setTextField(dateFormatter.string(from: datePicker.date))
                 self.reactor?.action.onNext(.setAppointmentDate(datePicker.date))
             case .time:
-                dateFormatter.dateFormat = "HH:mm"
+                dateFormatter.locale = Locale(identifier: "ko_KR")
+                dateFormatter.amSymbol = "오전"
+                dateFormatter.pmSymbol = "오후"
+                dateFormatter.dateFormat = "a hh시 mm분"
                 self.timeSearchTextField.setTextField(dateFormatter.string(from: datePicker.date))
                 self.reactor?.action.onNext(.setAppointmentTime(datePicker.date))
             }
