@@ -24,20 +24,24 @@ enum SelectAppointmentDateRouter {
 
 public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRouting {
     
-    
     public enum Action {
         case selectDateRange(Set<ClosedRange<Date>>?)
         case changeMode(YakgwaSwitchViewState)
+        case didTapDateInputField(PickerSheetType)
+        case setAppointmentDate(Date)
+        case setAppointmentTime(Date)
     }
     
     public enum Mutation {
         case updateDateRange(Set<ClosedRange<Date>>?)
         case updateMode(YakgwaSwitchViewState)
         case showPopUp(String)
+        case showPickerSheet(PickerSheetType)
     }
     
     public struct State { 
         var mode: YakgwaSwitchViewState = .first
+        @Pulse var pickerSheetShown: PickerSheetType?
     }
     
     // MARK: - Properties
@@ -72,8 +76,18 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
                 // 직접 입력 모드
                 newAppointment.setDateToDirectInput()
             }
-            print("엔터티 결과: \(newAppointment)")
             return .just(.updateMode(mode))
+
+        case .didTapDateInputField(let type):
+            return .just(.showPickerSheet(type))
+            
+        case .setAppointmentDate(let date):
+            newAppointment.setDate(date)
+            return .empty()
+        
+        case .setAppointmentTime(let time):
+            newAppointment.setTime(time)
+            return .empty()
         }
     }
     
@@ -83,6 +97,8 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
         switch mutation {
         case .updateMode(let mode):
             newState.mode = mode
+        case .showPickerSheet(let type):
+            newState.pickerSheetShown = type
         default:
             break
         }

@@ -21,6 +21,8 @@ public struct NewAppointment: Equatable {
     var endDate: Date?
     /// 직접 입력 일자
     var date: Date?
+    /// 직접 입력 시간
+    var time: Date?
     
     public init(title: String? = nil, description: String? = nil, date: Date? = nil) {
         self.title = title
@@ -46,5 +48,14 @@ public extension NewAppointment {
     
     mutating func setDateToVote() {
         self.date = nil
+        self.time = nil
+    }
+    
+    mutating func setDate(_ date: Date) {
+        self.date = date
+    }
+    
+    mutating func setTime(_ time: Date) {
+        self.time = time
     }
 }

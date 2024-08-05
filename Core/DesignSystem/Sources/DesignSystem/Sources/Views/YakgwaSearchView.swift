@@ -8,6 +8,8 @@
 import UIKit
 
 import Util
+import RxSwift
+import RxCocoa
 
 public final class YakgwaSearchView: UIView {
     // MARK: - Properties
@@ -80,5 +82,25 @@ public final class YakgwaSearchView: UIView {
             $0.centerY.equalToSuperview()
             $0.width.height.equalTo(20)
         }
+    }
+    
+    // MARK: - Public
+    public func setTextField(_ text: String) {
+        self.titleLabel.text = text
+        self.titleLabel.textColor = .neutralBlack
+    }
+    
+    public func setPlaceHolder(with text: String) {
+        self.titleLabel.text = text
+        self.titleLabel.textColor = .neutral500
+    }
+}
+
+public extension Reactive where Base: YakgwaSearchView {
+    var tap: ControlEvent<Void> {
+        let tapGesture = UITapGestureRecognizer()
+        base.addGestureRecognizer(tapGesture)
+        base.isUserInteractionEnabled = true
+        return ControlEvent(events: tapGesture.rx.event.map { _ in })
     }
 }

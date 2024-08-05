@@ -74,8 +74,8 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
         return calendarView
     }()
     
-    private lazy var dateSearchTextField: YakgwaSearchTextField = {
-        let textField = YakgwaSearchTextField(placeholder: "날짜를 입력해주세요")
+    private lazy var dateSearchTextField: YakgwaSearchView = {
+        let textField = YakgwaSearchView(placeholder: "날짜를 입력해주세요")
         return textField
     }()
     
@@ -165,17 +165,38 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        dateSearchTextField.rx.tap
+            .map { Reactor.Action.didTapDateInputField(.date) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        timeSearchTextField.rx.tap
+            .map { Reactor.Action.didTapDateInputField(.time) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .map { $0.mode }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] mode in
                 guard let self = self else { return }
+                // Calendar 초기화
                 self.selectedDayRange = nil
                 self.calendarView.setContent(self.makeContent())
+                
+                // 직접 입력 필드 초기화
+                self.dateSearchTextField.setPlaceHolder(with: "날짜를 입력해주세요")
+                self.timeSearchTextField.setPlaceHolder(with: "시간을 입력해주세요")
             })
             .disposed(by: disposeBag)
         
+        reactor.pulse(\.$pickerSheetShown)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] type in
+                self?.setPickerSheet(type: type)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func changeMode(state: YakgwaSwitchViewState) {
@@ -348,10 +369,6 @@ extension SelectAppointmentDateViewController: YakgwaSwitchViewDelegate {
 }
 
 extension SelectAppointmentDateViewController {
-    enum PickerSheetType {
-        case date
-        case time
-    }
     private func setPickerSheet(type: PickerSheetType) {
         let pickerSheet = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
         
@@ -374,15 +391,12 @@ extension SelectAppointmentDateViewController {
             switch type {
             case .date:
                 dateFormatter.dateFormat = "yyyy-MM-dd"
-//                dateSearchTextField.rx.
-//                self.daySelectionView.firstLabel.text = dateFormatter.string(from: datePicker.date)
-//                self.daySelectionView.firstLabel.textColor = .neutralBlack
-//                self.reactor?.action.onNext(.updateStartDate(datePicker.date))
+                self.dateSearchTextField.setTextField(dateFormatter.string(from: datePicker.date))
+                self.reactor?.action.onNext(.setAppointmentDate(datePicker.date))
             case .time:
                 dateFormatter.dateFormat = "HH:mm"
-//                self.timeSelectionView.firstLabel.text = dateFormatter.string(from: datePicker.date)
-//                self.timeSelectionView.firstLabel.textColor = .neutralBlack
-//                self.reactor?.action.onNext(.updateStartTime(datePicker.date))
+                self.timeSearchTextField.setTextField(dateFormatter.string(from: datePicker.date))
+                self.reactor?.action.onNext(.setAppointmentTime(datePicker.date))
             }
         }
         
@@ -398,4 +412,9 @@ extension SelectAppointmentDateViewController {
         
         self.present(pickerSheet, animated: true, completion: nil)
     }
+}
+
+public enum PickerSheetType {
+    case date
+    case time
 }
