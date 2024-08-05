@@ -8,9 +8,12 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
 
-public final class AddAppointmentLocationViewController: UIViewController {
+public final class AddAppointmentLocationViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((AddAppointmentLocationRouter) -> Void)?
     
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
@@ -67,7 +70,10 @@ public final class AddAppointmentLocationViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: AddAppointmentLocationReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
         
         setUI()
@@ -130,6 +136,10 @@ public final class AddAppointmentLocationViewController: UIViewController {
         }
     }
     
+    public func bind(reactor: AddAppointmentLocationReactor) {
+        
+    }
+    
     private func addLocationDemo() {
         let locationView = LocationView(name: "마곡")
         let locationView2 = LocationView(name: "발산")
@@ -166,5 +176,5 @@ extension AddAppointmentLocationViewController: YakgwaSwitchViewDelegate {
 }
 
 #Preview {
-    AddAppointmentLocationViewController()
+    AddAppointmentLocationViewController(reactor: AddAppointmentLocationReactor())
 }
