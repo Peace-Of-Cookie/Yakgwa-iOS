@@ -59,7 +59,7 @@ public class KakaoLoginService: LoginServiceType {
                                         
                                         AccessTokenManager.saveAccessToken(token: tokenSet.accessToken)
                                         AccessTokenManager.saveRefreshToken(token: tokenSet.refreshToken)
-                                        
+                                        print("서버에 로그인을 성공했습니다.\(loginResponse)")
                                         observer.onNext(true)
                                         observer.onCompleted()
                                     } catch {

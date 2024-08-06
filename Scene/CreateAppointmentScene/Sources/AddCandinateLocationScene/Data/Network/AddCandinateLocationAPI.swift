@@ -23,7 +23,7 @@ extension AddCandinateLocationAPI: YakgwaAPI {
     public var urlPath: String {
         switch self {
         case .fetchLocations(let query):
-            return "/search?q=\(query)"
+            return "/search"
         }
     }
     
@@ -52,8 +52,8 @@ extension AddCandinateLocationAPI: YakgwaAPI {
     
     public var task: Task {
         switch self {
-        case .fetchLocations:
-            return .requestPlain
+        case .fetchLocations(let query):
+            return .requestParameters(parameters: ["search": query], encoding: URLEncoding.queryString)
         }
     }
     

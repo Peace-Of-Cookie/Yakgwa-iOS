@@ -26,7 +26,7 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
     }
     
     public enum Mutation {
-        case editingQuery(String)
+        case fetchLocations([Location])
     }
     
     public struct State {
@@ -42,5 +42,28 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
         fetchLocationUsecase: FetchLocationsUsecaseProtocol
     ) {
         self.fetchLocationUsecase = fetchLocationUsecase
+    }
+    
+    public func mutate(action: Action) -> Observable<Mutation> {
+        switch action {
+        case .editQuery(let query):
+            return fetchLocationUsecase
+                .execute(query: query)
+                .map { Mutation.fetchLocations($0) }
+                .asObservable()
+        case .didTapNextButton:
+            route.onNext(.back)
+            return Observable.empty()
+
+        }
+    }
+    
+    public func reduce(state: State, mutation: Mutation) -> State {
+        var newState = state
+        switch mutation {
+        case .fetchLocations(let locations):
+            newState.searchResults = locations
+        }
+        return newState
     }
 }

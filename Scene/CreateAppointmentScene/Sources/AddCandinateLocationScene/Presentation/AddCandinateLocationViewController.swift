@@ -91,8 +91,19 @@ public final class AddCandinateLocationViewController: UIViewController, View {
     
     public func bind(reactor: AddCandinateLocationReactor) {
         // Action
+        searchTextField.rx.text
+            .orEmpty
+            .map { Reactor.Action.editQuery($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
         // State
+        reactor.state
+            .map { $0.searchResults }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] results in
+                print("결과:\(results)")
+            }).disposed(by: disposeBag)
         
         // Routing
     }
