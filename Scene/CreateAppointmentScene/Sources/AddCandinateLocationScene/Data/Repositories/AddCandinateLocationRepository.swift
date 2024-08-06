@@ -1,15 +1,15 @@
 //
-//  AddAppointmentLocationRepository.swift
+//  AddCandinateLocationRepository.swift
 //
 //
-//  Created by Kim Dongjoo on 8/5/24.
+//  Created by Kim Dongjoo on 8/6/24.
 //
 
 import Network
 import RxSwift
 import Domain
 
-public final class AddAppointmentLocationRepository: FetchLocationRepositoryProtocol {
+public final class AddCandinateLocationRepository: FetchLocationRepositoryProtocol {
     private let remoteDataSource: RemoteFetchLocationsDataSourceProtocol
     
     public init(remoteDataSource: RemoteFetchLocationsDataSourceProtocol) {
@@ -22,3 +22,4 @@ public final class AddAppointmentLocationRepository: FetchLocationRepositoryProt
             .map { $0.toDomain() }
     }
 }
+

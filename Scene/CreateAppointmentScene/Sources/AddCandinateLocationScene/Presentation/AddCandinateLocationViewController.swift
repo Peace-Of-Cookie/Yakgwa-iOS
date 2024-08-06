@@ -104,9 +104,3 @@ extension AddCandinateLocationViewController: YakgwaNavigationDetailDelegate {
         self.navigationController?.popViewController(animated: true)
     }
 }
-
-#Preview {
-    AddCandinateLocationViewController(
-        reactor: AddCandinateLocationReactor()
-    )
-}

@@ -2,7 +2,7 @@
 //  FetchLocationsUsecase.swift
 //
 //
-//  Created by Kim Dongjoo on 8/5/24.
+//  Created by Kim Dongjoo on 8/6/24.
 //
 
 import RxSwift
@@ -19,3 +19,4 @@ public final class FetchLocationsUsecase: FetchLocationsUsecaseProtocol {
         return repository.fetchLocations(query: query)
     }
 }
+

@@ -49,7 +49,12 @@ public final class AddAppointmentLocationCoordinator: BaseCoordinator {
 
 extension AddAppointmentLocationCoordinator {
     private func routeToAddCandinateLocationScene() {
-        let reactor = AddCandinateLocationReactor()
+        let fetchLocationUsecase: FetchLocationsUsecaseProtocol = FetchLocationsUsecase(
+            repository: AddCandinateLocationRepository(
+                remoteDataSource: RemoteFetchLocationsDataSource()
+            )
+        )
+        let reactor = AddCandinateLocationReactor(fetchLocationUsecase: fetchLocationUsecase)
         let viewController = AddCandinateLocationViewController(reactor: reactor)
         
         if let navigationController = self.navigationController {

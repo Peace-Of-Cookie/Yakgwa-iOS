@@ -36,5 +36,11 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
     public let initialState: State = State()
     let route: PublishSubject<AddCandinateLocationRouter> = PublishSubject<AddCandinateLocationRouter>()
     
-    public init() { }
+    let fetchLocationUsecase: FetchLocationsUsecaseProtocol
+    
+    public init(
+        fetchLocationUsecase: FetchLocationsUsecaseProtocol
+    ) {
+        self.fetchLocationUsecase = fetchLocationUsecase
+    }
 }

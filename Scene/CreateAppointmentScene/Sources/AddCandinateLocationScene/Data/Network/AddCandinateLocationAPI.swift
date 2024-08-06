@@ -1,18 +1,18 @@
 //
-//  AddAppointmentLocationAPI.swift
+//  AddCandinateLocationAPI.swift
 //
 //
-//  Created by Kim Dongjoo on 8/5/24.
+//  Created by Kim Dongjoo on 8/6/24.
 //
 
 import Network
 import Local
 
-public enum AddAppointmentLocationAPI {
+public enum AddCandinateLocationAPI {
     case fetchLocations(String)
 }
 
-extension AddAppointmentLocationAPI: YakgwaAPI {
+extension AddCandinateLocationAPI: YakgwaAPI {
     public var domain: YakgwaDomain {
         switch self {
         case .fetchLocations:
@@ -67,58 +67,3 @@ extension AddAppointmentLocationAPI: YakgwaAPI {
         ]
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

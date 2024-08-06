@@ -2,14 +2,14 @@
 //  RemoteFetchLocationsDataSource.swift
 //
 //
-//  Created by Kim Dongjoo on 8/5/24.
+//  Created by Kim Dongjoo on 8/6/24.
 //
 
 import Network
 
 import RxSwift
 
-final public class RemoteFetchLocationsDataSource: BaseRemoteDataSource<AddAppointmentLocationAPI>, RemoteFetchLocationsDataSourceProtocol {
+final public class RemoteFetchLocationsDataSource: BaseRemoteDataSource<AddCandinateLocationAPI>, RemoteFetchLocationsDataSourceProtocol {
     public func fetchLocations(query: String) -> RxSwift.Single<SearchLocationDTO> {
         request(
             .fetchLocations(query)
