@@ -61,9 +61,9 @@ final class ThemeCell: UICollectionViewCell {
         }
     }
     
-//    func configure(with theme: MeetTheme, isSelected: Bool) {
-//        themeImageView.image = UIImage(named: "Yakgwa_Theme_Default", in: .module, with: nil)
-//        themeLabel.text = theme.name
-//        contentView.backgroundColor = isSelected ? .primary100 : .neutralWhite
-//    }
+    func configure(with theme: Theme, isSelected: Bool) {
+        themeImageView.image = UIImage(named: "yakgwa_theme_default", in: .module, with: nil)
+        themeLabel.text = theme.themeName
+        contentView.backgroundColor = isSelected ? .primary100 : .neutralWhite
+    }
 }

@@ -13,12 +13,14 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
+        .package(path: "./CreateAppointmentScene")
     ],
     targets: [
         .target(
             name: "HomeScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "InputAppointmentInfoScene", package: "CreateAppointmentScene")
             ],
             resources: [.process("Assets")]
         ),

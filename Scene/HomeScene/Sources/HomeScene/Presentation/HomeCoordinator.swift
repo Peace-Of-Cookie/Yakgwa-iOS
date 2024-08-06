@@ -43,7 +43,8 @@ public final class HomeCoordinator: BaseCoordinator {
 
 extension HomeCoordinator {
     private func routeToCreateAppointment() {
-        let inputAppointmentInfoViewController = InputAppointmentInfoViewController()
+        let reactor = InputAppointmentReactor()
+        let inputAppointmentInfoViewController = InputAppointmentInfoViewController(reactor: reactor)
         if let navigationController = self.navigationController {
             let inputAppointmentInfoCoordinator = InputAppointmentInfoCoordinator(
                 navigationController: navigationController,
@@ -55,5 +56,7 @@ extension HomeCoordinator {
             inputAppointmentInfoCoordinator.start()
             addChildCoordinator(inputAppointmentInfoCoordinator)
         }
+        
+        inputAppointmentInfoViewController.tabBarController?.tabBar.isHidden = true
     }
 }

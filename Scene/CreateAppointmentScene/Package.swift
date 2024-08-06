@@ -22,32 +22,41 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
+        .package(path: "./Domain"),
         .package(url: "https://github.com/airbnb/HorizonCalendar.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
         .target(
             name: "InputAppointmentInfoScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "Domain", package: "Domain"),
+                "SelectAppointmentThemeScene"
             ]
         ),
         .target(
             name: "SelectAppointmentThemeScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "Domain", package: "Domain"),
+                "SelectAppointmentDateScene"
+                
             ]
         ),
         .target(
             name: "AddAppointmentLocationScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "Domain", package: "Domain")
             ]
         ),
         .target(
             name: "SelectAppointmentDateScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
-                .product(name: "HorizonCalendar", package: "HorizonCalendar")
+                .product(name: "Domain", package: "Domain"),
+                .product(name: "HorizonCalendar", package: "HorizonCalendar"),
+                "AddAppointmentLocationScene"
             ]
         ),
         .testTarget(

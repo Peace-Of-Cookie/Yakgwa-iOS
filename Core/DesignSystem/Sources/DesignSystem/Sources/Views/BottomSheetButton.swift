@@ -6,14 +6,19 @@
 //
 
 import UIKit
+import RxSwift
+import RxCocoa
 
 public final class BottomSheetButton: UIView {
     // MARK: - Properties
     private var title: String
+    private let buttonTappedSubject = PublishSubject<Void>()
+    private let disposeBag = DisposeBag()
     
     // MARK: - UI Components
     private lazy var button: YakGwaButton = {
         let button = YakGwaButton(style: .primary)
+        button.addTarget(self, action: #selector(buttonPressed), for: .touchUpInside)
         return button
     }()
     
@@ -47,6 +52,22 @@ public final class BottomSheetButton: UIView {
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
+    }
+    
+    // MARK: - Actions
+    @objc private func buttonPressed() {
+        buttonTappedSubject.onNext(())
+    }
+    
+    // Exposing the tap event as an observable
+    public var rx_tap: Observable<Void> {
+        return buttonTappedSubject.asObservable()
+    }
+}
+
+public extension Reactive where Base: BottomSheetButton {
+    var tap: ControlEvent<Void> {
+        return ControlEvent(events: base.rx_tap)
     }
 }
 

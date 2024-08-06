@@ -17,7 +17,7 @@ public class HomeViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
     var sendRoutingEvent: ((HomeRouter) -> Void)?
-    var testSubject: PublishSubject<HomeRouter> = PublishSubject<HomeRouter>()
+    // var testSubject: PublishSubject<HomeRouter> = PublishSubject<HomeRouter>()
     
     // MARK: - UI Components
     private lazy var yakgwaLogo: UIImageView = {
@@ -117,14 +117,7 @@ public class HomeViewController: UIViewController, View {
             .subscribe(onNext: { [weak self] router in
                 switch router {
                 case .create:
-                    print("탕후루")
                     self?.sendRoutingEvent?(.create)
-                    if let sendRoutingEvent = self?.sendRoutingEvent {
-                        print("sendRoutingEvent is set")
-                    } else {
-                        print("sendRoutingEvent is nil")
-                    }
-                    // self?.testSubject.onNext(.create)
                 }
             })
             .disposed(by: disposeBag)

@@ -8,9 +8,12 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
 
-public final class SelectAppointmentThemeViewController: UIViewController {
+public final class SelectAppointmentThemeViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((SelectAppointmentThemeRouter) -> Void)?
     
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
@@ -37,7 +40,6 @@ public final class SelectAppointmentThemeViewController: UIViewController {
         view.clipsToBounds = true
         view.register(ThemeCell.self, forCellWithReuseIdentifier: ThemeCell.identifier)
         view.delegate = self
-        view.dataSource = self
         return view
     }()
     
@@ -47,7 +49,10 @@ public final class SelectAppointmentThemeViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: SelectAppointmentThemeReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
         setUI()
     }
@@ -112,27 +117,61 @@ public final class SelectAppointmentThemeViewController: UIViewController {
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout
     }
+    
+    public func bind(reactor: SelectAppointmentThemeReactor) {
+        // Action
+        self.rx.viewDidAppear
+            .map { _ in Reactor.Action.viewDidAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.collectionView.rx.itemSelected
+            .map { Reactor.Action.selectTheme($0.item) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapNextButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        reactor.state
+            .map { $0.themes }
+            .distinctUntilChanged()
+            .bind(to: collectionView.rx.items(
+                cellIdentifier: "ThemeCell",
+                cellType: ThemeCell.self)
+            ) { index, theme, cell in
+                let isSelected = (index == reactor.currentState.selectedTheme)
+                cell.configure(with: theme, isSelected: isSelected)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.selectedTheme }
+            .distinctUntilChanged()
+            .asDriver(onErrorJustReturn: nil)
+            .drive(onNext: { [weak self] _ in
+                self?.collectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
+    }
 }
 
-extension SelectAppointmentThemeViewController: UICollectionViewDelegate, UICollectionViewDataSource {
-    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
-    }
-    
-    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ThemeCell.identifier, for: indexPath) as? ThemeCell else {
-            return UICollectionViewCell()
-        }
-        return cell
-    }
+extension SelectAppointmentThemeViewController: UICollectionViewDelegate {
+
 }
 
 extension SelectAppointmentThemeViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
         navigationController?.popViewController(animated: true)
     }
-}
-
-#Preview {
-    SelectAppointmentThemeViewController()
 }

@@ -8,6 +8,8 @@
 import UIKit
 
 import Util
+import RxSwift
+import RxCocoa
 
 public protocol YakgwaTextViewDelegate: AnyObject {
     func textViewDidEndEditing(text: String)
@@ -22,7 +24,7 @@ public final class YakgwaTextView: UIView {
     var placeHolderText: String = ""
     
     // MARK: - UI Components
-    private lazy var textView: UITextView = {
+    lazy var textView: UITextView = {
         let textView = UITextView()
         textView.delegate = self
         textView.backgroundColor = .neutralWhite
@@ -44,7 +46,6 @@ public final class YakgwaTextView: UIView {
         let label = UILabel()
         label.font = .r12
         label.textColor = .neutral600
-        
         return label
     }()
 
@@ -106,12 +107,10 @@ extension YakgwaTextView: UITextViewDelegate {
     }
     
     public func textViewDidChange(_ textView: UITextView) {
-        
         if textView.text != nil && !textView.text.isEmpty {
             self.placeholderLabel.text = ""
             textView.textColor = .neutralBlack
-        }
-        else {
+        } else {
             self.placeholderLabel.text = self.placeHolderText
         }
         
@@ -123,17 +122,17 @@ extension YakgwaTextView: UITextViewDelegate {
         self.customDelegate?.textViewDidChange(text: textView.text)
     }
     
-    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let newLength = self.textView.text.count - range.length + text.count
+    public func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText replacement: String) -> Bool {
+        let newLength = self.textView.text.count - range.length + replacement.count
         let maxCount = self.maxLength
          
         if newLength > maxCount {
             let overflow = newLength - maxCount
-            if text.count < overflow {
+            if replacement.count < overflow {
                 return true
             }
-            let index = text.index(text.endIndex, offsetBy: -overflow)
-            let newText = text[..<index]
+            let index = replacement.index(replacement.endIndex, offsetBy: -overflow)
+            let newText = replacement[..<index]
             guard let startPosition = textView.position(from: textView.beginningOfDocument, offset: range.location) else { return false }
             guard let endPosition = textView.position(from: textView.beginningOfDocument, offset: NSMaxRange(range)) else { return false }
             guard let textRange = textView.textRange(from: startPosition, to: endPosition) else { return false }
@@ -143,5 +142,24 @@ extension YakgwaTextView: UITextViewDelegate {
             return false
         }
         return true
+    }
+}
+
+// Reactive Extension
+public extension Reactive where Base: YakgwaTextView {
+    var text: ControlProperty<String?> {
+        let source: Observable<String?> = Observable.deferred { [weak base] in
+            guard let textView = base?.textView else {
+                return Observable.empty()
+            }
+            return textView.rx.text.asObservable()
+        }
+        
+        let bindingObserver = Binder(base) { (view, text: String?) in
+            view.textView.text = text
+            view.textView.delegate?.textViewDidChange?(view.textView)
+        }
+        
+        return ControlProperty(values: source, valueSink: bindingObserver)
     }
 }

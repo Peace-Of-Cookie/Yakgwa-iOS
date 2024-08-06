@@ -1,5 +1,5 @@
 //
-//  DayRangeView.swift
+//  DayRangeIndicatorView.swift
 //
 //
 //  Created by Ekko on 7/19/24.
@@ -10,7 +10,7 @@ import UIKit
 import DesignSystem
 import HorizonCalendar
 
-public final class DayRangeView: UIView {
+public final class DayRangeIndicatorView: UIView {
     // MARK: - Properties
     public let indicatorColor: UIColor
     public var framesOfDaysToHighlight = [CGRect]() {
@@ -106,8 +106,8 @@ public final class DayRangeView: UIView {
 }
 
 // MARK: CalendarItemViewRepresentable
-extension DayRangeView: CalendarItemViewRepresentable {
-    public typealias ViewType = DayRangeView
+extension DayRangeIndicatorView: CalendarItemViewRepresentable {
+    public typealias ViewType = DayRangeIndicatorView
     public typealias ViewModel = Content
     
     public struct InvariantViewProperties: Hashable {
@@ -129,11 +129,11 @@ extension DayRangeView: CalendarItemViewRepresentable {
     
     public static func makeView(
         withInvariantViewProperties invariantViewProperties: InvariantViewProperties
-    ) -> DayRangeView {
-        DayRangeView(indicatorColor: invariantViewProperties.indicatorColor)
+    ) -> DayRangeIndicatorView {
+        DayRangeIndicatorView(indicatorColor: invariantViewProperties.indicatorColor)
     }
     
-    public static func setViewModel(_ viewModel: Content, on view: DayRangeView) {
+    public static func setViewModel(_ viewModel: Content, on view: DayRangeIndicatorView) {
         view.framesOfDaysToHighlight = viewModel.framesOfDaysToHighlight
     }
 }

@@ -8,9 +8,13 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
+import Domain
 
-public final class AddAppointmentLocationViewController: UIViewController {
+public final class AddAppointmentLocationViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((AddAppointmentLocationRouter) -> Void)?
     
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
@@ -54,9 +58,10 @@ public final class AddAppointmentLocationViewController: UIViewController {
         return button
     }()
     
-    private lazy var searchTextField: YakgwaSearchTextField = {
-        let textField = YakgwaSearchTextField(placeholder: "지역/지하철역을 검색해주세요")
-        return textField
+    private lazy var addLocationButton: YakGwaButton = {
+        let button = YakGwaButton(style: .white, image: .plus)
+        button.title = "후보지 추가하기"
+        return button
     }()
     
     private lazy var locationStack: UIStackView = {
@@ -67,11 +72,13 @@ public final class AddAppointmentLocationViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: AddAppointmentLocationReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
         
         setUI()
-        addLocationDemo()
     }
     
     required init?(coder: NSCoder) {
@@ -115,8 +122,8 @@ public final class AddAppointmentLocationViewController: UIViewController {
             $0.leading.equalToSuperview().offset(16)
         }
         
-        self.view.addSubview(searchTextField)
-        searchTextField.snp.makeConstraints {
+        self.view.addSubview(addLocationButton)
+        addLocationButton.snp.makeConstraints {
             $0.top.equalTo(titleStack.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
@@ -124,18 +131,14 @@ public final class AddAppointmentLocationViewController: UIViewController {
         
         self.view.addSubview(locationStack)
         locationStack.snp.makeConstraints {
-            $0.top.equalTo(searchTextField.snp.bottom).offset(32)
+            $0.top.equalTo(addLocationButton.snp.bottom).offset(32)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
     }
     
-    private func addLocationDemo() {
-        let locationView = LocationView(name: "마곡")
-        let locationView2 = LocationView(name: "발산")
-    
-        locationStack.addArrangedSubview(locationView)
-        locationStack.addArrangedSubview(locationView2)
+    public func bind(reactor: AddAppointmentLocationReactor) {
+        
     }
     
     private func changeMode(state: YakgwaSwitchViewState) {
@@ -166,5 +169,5 @@ extension AddAppointmentLocationViewController: YakgwaSwitchViewDelegate {
 }
 
 #Preview {
-    AddAppointmentLocationViewController()
+    AddAppointmentLocationViewController(reactor: AddAppointmentLocationReactor(newAppointment: NewAppointment()))
 }

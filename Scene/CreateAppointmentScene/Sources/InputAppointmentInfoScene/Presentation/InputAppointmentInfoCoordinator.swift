@@ -9,6 +9,9 @@ import UIKit
 
 import CoreKit
 import Util
+import Domain
+
+import SelectAppointmentThemeScene
 
 public final class InputAppointmentInfoCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -26,6 +29,48 @@ public final class InputAppointmentInfoCoordinator: BaseCoordinator {
     // MARK: - Public
     public override func start() {
         self.navigationController?.pushViewController(self.viewController, animated: true)
+        self.setRoute()
     }
+    
     // MARK: - Private
+    private func setRoute() {
+        self.viewController.sendRoutingEvent = { [weak self] event in
+            switch event {
+            case .back:
+                print("뒤로 가기")
+            case .theme(let newAppointment):
+                self?.routeSelectAppointmentTheme(with: newAppointment)
+            }
+        }
+    }
+}
+
+extension InputAppointmentInfoCoordinator {
+    private func routeSelectAppointmentTheme(with newAppointment: NewAppointment) {
+        let reactor = SelectAppointmentThemeReactor(
+            fetchThemeUseCase: FetchThemeUsecase(
+                repository: FetchThemeRepository(
+                    remoteDataSource: RemoteFetchThemeDataSource()
+                )
+            ), 
+            newAppointment: newAppointment
+        )
+        
+        let selectAppointmentThemeViewController = SelectAppointmentThemeViewController(
+            reactor: reactor
+        )
+        
+        if let navigationController = self.navigationController {
+            let selectAppointmentThemeCoordinator = SelectAppointmentThemeCoordinator(
+                navigationController: navigationController,
+                viewController: selectAppointmentThemeViewController
+            )
+            navigationController.delegate = self
+            selectAppointmentThemeCoordinator.parentCoordinator = self
+            selectAppointmentThemeCoordinator.start()
+            addChildCoordinator(selectAppointmentThemeCoordinator)
+        }
+        
+        selectAppointmentThemeViewController.tabBarController?.tabBar.isHidden = true
+    }
 }
