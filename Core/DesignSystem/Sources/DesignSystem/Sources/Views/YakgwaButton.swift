@@ -12,12 +12,15 @@ public enum YakgwaButtonStyle {
     case primary
     /// 보조
     case secondary
+    /// 흰색
+    case white
 }
 
 public enum YakgwaButtonImage: String {
     case share = "share_icon"
     case rightArrow = "arrow_icon"
     case rightArrowBlack = "arrow_icon_black"
+    case plus = "plus_icon"
 }
 
 public class YakGwaButton: UIButton {
@@ -51,14 +54,16 @@ public class YakGwaButton: UIButton {
         switch style {
         case .primary:
             self.backgroundColor = UIColor.primary700
-            self.layer.cornerRadius = 15
             self.setTitleColor(UIColor.white, for: .normal)
         case .secondary:
             self.backgroundColor = UIColor.primary100
-            self.layer.cornerRadius = 15
             self.setTitleColor(UIColor.black, for: .normal)
+        case .white:
+            self.backgroundColor = UIColor.neutralWhite
+            self.setTitleColor(UIColor.neutral600, for: .normal)
         }
         
+        self.layer.cornerRadius = 15
         self.style = style
     }
     
@@ -70,16 +75,19 @@ public class YakGwaButton: UIButton {
         switch style {
         case .primary:
             self.backgroundColor = UIColor.primary700
-            self.layer.cornerRadius = 15
             self.setTitleColor(UIColor.white, for: .normal)
             self.buttonImage = UIImage(named: image.rawValue, in: .module, with: nil)
         case .secondary:
             self.backgroundColor = UIColor.primary100
-            self.layer.cornerRadius = 15
             self.setTitleColor(UIColor.black, for: .normal)
+            self.buttonImage = UIImage(named: image.rawValue, in: .module, with: nil)
+        case .white:
+            self.backgroundColor = UIColor.neutralWhite
+            self.setTitleColor(UIColor.neutral600, for: .normal)
             self.buttonImage = UIImage(named: image.rawValue, in: .module, with: nil)
         }
         
+        self.layer.cornerRadius = 15
         self.style = style
     }
     
@@ -101,6 +109,8 @@ public class YakGwaButton: UIButton {
             self.backgroundColor = UIColor.primary100
             configuration.baseForegroundColor = UIColor.neutralBlack
             self.setTitleColor(UIColor.neutralBlack, for: .normal)
+        } else if self.style == .white {
+            self.setTitleColor(UIColor.neutral600, for: .normal)
         }
         self.configuration = configuration
     }
@@ -117,6 +127,15 @@ public class YakGwaButton: UIButton {
         var titleContainer = AttributeContainer()
         titleContainer.font = UIFont.sb14
         titleContainer.foregroundColor = style == .primary ? UIColor.white : UIColor.neutralBlack
+        
+        switch style {
+        case .primary:
+            titleContainer.foregroundColor = UIColor.white
+        case .secondary:
+            titleContainer.foregroundColor = UIColor.neutralBlack
+        case .white:
+            titleContainer.foregroundColor = UIColor.neutral600
+        }
         
         configuration.title = title
         configuration.attributedTitle = AttributedString(title, attributes: titleContainer)
