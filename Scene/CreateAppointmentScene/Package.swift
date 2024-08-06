@@ -19,6 +19,9 @@ let package = Package(
         .library(
             name: "SelectAppointmentDateScene",
             targets: ["SelectAppointmentDateScene"]),
+        .library(
+            name: "AddCandinateLocationScene",
+            targets: ["AddCandinateLocationScene"])
     ],
     dependencies: [
         .package(path: "./CoreKit"),
@@ -47,7 +50,8 @@ let package = Package(
             name: "AddAppointmentLocationScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
-                .product(name: "Domain", package: "Domain")
+                .product(name: "Domain", package: "Domain"),
+                "AddCandinateLocationScene"
             ]
         ),
         .target(
@@ -57,6 +61,12 @@ let package = Package(
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "HorizonCalendar", package: "HorizonCalendar"),
                 "AddAppointmentLocationScene"
+            ]
+        ),
+        .target(
+            name: "AddCandinateLocationScene",
+            dependencies: [
+                .product(name: "CoreKit", package: "CoreKit")
             ]
         ),
         .testTarget(
@@ -70,6 +80,9 @@ let package = Package(
             dependencies: ["AddAppointmentLocationScene"]),
         .testTarget(
             name: "SelectAppointmentDateSceneTests",
-            dependencies: ["SelectAppointmentDateScene"])
+            dependencies: ["SelectAppointmentDateScene"]),
+        .testTarget(
+            name: "AddCandinateLocationSceneTests",
+            dependencies: ["AddCandinateLocationScene"])
     ]
 )
