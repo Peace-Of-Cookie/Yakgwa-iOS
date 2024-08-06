@@ -8,6 +8,8 @@
 import UIKit
 
 import Util
+import RxSwift
+import RxCocoa
 
 public final class YakgwaSearchTextField: UIView {
     // MARK: - Properties
@@ -17,7 +19,7 @@ public final class YakgwaSearchTextField: UIView {
     public var imageString: String = ""
     
     // MARK: - UI Components
-    private lazy var textField: UITextField = {
+    fileprivate lazy var textField: UITextField = {
         let textField = UITextField()
         textField.font = .r14
         textField.textColor = .neutralBlack
@@ -90,4 +92,10 @@ extension YakgwaSearchTextField: UITextFieldDelegate {
         self.returnValueAction?(textField.text ?? "")
         return true
     }
+}
+
+public extension Reactive where Base: YakgwaSearchTextField {
+  var text: ControlProperty<String?> {
+    return base.textField.rx.text
+  }
 }

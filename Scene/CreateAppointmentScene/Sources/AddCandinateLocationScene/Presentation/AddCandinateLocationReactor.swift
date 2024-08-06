@@ -6,6 +6,7 @@
 //
 
 import CoreKit
+import Domain
 
 import ReactorKit
 
@@ -21,14 +22,15 @@ enum AddCandinateLocationRouter {
 public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRouting {
     public enum Action {
         case didTapNextButton
+        case editQuery(String)
     }
     
     public enum Mutation {
-        
+        case editingQuery(String)
     }
     
     public struct State {
-        
+        var searchResults: [Location] = []
     }
     
     public let initialState: State = State()

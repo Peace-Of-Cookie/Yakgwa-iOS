@@ -138,7 +138,24 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
     }
     
     public func bind(reactor: AddAppointmentLocationReactor) {
+        // Action
+        self.addLocationButton.rx.tap
+            .map { Reactor.Action.didTapSearchButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        self.bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapCreateButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        // State
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func changeMode(state: YakgwaSwitchViewState) {

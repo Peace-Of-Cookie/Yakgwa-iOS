@@ -6,6 +6,7 @@
 //
 
 import Network
+import Domain
 import RxSwift
 
 public protocol FetchLocationRepositoryProtocol {

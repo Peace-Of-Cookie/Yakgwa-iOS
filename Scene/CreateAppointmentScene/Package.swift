@@ -66,7 +66,8 @@ let package = Package(
         .target(
             name: "AddCandinateLocationScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "Domain", package: "Domain")
             ]
         ),
         .testTarget(

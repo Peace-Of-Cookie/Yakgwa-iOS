@@ -1,11 +1,12 @@
 //
-//  File.swift
-//  
+//  SearchLocationDTO.swift
+//
 //
 //  Created by Kim Dongjoo on 8/5/24.
 //
 
 import Foundation
+import Domain
 
 public struct SearchLocationDTO: Decodable {
     let time: String

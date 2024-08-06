@@ -7,6 +7,7 @@
 
 import Network
 import RxSwift
+import Domain
 
 public final class AddAppointmentLocationRepository: FetchLocationRepositoryProtocol {
     private let remoteDataSource: RemoteFetchLocationsDataSourceProtocol

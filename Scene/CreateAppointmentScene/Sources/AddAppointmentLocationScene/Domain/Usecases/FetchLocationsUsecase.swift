@@ -6,6 +6,7 @@
 //
 
 import RxSwift
+import Domain
 
 public final class FetchLocationsUsecase: FetchLocationsUsecaseProtocol {
     private let repository: FetchLocationRepositoryProtocol

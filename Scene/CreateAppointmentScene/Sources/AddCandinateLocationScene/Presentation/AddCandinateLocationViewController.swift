@@ -90,7 +90,11 @@ public final class AddCandinateLocationViewController: UIViewController, View {
     }
     
     public func bind(reactor: AddCandinateLocationReactor) {
+        // Action
         
+        // State
+        
+        // Routing
     }
 }
 
