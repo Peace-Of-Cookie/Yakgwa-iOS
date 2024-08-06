@@ -30,6 +30,8 @@ public final class AddCandinateLocationViewController: UIViewController, View {
     
     private lazy var resultTableView: UITableView = {
         let tableView = UITableView()
+        tableView.register(LocationCell.self, forCellReuseIdentifier: LocationCell.identifier)
+        tableView.backgroundColor = .clear
         return tableView
     }()
     
@@ -100,10 +102,14 @@ public final class AddCandinateLocationViewController: UIViewController, View {
         // State
         reactor.state
             .map { $0.searchResults }
-            .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] results in
-                print("결과:\(results)")
-            }).disposed(by: disposeBag)
+            .bind(to: resultTableView.rx.items(cellIdentifier: LocationCell.identifier, cellType: LocationCell.self)) { _, element, cell in
+                cell.configure(
+                    title: element.title,
+                    address: element.address,
+                    isBookmarked: element.isBookMark
+                )
+            }
+            .disposed(by: disposeBag)
         
         // Routing
     }

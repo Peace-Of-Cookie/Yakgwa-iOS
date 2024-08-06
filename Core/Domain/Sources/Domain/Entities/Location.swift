@@ -7,21 +7,21 @@
 
 public struct Location: Equatable {
     /// 장소 이름
-    let title: String?
+    public let title: String?
     /// 링크
-    let link: String?
+    public let link: String?
     /// 카테고리
-    let category: String?
+    public let category: String?
     /// 전환 번호
-    let telephone: String?
+    public let telephone: String?
     /// 주소
-    let address: String?
+    public let address: String?
     /// 도로명 주소
-    let roadAddress: String?
+    public let roadAddress: String?
     /// x좌표
-    let mapx: String?
+    public let mapx: String?
     /// y좌표
-    let mapy: String?
+    public let mapy: String?
     
     public init(title: String?, link: String?, category: String?, telephone: String?, address: String?, roadAddress: String?, mapx: String?, mapy: String?) {
         self.title = title

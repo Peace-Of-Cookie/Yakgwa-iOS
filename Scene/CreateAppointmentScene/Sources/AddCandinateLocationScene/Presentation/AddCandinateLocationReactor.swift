@@ -30,7 +30,7 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
     }
     
     public struct State {
-        var searchResults: [Location] = []
+        var searchResults: [LocationViewModel] = []
     }
     
     public let initialState: State = State()
@@ -62,7 +62,8 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
         var newState = state
         switch mutation {
         case .fetchLocations(let locations):
-            newState.searchResults = locations
+            let viewModel = locations.map { LocationViewModel(with: $0) }
+            newState.searchResults = viewModel
         }
         return newState
     }
