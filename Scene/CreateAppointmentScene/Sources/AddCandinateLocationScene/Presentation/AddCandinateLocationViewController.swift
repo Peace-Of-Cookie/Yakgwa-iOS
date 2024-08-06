@@ -32,6 +32,7 @@ public final class AddCandinateLocationViewController: UIViewController, View {
         let tableView = UITableView()
         tableView.register(LocationCell.self, forCellReuseIdentifier: LocationCell.identifier)
         tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
         return tableView
     }()
     

@@ -106,6 +106,7 @@ final public class LocationCell: UITableViewCell {
         mapButton.snp.makeConstraints {
             $0.top.equalTo(addressLabel.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
+            $0.bottom.equalToSuperview().offset(-16)
         }
     }
     
