@@ -100,19 +100,32 @@ public final class AddCandinateLocationViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        resultTableView.rx.itemSelected
+            .map { Reactor.Action.didTapLocationCell($0.row) }
+            .do(onNext: { [weak self] _ in
+                self?.view.endEditing(true)
+            })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
-            .map { $0.searchResults }
+            .map { $0.searchResultsViewModel }
             .bind(to: resultTableView.rx.items(cellIdentifier: LocationCell.identifier, cellType: LocationCell.self)) { _, element, cell in
                 cell.configure(
                     title: element.title,
                     address: element.address,
-                    isBookmarked: element.isBookMark
+                    isBookmarked: false, 
+                    isSelected: element.isSelected
                 )
             }
             .disposed(by: disposeBag)
         
         // Routing
+    }
+    
+    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 }
 

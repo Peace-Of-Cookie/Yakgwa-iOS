@@ -8,13 +8,22 @@
 import Foundation
 import Domain
 
-public struct LocationViewModel {
+public struct LocationViewModel: Equatable {
     let title: String
     let address: String
-    let isBookMark: Bool = false
-    
-    init(with entity: Location) {
-        title = entity.title ?? ""
-        address = entity.roadAddress ?? ""
+    var isBookMark: Bool = false
+    var isSelected: Bool = false
+}
+
+extension LocationViewModel {
+    init(with entity: Location, isSelected: Bool = false) {
+        self.title = entity.title ?? ""
+        if let roadAddress = entity.roadAddress, !roadAddress.isEmpty {
+            self.address = roadAddress
+        } else {
+            self.address = entity.address ?? ""
+        }
+        self.isSelected = isSelected
     }
+    
 }

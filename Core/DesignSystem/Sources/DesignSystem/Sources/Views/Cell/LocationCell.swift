@@ -20,6 +20,14 @@ final public class LocationCell: UITableViewCell {
         return view
     }()
     
+    private lazy var contentStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        stack.alignment = .leading
+        return stack
+    }()
+    
     private lazy var titleStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -52,12 +60,11 @@ final public class LocationCell: UITableViewCell {
     private lazy var mapButton: UIButton = {
         let button = UIButton()
         button.setTitle("지도 바로가기", for: .normal)
+        button.titleLabel?.font = .m11
         button.setTitleColor(.neutral600, for: .normal)
-        var config = UIButton.Configuration.plain()
-        config.image = UIImage(named: "forward_icon", in: .module, with: nil)
-        config.imagePlacement = .trailing
-        config.imagePadding = 8
-        button.configuration = config
+        button.setImage(UIImage(named: "forward_icon", in: .module, with: nil), for: .normal)
+        button.semanticContentAttribute = .forceRightToLeft
+        button.imageEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: -8)
         return button
     }()
     
@@ -71,6 +78,13 @@ final public class LocationCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life cycles
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        resetUI()
+    }
+    
     // MARK: - Privates
     private func setUI() {
         self.backgroundColor = .neutral200
@@ -79,14 +93,18 @@ final public class LocationCell: UITableViewCell {
         self.addSubview(containerView)
         containerView.snp.makeConstraints {
             $0.top.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.trailing.equalToSuperview().offset(-16)
             $0.bottom.equalToSuperview().offset(-16)
         }
         
-        containerView.addSubview(titleStack)
-        titleStack.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(16)
+        containerView.addSubview(contentStack)
+        contentStack.addArrangedSubview(titleStack)
+        contentStack.addArrangedSubview(addressLabel)
+        contentStack.addArrangedSubview(mapButton)
+        
+        contentStack.snp.makeConstraints {
+            $0.edges.equalToSuperview().inset(16)
         }
         
         titleStack.addArrangedSubview(bookmarkImageView)
@@ -95,25 +113,41 @@ final public class LocationCell: UITableViewCell {
             $0.width.equalTo(10)
             $0.height.equalTo(16)
         }
-        
-        containerView.addSubview(addressLabel)
-        addressLabel.snp.makeConstraints {
-            $0.top.equalTo(titleStack.snp.bottom).offset(8)
-            $0.leading.equalToSuperview().offset(16)
-        }
-        
-        containerView.addSubview(mapButton)
-        mapButton.snp.makeConstraints {
-            $0.top.equalTo(addressLabel.snp.bottom).offset(8)
-            $0.leading.equalToSuperview().offset(16)
-            $0.bottom.equalToSuperview().offset(-16)
-        }
+    }
+    
+    private func resetUI() {
+        titleLabel.text = nil
+        addressLabel.text = nil
+        addressLabel.isHidden = false
+        bookmarkImageView.isHidden = true
+        containerView.layer.borderWidth = 0
+        containerView.layer.borderColor = UIColor.clear.cgColor
     }
     
     // MARK: - Public
-    public func configure(title: String, address: String, isBookmarked: Bool) {
+    public func configure(
+        title: String,
+        address: String,
+        isBookmarked: Bool,
+        isSelected: Bool
+    ) {
         titleLabel.text = title
-        addressLabel.text = address
+        
+        if address.isEmpty {
+            addressLabel.isHidden = true
+        } else {
+            addressLabel.isHidden = false
+            addressLabel.text = address
+        }
+        
         bookmarkImageView.isHidden = !isBookmarked
+        
+        if isSelected {
+            containerView.layer.borderWidth = 1
+            containerView.layer.borderColor = UIColor.primary800.cgColor
+        } else {
+            containerView.layer.borderWidth = 0
+            containerView.layer.borderColor = UIColor.clear.cgColor
+        }
     }
 }

@@ -19,24 +19,37 @@ enum AddCandinateLocationRouter {
     case back
 }
 
+public enum AddCandidatePopupMessage: String, Error {
+    case toomanycandidates = "장소 후보는 최대 3개까지 선택 가능해요"
+    case error = "에러가 발생했어요"
+}
+
 public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRouting {
     public enum Action {
         case didTapNextButton
         case editQuery(String)
+        case didTapLocationCell(Int)
     }
     
     public enum Mutation {
         case fetchLocations([Location])
+        case addToCandidates(Location)
+        case showPopUp(AddCandidatePopupMessage)
     }
     
     public struct State {
-        var searchResults: [LocationViewModel] = []
+        var searchResultsViewModel: [LocationViewModel] = []
+        var showPopup: AddCandidatePopupMessage? = nil
     }
     
+    // MARK: - Properties
     public let initialState: State = State()
     let route: PublishSubject<AddCandinateLocationRouter> = PublishSubject<AddCandinateLocationRouter>()
     
     let fetchLocationUsecase: FetchLocationsUsecaseProtocol
+    
+    var searchResults: [Location] = []
+    var candidateLocations: [Location] = []
     
     public init(
         fetchLocationUsecase: FetchLocationsUsecaseProtocol
@@ -49,12 +62,20 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
         case .editQuery(let query):
             return fetchLocationUsecase
                 .execute(query: query)
+                .do { self.searchResults = $0 }
                 .map { Mutation.fetchLocations($0) }
                 .asObservable()
         case .didTapNextButton:
             route.onNext(.back)
             return Observable.empty()
-
+        case .didTapLocationCell(let index):
+            if self.candidateLocations.count >= 3 {
+                return Observable.just(Mutation.showPopUp(.toomanycandidates))
+            }
+            
+            let location = searchResults[index]
+            self.candidateLocations.append(location)
+            return Observable.just(Mutation.addToCandidates(location))
         }
     }
     
@@ -62,9 +83,25 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
         var newState = state
         switch mutation {
         case .fetchLocations(let locations):
-            let viewModel = locations.map { LocationViewModel(with: $0) }
-            newState.searchResults = viewModel
+            newState.searchResultsViewModel = locations.map { location in
+                let isSelected = candidateLocations.contains(location)
+                return LocationViewModel(with: location, isSelected: isSelected)
+            }
+        case .addToCandidates(let location):
+            newState.searchResultsViewModel = newState.searchResultsViewModel.map { viewModel in
+                var viewModel = viewModel
+                if viewModel.title == location.title {
+                    viewModel.isSelected = true
+                }
+                return viewModel
+            }
+        case .showPopUp(let message):
+            newState.showPopup = message
         }
         return newState
     }
+}
+
+extension AddCandinateLocationReactor {
+    
 }
