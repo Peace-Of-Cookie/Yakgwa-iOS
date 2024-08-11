@@ -108,6 +108,11 @@ public final class AddCandinateLocationViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapNextButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .map { $0.searchResultsViewModel }
@@ -122,6 +127,11 @@ public final class AddCandinateLocationViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
     
     override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {

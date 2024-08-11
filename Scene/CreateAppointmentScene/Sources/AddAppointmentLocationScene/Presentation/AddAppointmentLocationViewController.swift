@@ -148,7 +148,22 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
             .map { Reactor.Action.didTapCreateButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
         // State
+        self.reactor?.state
+            .map { $0.locations }
+            .bind { [weak self] locations in
+                self?.locationStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+                locations.forEach { location in
+                    let view = LocationView()
+                    view.configure(
+                        title: location.title,
+                        address: location.address
+                    )
+                    self?.locationStack.addArrangedSubview(view)
+                }
+            }
+            .disposed(by: disposeBag)
         
         // Routing
         reactor.route

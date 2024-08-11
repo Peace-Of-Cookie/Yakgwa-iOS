@@ -27,14 +27,16 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     public enum Action {
         case didTapCreateButton
         case didTapSearchButton
+        case returnToScene([Location])
     }
     
     public enum Mutation {
-        
+        case addToCandidates([LocationViewModel])
     }
     
     public struct State {
         var isLoading: Bool = false
+        var locations: [LocationViewModel] = []
     }
     
     // MARK: - Properties
@@ -59,6 +61,18 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         case .didTapSearchButton:
             route.onNext(.search)
             return Observable.empty()
+        case .returnToScene(let locations):
+            return Observable.just(.addToCandidates(locations.map { LocationViewModel(with: $0) }))
         }
+    }
+    
+    public func reduce(state: State, mutation: Mutation) -> State {
+        var newState = state
+        switch mutation {
+        case .addToCandidates(let locations):
+            newState.locations.append(contentsOf: locations)
+        }
+        
+        return newState
     }
 }

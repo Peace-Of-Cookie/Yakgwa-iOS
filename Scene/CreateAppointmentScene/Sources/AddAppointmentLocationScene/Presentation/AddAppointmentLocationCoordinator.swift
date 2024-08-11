@@ -65,6 +65,9 @@ extension AddAppointmentLocationCoordinator {
             
             navigationController.delegate = self
             coordinator.parentCoordinator = self
+            coordinator.onLocationsSelected = { [weak self] locations in
+                self?.viewController.reactor?.action.onNext(.returnToScene(locations))
+            }
             coordinator.start()
             addChildCoordinator(coordinator)
         }
