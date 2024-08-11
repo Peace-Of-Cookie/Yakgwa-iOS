@@ -71,7 +71,9 @@ final public class LocationCell: UITableViewCell {
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
+        
         setUI()
+        attribute()
     }
     
     required init?(coder: NSCoder) {
@@ -122,6 +124,10 @@ final public class LocationCell: UITableViewCell {
         bookmarkImageView.isHidden = true
         containerView.layer.borderWidth = 0
         containerView.layer.borderColor = UIColor.clear.cgColor
+    }
+    
+    private func attribute() {
+        self.selectionStyle = .none
     }
     
     // MARK: - Public

@@ -23,6 +23,10 @@ public struct NewAppointment: Equatable {
     var date: Date?
     /// 직접 입력 시간
     var time: Date?
+    /// 후보지
+    var candidateLocations: [Location]? = []
+    /// 약속 장소
+    var location: Location?
     
     public init(title: String? = nil, description: String? = nil, date: Date? = nil) {
         self.title = title
@@ -57,5 +61,13 @@ public extension NewAppointment {
     
     mutating func setTime(_ time: Date) {
         self.time = time
+    }
+    
+    mutating func setCandicdateLocations(_ locations: [Location]) {
+        self.candidateLocations = locations
+    }
+    
+    mutating func setLocation(_ location: Location) {
+        self.location = location
     }
 }

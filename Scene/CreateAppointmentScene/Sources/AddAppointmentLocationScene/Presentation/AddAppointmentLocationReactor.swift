@@ -72,6 +72,7 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
             route.onNext(.search)
             return Observable.empty()
         case .returnToScene(let locations):
+            self.newAppointment.setCandicdateLocations(locations)
             return Observable.just(.addToCandidates(locations.map { LocationViewModel(with: $0) }))
         }
     }
