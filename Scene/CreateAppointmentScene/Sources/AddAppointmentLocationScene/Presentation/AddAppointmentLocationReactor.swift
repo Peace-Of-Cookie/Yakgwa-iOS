@@ -23,6 +23,11 @@ enum AddAppointmentLocationRouter {
     case search
 }
 
+public enum AddLocationPopupMessage: String, Error {
+    case toomanycandidates = "장소 후보는 최대 3개까지 선택 가능해요"
+    case error = "에러가 발생했어요"
+}
+
 public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocationRouting {
     public enum Action {
         case didTapCreateButton
@@ -32,11 +37,13 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     
     public enum Mutation {
         case addToCandidates([LocationViewModel])
+        case showPopUp(AddLocationPopupMessage)
     }
     
     public struct State {
         var isLoading: Bool = false
         var locations: [LocationViewModel] = []
+        var showPopup: AddLocationPopupMessage? = nil
     }
     
     // MARK: - Properties
@@ -59,6 +66,9 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
             route.onNext(.detail(0))
             return Observable.empty()
         case .didTapSearchButton:
+            if currentState.locations.count > 3 {
+                return Observable.just(.showPopUp(.toomanycandidates))
+            }
             route.onNext(.search)
             return Observable.empty()
         case .returnToScene(let locations):
@@ -71,6 +81,8 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         switch mutation {
         case .addToCandidates(let locations):
             newState.locations.append(contentsOf: locations)
+        case .showPopUp(let message):
+            newState.showPopup = message
         }
         
         return newState
