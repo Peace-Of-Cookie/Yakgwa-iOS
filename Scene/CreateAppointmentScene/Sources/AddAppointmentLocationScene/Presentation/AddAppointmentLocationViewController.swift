@@ -71,6 +71,19 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
         return stack
     }()
     
+    private lazy var searchTextField: YakgwaSearchTextField = {
+        let textField = YakgwaSearchTextField(placeholder: "장소나 주소를 검색해주세요")
+        return textField
+    }()
+    
+    private lazy var resultTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(LocationCell.self, forCellReuseIdentifier: LocationCell.identifier)
+        tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
+        return tableView
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: AddAppointmentLocationReactor
@@ -178,10 +191,44 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
             titleLabel.text = "약속 장소 후보를 추가해 주세요"
             descriptionLabel.text = "최대 3개 추가 기능"
             titleStack.addArrangedSubview(descriptionLabel)
+            
+            searchTextField.removeFromSuperview()
+            resultTableView.removeFromSuperview()
+            
+            self.view.addSubview(addLocationButton)
+            addLocationButton.snp.makeConstraints {
+                $0.top.equalTo(titleStack.snp.bottom).offset(8)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+            
+            self.view.addSubview(locationStack)
+            locationStack.snp.makeConstraints {
+                $0.top.equalTo(addLocationButton.snp.bottom).offset(32)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
         } else {
             titleLabel.text = "정해진 약속 장소를 입력해주세요."
             descriptionLabel.text = ""
             titleStack.removeArrangedSubview(descriptionLabel)
+            
+            addLocationButton.removeFromSuperview()
+            locationStack.removeFromSuperview()
+            
+            self.view.addSubview(searchTextField)
+            searchTextField.snp.makeConstraints {
+                $0.top.equalTo(titleStack.snp.bottom).offset(16)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+            
+            self.view.addSubview(resultTableView)
+            resultTableView.snp.makeConstraints {
+                $0.top.equalTo(searchTextField.snp.bottom).offset(16)
+                $0.leading.trailing.equalToSuperview()
+                $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-16)
+            }
         }
     }
 }
