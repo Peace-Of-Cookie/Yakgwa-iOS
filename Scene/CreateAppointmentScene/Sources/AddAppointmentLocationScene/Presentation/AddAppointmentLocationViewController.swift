@@ -171,7 +171,7 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
         self.resultTableView.rx.itemSelected
             .map { Reactor.Action.didTapLocationCell($0.row) }
             .do(onNext: { [weak self] _ in
-                self?.view.endEditing(true)
+                // self?.view.endEditing(true)
             })
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -256,6 +256,10 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
                 $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-16)
             }
         }
+    }
+    
+    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 }
 

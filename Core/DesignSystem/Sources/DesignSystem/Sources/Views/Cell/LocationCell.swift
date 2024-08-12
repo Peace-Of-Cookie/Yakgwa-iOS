@@ -135,7 +135,7 @@ final public class LocationCell: UITableViewCell {
         title: String,
         address: String,
         isBookmarked: Bool,
-        isSelected: Bool
+        isSelected: Bool = false
     ) {
         titleLabel.text = title
         

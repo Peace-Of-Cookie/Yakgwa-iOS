@@ -109,7 +109,7 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
             newState.locations.append(contentsOf: locations)
             
         case .fetchLocations(let locations):
-            // self.selectedLocation = nil
+            self.selectedLocation = nil
             newState.searchResults = locations.map { LocationViewModel(with: $0) }
             
         case .showPopUp(let message):
@@ -124,7 +124,6 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
                 } else {
                     updatedViewModel.isSelected = false
                 }
-                print("업데이트 :\(updatedViewModel)")
                 return updatedViewModel
             }
         }
