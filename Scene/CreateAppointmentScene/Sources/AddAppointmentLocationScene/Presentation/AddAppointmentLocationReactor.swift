@@ -131,7 +131,7 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
             newState.searchResults = newState.searchResults.map { viewModel in
                 var updatedViewModel = viewModel
                 // 선택된 location에 대한 ViewModel의 isSelected를 true로 설정하고, 나머지는 false로 설정
-                if viewModel.title == location.title {
+                if viewModel.title == location.title && ((viewModel.address == location.address) || (viewModel.address == location.roadAddress))  {
                     updatedViewModel.isSelected = true
                 } else {
                     updatedViewModel.isSelected = false
