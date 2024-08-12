@@ -32,17 +32,22 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     public enum Action {
         case didTapCreateButton
         case didTapSearchButton
+        case editQuery(String)
+        case didTapLocationCell(Int)
         case returnToScene([Location])
     }
     
     public enum Mutation {
         case addToCandidates([LocationViewModel])
+        case fetchLocations([Location])
+        case updateLocations(Location)
         case showPopUp(AddLocationPopupMessage)
     }
     
     public struct State {
         var isLoading: Bool = false
         var locations: [LocationViewModel] = []
+        var searchResults: [LocationViewModel] = []
         var showPopup: AddLocationPopupMessage? = nil
     }
     
@@ -51,12 +56,18 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     let route: PublishSubject<AddAppointmentLocationRouter> = PublishSubject<AddAppointmentLocationRouter>()
     
     private var newAppointment: NewAppointment
+    private var fetchLocationUsecase: FetchLocationsUsecaseProtocol
+    
+    var searchResults: [Location] = []
+    var selectedLocation: Location?
     
     // MARK: - Initializers
     public init(
-        newAppointment: NewAppointment
+        newAppointment: NewAppointment,
+        fetchLocationUsecase: FetchLocationsUsecaseProtocol
     ) {
         self.newAppointment = newAppointment
+        self.fetchLocationUsecase = fetchLocationUsecase
     }
     
     // MARK: - Mutate
@@ -65,15 +76,29 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         case .didTapCreateButton:
             route.onNext(.detail(0))
             return Observable.empty()
+            
         case .didTapSearchButton:
             if currentState.locations.count > 3 {
                 return Observable.just(.showPopUp(.toomanycandidates))
             }
             route.onNext(.search)
             return Observable.empty()
+            
+        case .editQuery(let query):
+            return fetchLocationUsecase
+                .execute(query: query)
+                .do { self.searchResults = $0 }
+                .map { Mutation.fetchLocations($0) }
+                .asObservable()
+            
         case .returnToScene(let locations):
             self.newAppointment.setCandicdateLocations(locations)
             return Observable.just(.addToCandidates(locations.map { LocationViewModel(with: $0) }))
+            
+        case .didTapLocationCell(let index):
+            let selectedLocation = searchResults[index]
+            self.selectedLocation = selectedLocation
+            return Observable.just(.updateLocations(selectedLocation))
         }
     }
     
@@ -82,8 +107,26 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         switch mutation {
         case .addToCandidates(let locations):
             newState.locations.append(contentsOf: locations)
+            
+        case .fetchLocations(let locations):
+            // self.selectedLocation = nil
+            newState.searchResults = locations.map { LocationViewModel(with: $0) }
+            
         case .showPopUp(let message):
             newState.showPopup = message
+            
+        case .updateLocations(let location):
+            newState.searchResults = newState.searchResults.map { viewModel in
+                var updatedViewModel = viewModel
+                // 선택된 location에 대한 ViewModel의 isSelected를 true로 설정하고, 나머지는 false로 설정
+                if viewModel.title == location.title {
+                    updatedViewModel.isSelected = true
+                } else {
+                    updatedViewModel.isSelected = false
+                }
+                print("업데이트 :\(updatedViewModel)")
+                return updatedViewModel
+            }
         }
         
         return newState

@@ -162,6 +162,20 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.searchTextField.rx.text
+            .orEmpty
+            .map { Reactor.Action.editQuery($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.resultTableView.rx.itemSelected
+            .map { Reactor.Action.didTapLocationCell($0.row) }
+            .do(onNext: { [weak self] _ in
+                self?.view.endEditing(true)
+            })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         self.reactor?.state
             .map { $0.locations }
@@ -175,6 +189,18 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
                     )
                     self?.locationStack.addArrangedSubview(view)
                 }
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.searchResults }
+            .bind(to: resultTableView.rx.items(cellIdentifier: LocationCell.identifier, cellType: LocationCell.self)) { _, element, cell in
+                cell.configure(
+                    title: element.title,
+                    address: element.address,
+                    isBookmarked: false, 
+                    isSelected: element.isSelected
+                )
             }
             .disposed(by: disposeBag)
         
@@ -245,8 +271,4 @@ extension AddAppointmentLocationViewController: YakgwaSwitchViewDelegate {
         print("yakgwaSwitchMode: \(state)")
         self.changeMode(state: state)
     }
-}
-
-#Preview {
-    AddAppointmentLocationViewController(reactor: AddAppointmentLocationReactor(newAppointment: NewAppointment()))
 }
