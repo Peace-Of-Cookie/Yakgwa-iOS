@@ -87,9 +87,21 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         case .editQuery(let query):
             return fetchLocationUsecase
                 .execute(query: query)
-                .do { self.searchResults = $0 }
-                .map { Mutation.fetchLocations($0) }
                 .asObservable()
+                .flatMap { [weak self] newResults -> Observable<Mutation> in
+                    guard let self = self else { return Observable.empty() }
+                    
+                    // 이전 결과와 새 결과 비교
+                    if self.searchResults == newResults {
+                        return Observable.empty() // 동일하면 무시
+                    }
+                    
+                    // 새 결과 저장
+                    self.searchResults = newResults
+                    
+                    // Mutation 반환
+                    return Observable.just(.fetchLocations(newResults))
+                }
             
         case .returnToScene(let locations):
             self.newAppointment.setCandicdateLocations(locations)

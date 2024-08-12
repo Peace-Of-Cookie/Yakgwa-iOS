@@ -171,7 +171,7 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
         self.resultTableView.rx.itemSelected
             .map { Reactor.Action.didTapLocationCell($0.row) }
             .do(onNext: { [weak self] _ in
-                // self?.view.endEditing(true)
+                self?.view.endEditing(true)
             })
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
