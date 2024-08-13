@@ -18,7 +18,7 @@ enum AddAppointmentLocationRouter {
     /// 뒤로 가기
     case back
     /// 상세 화면
-    case detail(Int)
+    case detail(MeetID)
     /// 검색 화면
     case search
 }
@@ -61,6 +61,7 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     
     private var newAppointment: NewAppointment
     private var fetchLocationUsecase: FetchLocationsUsecaseProtocol
+    private var createAppointmentUsecase: CreateAppointmentUsecaseProtocol
     
     var searchResults: [Location] = []
     var selectedLocation: Location?
@@ -68,19 +69,31 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     // MARK: - Initializers
     public init(
         newAppointment: NewAppointment,
-        fetchLocationUsecase: FetchLocationsUsecaseProtocol
+        fetchLocationUsecase: FetchLocationsUsecaseProtocol,
+        createAppointmentUsecase: CreateAppointmentUsecaseProtocol
     ) {
         self.newAppointment = newAppointment
         self.fetchLocationUsecase = fetchLocationUsecase
+        self.createAppointmentUsecase = createAppointmentUsecase
     }
     
     // MARK: - Mutate
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .didTapCreateButton:
-            route.onNext(.detail(0))
-            return Observable.empty()
-            
+            return createAppointmentUsecase
+                .execute(appointment: self.newAppointment)
+                .asObservable()
+                .flatMap { meetID -> Observable<Mutation> in
+                    self.route.onNext(.detail(meetID))
+                    return Observable.empty()
+                }
+                .catch { error in
+                    print("에러 발생:\(error.localizedDescription)")
+                    return Observable.just(.showPopUp(.error))
+                }
+                
+                
         case .didTapSearchButton:
             if currentState.locations.count > 3 {
                 return Observable.just(.showPopUp(.toomanycandidates))

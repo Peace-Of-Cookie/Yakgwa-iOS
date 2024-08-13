@@ -54,9 +54,16 @@ extension SelectAppointmentDateCoordinator {
             )
         )
         
+        let createAppointmentUsecase: CreateAppointmentUsecaseProtocol = CreateAppointmentUsecase(
+            repository: CreateAppointmentRepository(
+                remoteDataSource: RemoteCreateAppointmentDataSource()
+            )
+        )
+        
         let reactor = AddAppointmentLocationReactor(
             newAppointment: newAppointment, 
-            fetchLocationUsecase: fetchLocationUsecase
+            fetchLocationUsecase: fetchLocationUsecase,
+            createAppointmentUsecase: createAppointmentUsecase
         )
         
         let addAppointmentLocationViewController = AddAppointmentLocationViewController(

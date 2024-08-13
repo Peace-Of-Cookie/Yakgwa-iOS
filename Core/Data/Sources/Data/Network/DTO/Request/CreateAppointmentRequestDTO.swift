@@ -93,19 +93,18 @@ public extension CreateAppointmentRequestDTO {
         let voteDate: MeetInfoDTO.VoteDateDTO
         if let startDate = entity.getStartDate(), let endDate = entity.getEndDate() {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            dateFormatter.dateFormat = "yyyy-MM-dd"
             let startVoteDate = dateFormatter.string(from: startDate)
             let endVoteDate = dateFormatter.string(from: endDate)
             voteDate = MeetInfoDTO.VoteDateDTO(startVoteDate: startVoteDate, endVoteDate: endVoteDate)
         } else {
-            // Default values if no voting dates are set
             voteDate = MeetInfoDTO.VoteDateDTO(startVoteDate: "", endVoteDate: "")
         }
         
         let meetTime: String
         if let date = entity.getDate(), let time = entity.getTime() {
             let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ssZ"
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
             meetTime = dateFormatter.string(from: date) + " " + dateFormatter.string(from: time)
         } else {
             meetTime = ""

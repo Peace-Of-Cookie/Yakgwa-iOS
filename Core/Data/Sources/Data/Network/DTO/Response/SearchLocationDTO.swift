@@ -40,6 +40,7 @@ extension SearchLocationDTO {
                 title: locationDTO.placeInfoDto.title,
                 link: locationDTO.placeInfoDto.link,
                 category: locationDTO.placeInfoDto.category,
+                description: locationDTO.placeInfoDto.description,
                 telephone: locationDTO.placeInfoDto.telephone,
                 address: locationDTO.placeInfoDto.address,
                 roadAddress: locationDTO.placeInfoDto.roadAddress,
