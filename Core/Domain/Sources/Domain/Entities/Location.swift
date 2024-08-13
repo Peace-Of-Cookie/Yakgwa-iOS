@@ -12,6 +12,8 @@ public struct Location: Equatable {
     public let link: String?
     /// 카테고리
     public let category: String?
+    /// 설명
+    public let description: String?
     /// 전환 번호
     public let telephone: String?
     /// 주소
@@ -23,10 +25,11 @@ public struct Location: Equatable {
     /// y좌표
     public let mapy: String?
     
-    public init(title: String?, link: String?, category: String?, telephone: String?, address: String?, roadAddress: String?, mapx: String?, mapy: String?) {
+    public init(title: String?, link: String?, category: String?, description: String?, telephone: String?, address: String?, roadAddress: String?, mapx: String?, mapy: String?) {
         self.title = title
         self.link = link
         self.category = category
+        self.description = description
         self.telephone = telephone
         self.address = address
         self.roadAddress = roadAddress

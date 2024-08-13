@@ -35,6 +35,7 @@ public struct NewAppointment: Equatable {
     }
 }
 
+// MARK: - Setter
 public extension NewAppointment {
     mutating func setThemeId(_ themeId: Int) {
         self.themeId = themeId
@@ -77,5 +78,44 @@ public extension NewAppointment {
     
     mutating func setLocationToDirectInput() {
         self.candidateLocations = []
+    }
+}
+
+// MARK: - Getter
+public extension NewAppointment {
+    func getTitle() -> String? {
+        return title
+    }
+    
+    func getDescription() -> String? {
+        return description
+    }
+    
+    func getThemeId() -> Int? {
+        return themeId
+    }
+    
+    func getStartDate() -> Date? {
+        return startDate
+    }
+    
+    func getEndDate() -> Date? {
+        return endDate
+    }
+    
+    func getDate() -> Date? {
+        return date
+    }
+    
+    func getTime() -> Date? {
+        return time
+    }
+    
+    func getCandidateLocations() -> [Location]? {
+        return candidateLocations
+    }
+    
+    func getLocation() -> Location? {
+        return location
     }
 }
