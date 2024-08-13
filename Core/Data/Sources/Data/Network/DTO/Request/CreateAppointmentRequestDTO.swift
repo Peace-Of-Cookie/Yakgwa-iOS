@@ -46,7 +46,7 @@ public struct CreateAppointmentRequestDTO: Encodable {
         let meetThemeId: Int
         let confirmPlace: Bool
         let placeInfo: [PlaceInfoDTO]
-        let voteDate: VoteDateDTO
+        let voteDate: VoteDateDTO?
         let meetTime: String
         
         struct PlaceInfoDTO: Encodable {
@@ -76,8 +76,11 @@ public extension CreateAppointmentRequestDTO {
         let meetThemeId = entity.getThemeId() ?? 0
         let confirmPlace = (entity.getLocation() != nil)
         
-        let placeInfo: [MeetInfoDTO.PlaceInfoDTO] = entity.getCandidateLocations()?.map { location in
-            return MeetInfoDTO.PlaceInfoDTO(
+        let placeInfo: [MeetInfoDTO.PlaceInfoDTO]
+        
+        if confirmPlace {
+            let location = entity.getLocation()!
+            placeInfo = [MeetInfoDTO.PlaceInfoDTO(
                 title: location.title ?? "",
                 link: location.link ?? "",
                 category: location.category ?? "",
@@ -87,26 +90,44 @@ public extension CreateAppointmentRequestDTO {
                 roadAddress: location.roadAddress ?? "",
                 mapx: location.mapx ?? "",
                 mapy: location.mapy ?? ""
-            )
-        } ?? []
+            )]
+        } else {
+            placeInfo = entity.getCandidateLocations()?.map { location in
+                return MeetInfoDTO.PlaceInfoDTO(
+                    title: location.title ?? "",
+                    link: location.link ?? "",
+                    category: location.category ?? "",
+                    description: location.description ?? "",
+                    telephone: location.telephone ?? "",
+                    address: location.address ?? "",
+                    roadAddress: location.roadAddress ?? "",
+                    mapx: location.mapx ?? "",
+                    mapy: location.mapy ?? ""
+                )
+            } ?? []
+        }
         
-        let voteDate: MeetInfoDTO.VoteDateDTO
-        if let startDate = entity.getStartDate(), let endDate = entity.getEndDate() {
+        
+        
+        let voteDate: MeetInfoDTO.VoteDateDTO?
+        let meetTime: String
+        
+        if let date = entity.getDate(), let time = entity.getTime() {
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            let timeFormatter = DateFormatter()
+            timeFormatter.dateFormat = "HH:mm:ss"
+            meetTime = dateFormatter.string(from: date) + " " + timeFormatter.string(from: time)
+            voteDate = nil  // meetTime이 있을 경우 voteDate는 nil로 설정
+        } else if let startDate = entity.getStartDate(), let endDate = entity.getEndDate() {
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd"
             let startVoteDate = dateFormatter.string(from: startDate)
             let endVoteDate = dateFormatter.string(from: endDate)
             voteDate = MeetInfoDTO.VoteDateDTO(startVoteDate: startVoteDate, endVoteDate: endVoteDate)
+            meetTime = ""  // voteDate가 있을 경우 meetTime은 빈 문자열로 설정
         } else {
-            voteDate = MeetInfoDTO.VoteDateDTO(startVoteDate: "", endVoteDate: "")
-        }
-        
-        let meetTime: String
-        if let date = entity.getDate(), let time = entity.getTime() {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-            meetTime = dateFormatter.string(from: date) + " " + dateFormatter.string(from: time)
-        } else {
+            voteDate = nil
             meetTime = ""
         }
         
