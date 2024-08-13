@@ -35,16 +35,20 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         case editQuery(String)
         case didTapLocationCell(Int)
         case returnToScene([Location])
+        case changeMode(YakgwaSwitchViewState)
     }
     
     public enum Mutation {
         case addToCandidates([LocationViewModel])
+        case clearCandindates
         case fetchLocations([Location])
         case updateLocations(Location)
         case showPopUp(AddLocationPopupMessage)
+        case updateMode(YakgwaSwitchViewState)
     }
     
     public struct State {
+        var mode: YakgwaSwitchViewState = .first
         var isLoading: Bool = false
         var locations: [LocationViewModel] = []
         var searchResults: [LocationViewModel] = []
@@ -110,7 +114,23 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         case .didTapLocationCell(let index):
             let selectedLocation = searchResults[index]
             self.selectedLocation = selectedLocation
+            
+            // Configure Entity
+            newAppointment.setLocation(selectedLocation)
+            
             return Observable.just(.updateLocations(selectedLocation))
+            
+        case .changeMode(let mode):
+            if mode == .first {
+                newAppointment.setLocationToVote()
+            } else {
+                newAppointment.setLocationToDirectInput()
+            }
+            
+            return Observable.concat([
+                .just(.updateMode(mode)),
+                .just(.clearCandindates)
+            ])
         }
     }
     
@@ -119,6 +139,9 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         switch mutation {
         case .addToCandidates(let locations):
             newState.locations.append(contentsOf: locations)
+            
+        case .clearCandindates:
+            newState.locations = []
             
         case .fetchLocations(let locations):
             self.selectedLocation = nil
@@ -138,6 +161,10 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
                 }
                 return updatedViewModel
             }
+        
+        case .updateMode(let mode):
+            newState.searchResults = []
+            newState.mode = mode
         }
         
         return newState

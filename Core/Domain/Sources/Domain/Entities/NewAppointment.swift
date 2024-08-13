@@ -70,4 +70,12 @@ public extension NewAppointment {
     mutating func setLocation(_ location: Location) {
         self.location = location
     }
+    
+    mutating func setLocationToVote() {
+        self.location = nil
+    }
+    
+    mutating func setLocationToDirectInput() {
+        self.candidateLocations = []
+    }
 }

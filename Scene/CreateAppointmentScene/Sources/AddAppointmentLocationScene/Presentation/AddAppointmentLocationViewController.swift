@@ -10,11 +10,14 @@ import UIKit
 import CoreKit
 import ReactorKit
 import Domain
+import RxCocoa
 
 public final class AddAppointmentLocationViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
     var sendRoutingEvent: ((AddAppointmentLocationRouter) -> Void)?
+    
+    private let modeObserver = BehaviorRelay<YakgwaSwitchViewState>(value: .first)
     
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
@@ -176,6 +179,11 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        modeObserver
+            .map { Reactor.Action.changeMode($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         self.reactor?.state
             .map { $0.locations }
@@ -234,9 +242,17 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
                 $0.leading.equalToSuperview().offset(16)
                 $0.centerX.equalToSuperview()
             }
+            
+            searchTextField.rx.text.onNext("")
         } else {
             titleLabel.text = "정해진 약속 장소를 입력해주세요."
             descriptionLabel.text = ""
+            
+            for view in locationStack.arrangedSubviews {
+                locationStack.removeArrangedSubview(view)
+                view.removeFromSuperview()
+            }
+            
             titleStack.removeArrangedSubview(descriptionLabel)
             
             addLocationButton.removeFromSuperview()
@@ -272,7 +288,7 @@ extension AddAppointmentLocationViewController: YakgwaNavigationDetailDelegate {
 
 extension AddAppointmentLocationViewController: YakgwaSwitchViewDelegate {
     public func yakgwaSwitchView(state: YakgwaSwitchViewState) {
-        print("yakgwaSwitchMode: \(state)")
         self.changeMode(state: state)
+        self.modeObserver.accept(state)
     }
 }
