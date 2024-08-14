@@ -32,12 +32,18 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
         case fetchThemes([Theme])
         case setTheme(Int)
         case setLoading(Bool)
+        case setPopupMessage(PopupMessage)
     }
     
     public struct State {
         var isLoading: Bool = false
         var selectedTheme: Int?
         var themes: [Theme] = []
+        @Pulse var popupMessage: (PopupMessage?)
+    }
+    
+    public enum PopupMessage {
+        case emptyTheme
     }
     
     // MARK: - Properties
@@ -73,13 +79,15 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
             ])
             
         case .didTapNextButton:
+            if currentState.selectedTheme == nil {
+                return Observable.just(Mutation.setPopupMessage(.emptyTheme))
+            }
+            
             route.onNext(.date(newAppointment))
             return Observable.empty()
             
         case .selectTheme(let index):
-            print("테마 선택: \(index)")
             newAppointment.setThemeId(currentState.themes[index].id)
-            print("엔터티 확인 : \(newAppointment)")
             return Observable.just(Mutation.setTheme(index))
         }
     }
@@ -95,6 +103,8 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
             newState.isLoading = isLoading
         case .setTheme(let index):
             newState.selectedTheme = index
+        case .setPopupMessage(let message):
+            newState.popupMessage = message
         }
         
         return newState
