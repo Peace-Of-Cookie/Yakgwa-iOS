@@ -143,8 +143,12 @@ public final class DefaultAppointmentView: UIView {
             $0.centerX.equalToSuperview()
         }
     }
-}
-
-#Preview {
-    DefaultAppointmentView()
+    
+    // MARK: - Public
+    func configure(with viewModel: AppointmentDetailViewModel) {
+        tagView.setTag(viewModel.theme)
+        titleLabel.text = viewModel.title
+        descriptionLabel.text = viewModel.description
+        // invitedView.configure(with: viewModel.invited)
+    }
 }

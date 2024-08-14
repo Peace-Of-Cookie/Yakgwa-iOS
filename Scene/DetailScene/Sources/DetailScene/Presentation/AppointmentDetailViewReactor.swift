@@ -30,7 +30,7 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
     }
     
     public struct State {
-        var details: AppointmentDetail?
+        var details: AppointmentDetailViewModel?
         var isLoading: Bool = false
         @Pulse var popupMessage: (PopupMessage?)
     }
@@ -78,7 +78,7 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         
         switch mutation {
         case .fetchAppointmentDetail(let detail):
-            newState.details = detail
+            newState.details = AppointmentDetailViewModel(with: detail)
             
         case .setLoading(let isLoading):
             newState.isLoading = isLoading

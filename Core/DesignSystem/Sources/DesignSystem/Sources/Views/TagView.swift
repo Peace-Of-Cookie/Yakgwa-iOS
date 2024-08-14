@@ -42,6 +42,10 @@ public final class TagView: UIView {
             $0.centerX.centerY.equalToSuperview()
         }
     }
+    
+    public func setTag(_ tag: String) {
+        tagLabel.text = tag
+    }
 }
 
 public extension Reactive where Base: TagView {

@@ -8,6 +8,7 @@
 import UIKit
 
 import CoreKit
+import Domain
 
 public enum InvitedState {
     case none
@@ -68,6 +69,7 @@ public final class InvitedView: UIView  {
         button.setTitle("전체 보기 >", for: .normal)
         button.setTitleColor(.neutral600, for: .normal)
         button.titleLabel?.font = .m11
+        button.isHidden = true
         return button
     }()
     
@@ -75,12 +77,12 @@ public final class InvitedView: UIView  {
     public init() {
         super.init(frame: .zero)
         setUI()
-        setProfileStack()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
     // MARK: - Privates
     private func setUI() {
         self.backgroundColor = .neutral200
@@ -110,11 +112,27 @@ public final class InvitedView: UIView  {
         }
     }
     
-#warning("TODO : - UI Test ")
-    private func setProfileStack() {
-        let count = 6
+    // MARK: - Public
+    func configure(with participants: [Participant]) {
+        if participants.isEmpty {
+            state = .none
+        } else {
+            state = .invited
+        }
+        
+        let count: Int = participants.count
+        
+        if count > 0 {
+            profileImageStack.isHidden = false
+            noneLabel.isHidden = true
+        } else {
+            profileImageStack.isHidden = true
+            noneLabel.isHidden = false
+        }
+        
         if count > 5 {
             numberLabel.isHidden = false
+            showAllButton.isHidden = false
             for _ in 0..<5 {
                 let profileView = ProfileView(isNew: true)
                 profileImageStack.addArrangedSubview(profileView)
@@ -125,7 +143,6 @@ public final class InvitedView: UIView  {
                 profileImageStack.addArrangedSubview(profileView)
             }
         }
-        
     }
 }
 

@@ -113,10 +113,10 @@ public final class AppointmentDetailViewController: UIViewController, View {
         
         // State
         reactor.state
-            .map { $0.details }
+            .compactMap { $0.details }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] detail in
-                print("디테일 : \(detail)")
+                self?.appointmentDetailView.configure(with: detail)
             })
             .disposed(by: disposeBag)
         
