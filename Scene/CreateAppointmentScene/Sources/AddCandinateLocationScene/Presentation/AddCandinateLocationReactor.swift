@@ -44,7 +44,6 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
     public struct State {
         var isLoading: Bool = false
         var searchResultsViewModel: [LocationViewModel] = []
-        var showPopup: AddCandidatePopupMessage? = nil
         @Pulse var popupMessage: (PopupMessage?)
     }
     

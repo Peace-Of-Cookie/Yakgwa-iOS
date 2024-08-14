@@ -23,11 +23,6 @@ enum AddAppointmentLocationRouter {
     case search
 }
 
-public enum AddLocationPopupMessage: String, Error {
-    case toomanycandidates = "장소 후보는 최대 3개까지 선택 가능해요"
-    case error = "에러가 발생했어요"
-}
-
 public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocationRouting {
     public enum Action {
         case didTapCreateButton
@@ -43,8 +38,9 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         case clearCandindates
         case fetchLocations([Location])
         case updateLocations(Location)
-        case showPopUp(AddLocationPopupMessage)
+        case setPopupMessage(PopupMessage)
         case updateMode(YakgwaSwitchViewState)
+        case setLoading(Bool)
     }
     
     public struct State {
@@ -52,7 +48,14 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
         var isLoading: Bool = false
         var locations: [LocationViewModel] = []
         var searchResults: [LocationViewModel] = []
-        var showPopup: AddLocationPopupMessage? = nil
+        @Pulse var popupMessage: (PopupMessage?)
+    }
+    
+    public enum PopupMessage {
+        case emptyLocation
+        case emptyCandidates
+        case tooManyCandidates
+        case networkError(Error)
     }
     
     // MARK: - Properties
@@ -81,22 +84,34 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .didTapCreateButton:
-            return createAppointmentUsecase
-                .execute(appointment: self.newAppointment)
-                .asObservable()
-                .flatMap { meetID -> Observable<Mutation> in
-                    self.route.onNext(.detail(meetID))
-                    return Observable.empty()
+            if currentState.mode == .first {
+                if newAppointment.getCandidateLocations()?.count == 0 {
+                    return Observable.just(.setPopupMessage(.emptyCandidates))
                 }
-                .catch { error in
-                    print("에러 발생:\(error.localizedDescription)")
-                    return Observable.just(.showPopUp(.error))
+            } else {
+                if newAppointment.getLocation() == nil {
+                    return Observable.just(.setPopupMessage(.emptyLocation))
                 }
-                
-                
+            }
+            
+            return Observable.concat([
+                .just(.setLoading(true)),
+                createAppointmentUsecase
+                    .execute(appointment: self.newAppointment)
+                    .asObservable()
+                    .flatMap { meetID -> Observable<Mutation> in
+                        self.route.onNext(.detail(meetID))
+                        return Observable.empty()
+                    }
+                    .catch { error -> Observable<Mutation> in
+                        return Observable.just(.setPopupMessage(.networkError(error)))
+                    },
+                .just(.setLoading(false))
+            ])
+            
         case .didTapSearchButton:
-            if currentState.locations.count > 3 {
-                return Observable.just(.showPopUp(.toomanycandidates))
+            if currentState.locations.count >= 3 {
+                return Observable.just(.setPopupMessage(.tooManyCandidates))
             }
             route.onNext(.search)
             return Observable.empty()
@@ -160,9 +175,12 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
             self.selectedLocation = nil
             newState.searchResults = locations.map { LocationViewModel(with: $0) }
             
-        case .showPopUp(let message):
-            newState.showPopup = message
+        case .setPopupMessage(let message):
+            newState.popupMessage = message
             
+        case .setLoading(let isLoading):
+            newState.isLoading = isLoading
+
         case .updateLocations(let location):
             newState.searchResults = newState.searchResults.map { viewModel in
                 var updatedViewModel = viewModel
