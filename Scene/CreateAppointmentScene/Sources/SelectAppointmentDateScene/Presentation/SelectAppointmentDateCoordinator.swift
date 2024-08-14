@@ -10,6 +10,7 @@ import UIKit
 import CoreKit
 import Util
 import Domain
+import Data
 
 import AddAppointmentLocationScene
 
@@ -47,8 +48,22 @@ public final class SelectAppointmentDateCoordinator: BaseCoordinator {
 
 extension SelectAppointmentDateCoordinator {
     private func routeToAppointmentLocationScene(with newAppointment: NewAppointment) {
+        let fetchLocationUsecase: FetchLocationsUsecaseProtocol = FetchLocationsUsecase(
+            repository: FetchLocationRepository(
+                remoteDataSource: RemoteFetchLocationsDataSource()
+            )
+        )
+        
+        let createAppointmentUsecase: CreateAppointmentUsecaseProtocol = CreateAppointmentUsecase(
+            repository: CreateAppointmentRepository(
+                remoteDataSource: RemoteCreateAppointmentDataSource()
+            )
+        )
+        
         let reactor = AddAppointmentLocationReactor(
-            newAppointment: newAppointment
+            newAppointment: newAppointment, 
+            fetchLocationUsecase: fetchLocationUsecase,
+            createAppointmentUsecase: createAppointmentUsecase
         )
         
         let addAppointmentLocationViewController = AddAppointmentLocationViewController(

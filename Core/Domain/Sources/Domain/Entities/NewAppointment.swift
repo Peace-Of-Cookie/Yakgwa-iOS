@@ -23,6 +23,10 @@ public struct NewAppointment: Equatable {
     var date: Date?
     /// 직접 입력 시간
     var time: Date?
+    /// 후보지
+    var candidateLocations: [Location]? = []
+    /// 약속 장소
+    var location: Location?
     
     public init(title: String? = nil, description: String? = nil, date: Date? = nil) {
         self.title = title
@@ -31,6 +35,7 @@ public struct NewAppointment: Equatable {
     }
 }
 
+// MARK: - Setter
 public extension NewAppointment {
     mutating func setThemeId(_ themeId: Int) {
         self.themeId = themeId
@@ -57,5 +62,60 @@ public extension NewAppointment {
     
     mutating func setTime(_ time: Date) {
         self.time = time
+    }
+    
+    mutating func setCandicdateLocations(_ locations: [Location]) {
+        self.candidateLocations = locations
+    }
+    
+    mutating func setLocation(_ location: Location) {
+        self.location = location
+    }
+    
+    mutating func setLocationToVote() {
+        self.location = nil
+    }
+    
+    mutating func setLocationToDirectInput() {
+        self.candidateLocations = []
+    }
+}
+
+// MARK: - Getter
+public extension NewAppointment {
+    func getTitle() -> String? {
+        return title
+    }
+    
+    func getDescription() -> String? {
+        return description
+    }
+    
+    func getThemeId() -> Int? {
+        return themeId
+    }
+    
+    func getStartDate() -> Date? {
+        return startDate
+    }
+    
+    func getEndDate() -> Date? {
+        return endDate
+    }
+    
+    func getDate() -> Date? {
+        return date
+    }
+    
+    func getTime() -> Date? {
+        return time
+    }
+    
+    func getCandidateLocations() -> [Location]? {
+        return candidateLocations
+    }
+    
+    func getLocation() -> Location? {
+        return location
     }
 }

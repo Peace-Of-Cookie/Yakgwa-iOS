@@ -10,11 +10,14 @@ import UIKit
 import CoreKit
 import ReactorKit
 import Domain
+import RxCocoa
 
 public final class AddAppointmentLocationViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
     var sendRoutingEvent: ((AddAppointmentLocationRouter) -> Void)?
+    
+    private let modeObserver = BehaviorRelay<YakgwaSwitchViewState>(value: .first)
     
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
@@ -69,6 +72,19 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
         stack.axis = .vertical
         stack.spacing = 8
         return stack
+    }()
+    
+    private lazy var searchTextField: YakgwaSearchTextField = {
+        let textField = YakgwaSearchTextField(placeholder: "장소나 주소를 검색해주세요")
+        return textField
+    }()
+    
+    private lazy var resultTableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(LocationCell.self, forCellReuseIdentifier: LocationCell.identifier)
+        tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
+        return tableView
     }()
     
     // MARK: - Initializers
@@ -138,7 +154,70 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
     }
     
     public func bind(reactor: AddAppointmentLocationReactor) {
+        // Action
+        self.addLocationButton.rx.tap
+            .map { Reactor.Action.didTapSearchButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        self.bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapCreateButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.searchTextField.rx.text
+            .orEmpty
+            .map { Reactor.Action.editQuery($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.resultTableView.rx.itemSelected
+            .map { Reactor.Action.didTapLocationCell($0.row) }
+            .do(onNext: { [weak self] _ in
+                self?.view.endEditing(true)
+            })
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        modeObserver
+            .map { Reactor.Action.changeMode($0) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        self.reactor?.state
+            .map { $0.locations }
+            .bind { [weak self] locations in
+                self?.locationStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+                locations.forEach { location in
+                    let view = LocationView()
+                    view.configure(
+                        title: location.title,
+                        address: location.address
+                    )
+                    self?.locationStack.addArrangedSubview(view)
+                }
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state
+            .map { $0.searchResults }
+            .bind(to: resultTableView.rx.items(cellIdentifier: LocationCell.identifier, cellType: LocationCell.self)) { _, element, cell in
+                cell.configure(
+                    title: element.title,
+                    address: element.address,
+                    isBookmarked: false, 
+                    isSelected: element.isSelected
+                )
+            }
+            .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
     
     private func changeMode(state: YakgwaSwitchViewState) {
@@ -146,11 +225,57 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
             titleLabel.text = "약속 장소 후보를 추가해 주세요"
             descriptionLabel.text = "최대 3개 추가 기능"
             titleStack.addArrangedSubview(descriptionLabel)
+            
+            searchTextField.removeFromSuperview()
+            resultTableView.removeFromSuperview()
+            
+            self.view.addSubview(addLocationButton)
+            addLocationButton.snp.makeConstraints {
+                $0.top.equalTo(titleStack.snp.bottom).offset(8)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+            
+            self.view.addSubview(locationStack)
+            locationStack.snp.makeConstraints {
+                $0.top.equalTo(addLocationButton.snp.bottom).offset(32)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+            
+            searchTextField.rx.text.onNext("")
         } else {
             titleLabel.text = "정해진 약속 장소를 입력해주세요."
             descriptionLabel.text = ""
+            
+            for view in locationStack.arrangedSubviews {
+                locationStack.removeArrangedSubview(view)
+                view.removeFromSuperview()
+            }
+            
             titleStack.removeArrangedSubview(descriptionLabel)
+            
+            addLocationButton.removeFromSuperview()
+            locationStack.removeFromSuperview()
+            
+            self.view.addSubview(searchTextField)
+            searchTextField.snp.makeConstraints {
+                $0.top.equalTo(titleStack.snp.bottom).offset(16)
+                $0.leading.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+            
+            self.view.addSubview(resultTableView)
+            resultTableView.snp.makeConstraints {
+                $0.top.equalTo(searchTextField.snp.bottom).offset(16)
+                $0.leading.trailing.equalToSuperview()
+                $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-16)
+            }
         }
+    }
+    
+    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
 }
 
@@ -163,11 +288,7 @@ extension AddAppointmentLocationViewController: YakgwaNavigationDetailDelegate {
 
 extension AddAppointmentLocationViewController: YakgwaSwitchViewDelegate {
     public func yakgwaSwitchView(state: YakgwaSwitchViewState) {
-        print("yakgwaSwitchMode: \(state)")
         self.changeMode(state: state)
+        self.modeObserver.accept(state)
     }
-}
-
-#Preview {
-    AddAppointmentLocationViewController(reactor: AddAppointmentLocationReactor(newAppointment: NewAppointment()))
 }

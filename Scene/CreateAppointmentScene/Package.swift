@@ -19,10 +19,14 @@ let package = Package(
         .library(
             name: "SelectAppointmentDateScene",
             targets: ["SelectAppointmentDateScene"]),
+        .library(
+            name: "AddCandinateLocationScene",
+            targets: ["AddCandinateLocationScene"])
     ],
     dependencies: [
         .package(path: "./CoreKit"),
         .package(path: "./Domain"),
+        .package(path: "./Data"),
         .package(url: "https://github.com/airbnb/HorizonCalendar.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
@@ -47,7 +51,9 @@ let package = Package(
             name: "AddAppointmentLocationScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
-                .product(name: "Domain", package: "Domain")
+                .product(name: "Domain", package: "Domain"),
+                .product(name: "Data", package: "Data"),
+                "AddCandinateLocationScene"
             ]
         ),
         .target(
@@ -57,6 +63,13 @@ let package = Package(
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "HorizonCalendar", package: "HorizonCalendar"),
                 "AddAppointmentLocationScene"
+            ]
+        ),
+        .target(
+            name: "AddCandinateLocationScene",
+            dependencies: [
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "Domain", package: "Domain")
             ]
         ),
         .testTarget(
@@ -70,6 +83,9 @@ let package = Package(
             dependencies: ["AddAppointmentLocationScene"]),
         .testTarget(
             name: "SelectAppointmentDateSceneTests",
-            dependencies: ["SelectAppointmentDateScene"])
+            dependencies: ["SelectAppointmentDateScene"]),
+        .testTarget(
+            name: "AddCandinateLocationSceneTests",
+            dependencies: ["AddCandinateLocationScene"])
     ]
 )

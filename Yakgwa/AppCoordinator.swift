@@ -28,8 +28,8 @@ final class AppCoordinator: Coordinator {
     
     // MARK: - Functions
     func start() {
-        // presentSplashScene()
-        presentMainScene()
+        presentSplashScene()
+        // presentMainScene()
     }
 }
 
