@@ -41,6 +41,20 @@ public final class AddCandinateLocationViewController: UIViewController, View {
         return button
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutralBlack
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: AddCandinateLocationReactor
@@ -90,6 +104,16 @@ public final class AddCandinateLocationViewController: UIViewController, View {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-16)
         }
+        
+        self.view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     public func bind(reactor: AddCandinateLocationReactor) {
@@ -124,6 +148,29 @@ public final class AddCandinateLocationViewController: UIViewController, View {
                     isSelected: element.isSelected
                 )
             }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .tooManyCandidates:
+                    self?.popupView.configure(
+                        description: "장소 후보는 3개 까지만 선택 가능합니다",
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
+            })
             .disposed(by: disposeBag)
         
         // Routing

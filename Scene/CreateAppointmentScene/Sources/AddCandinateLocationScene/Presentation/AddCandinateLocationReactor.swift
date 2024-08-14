@@ -37,12 +37,19 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
         case fetchLocations([Location])
         case addToCandidates(Location)
         case removeFromCandidates(Location)
-        case showPopUp(AddCandidatePopupMessage)
+        case setPopupMessage(PopupMessage)
+        case setLoading(Bool)
     }
     
     public struct State {
+        var isLoading: Bool = false
         var searchResultsViewModel: [LocationViewModel] = []
         var showPopup: AddCandidatePopupMessage? = nil
+        @Pulse var popupMessage: (PopupMessage?)
+    }
+    
+    public enum PopupMessage {
+        case tooManyCandidates
     }
     
     // MARK: - Properties
@@ -63,11 +70,18 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .editQuery(let query):
-            return fetchLocationUsecase
-                .execute(query: query)
-                .do { self.searchResults = $0 }
-                .map { Mutation.fetchLocations($0) }
-                .asObservable()
+            if query.isEmpty {
+                return Observable.just(Mutation.setLoading(false))
+            }
+            return Observable.concat([
+                Observable.just(Mutation.setLoading(true)),
+                fetchLocationUsecase
+                    .execute(query: query)
+                    .do { self.searchResults = $0 }
+                    .map { Mutation.fetchLocations($0) }
+                    .asObservable(),
+                Observable.just(Mutation.setLoading(false))
+            ])
             
         case .didTapNextButton:
             route.onNext(.add(candidateLocations))
@@ -82,7 +96,7 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
             }
             
             if self.candidateLocations.count >= 3 {
-                return Observable.just(Mutation.showPopUp(.toomanycandidates))
+                return Observable.just(Mutation.setPopupMessage(.tooManyCandidates))
             }
             
             self.candidateLocations.append(location)
@@ -114,8 +128,11 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
                 }
                 return viewModel
             }
-        case .showPopUp(let message):
-            newState.showPopup = message
+        case .setPopupMessage(let message):
+            newState.popupMessage = message
+            
+        case .setLoading(let isLoading):
+            newState.isLoading = isLoading
         }
         return newState
     }
