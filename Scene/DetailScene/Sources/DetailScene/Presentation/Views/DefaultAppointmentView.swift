@@ -138,6 +138,7 @@ public final class DefaultAppointmentView: UIView {
         self.addSubview(inviteButton)
         inviteButton.snp.makeConstraints {
             $0.top.equalTo(invitedView.snp.bottom).offset(16)
+            $0.bottom.equalToSuperview().offset(-16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }

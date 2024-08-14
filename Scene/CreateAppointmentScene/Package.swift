@@ -27,6 +27,7 @@ let package = Package(
         .package(path: "./CoreKit"),
         .package(path: "./Domain"),
         .package(path: "./Data"),
+        .package(path: "./DetailScene"),
         .package(url: "https://github.com/airbnb/HorizonCalendar.git", .upToNextMajor(from: "1.0.0"))
     ],
     targets: [
@@ -53,7 +54,8 @@ let package = Package(
                 .product(name: "CoreKit", package: "CoreKit"),
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "Data", package: "Data"),
-                "AddCandinateLocationScene"
+                "AddCandinateLocationScene",
+                "DetailScene"
             ]
         ),
         .target(

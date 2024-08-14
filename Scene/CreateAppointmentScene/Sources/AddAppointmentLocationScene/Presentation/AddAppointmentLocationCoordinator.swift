@@ -12,6 +12,7 @@ import Util
 import Domain
 
 import AddCandinateLocationScene
+import DetailScene
 
 public final class AddAppointmentLocationCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -39,7 +40,7 @@ public final class AddAppointmentLocationCoordinator: BaseCoordinator {
             case .back:
                 print("뒤로 가기")
             case .detail(let id):
-                print("약속id:\(id) 상세 화면 이동")
+                self?.routeToAppointmentDetailScene(with: id)
             case .search:
                 self?.routeToAddCandinateLocationScene()
             }
@@ -73,5 +74,22 @@ extension AddAppointmentLocationCoordinator {
         }
         
         viewController.tabBarController?.tabBar.isHidden = true
+    }
+    
+    private func routeToAppointmentDetailScene(with id: MeetID) {
+        let reactor = AppointmentDetailViewReactor(id: id)
+        let viewController = AppointmentDetailViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let coordinator = AppointmentDetailCoordinator(
+                navigationController: navigationController,
+                viewController: viewController
+            )
+            
+            navigationController.delegate = self
+            coordinator.parentCoordinator = self
+            coordinator.start()
+            addChildCoordinator(coordinator)
+        }
     }
 }
