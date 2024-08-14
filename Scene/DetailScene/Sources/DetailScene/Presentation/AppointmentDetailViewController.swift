@@ -73,8 +73,8 @@ public final class AppointmentDetailViewController: UIViewController, View {
         
         self.view.addSubview(appointmentDetailView)
         appointmentDetailView.snp.makeConstraints {
-            $0.top.equalTo(navigationBar.snp.bottom)
-            $0.leading.equalToSuperview()
+            $0.top.equalTo(navigationBar.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
     }
