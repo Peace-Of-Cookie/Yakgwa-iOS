@@ -87,6 +87,20 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
         return tableView
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutralBlack
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: AddAppointmentLocationReactor
@@ -151,6 +165,16 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
+        
+        self.view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     public func bind(reactor: AddAppointmentLocationReactor) {
@@ -212,6 +236,59 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
             }
             .disposed(by: disposeBag)
         
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .tooManyCandidates:
+                    self?.popupView.configure(
+                        description: "장소 후보는 3개 까지만 선택 가능합니다",
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                
+                case .emptyCandidates:
+                    self?.popupView.configure(
+                        description: "약속 장소 후보를 추가해주세요",
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                
+                case .emptyLocation:
+                    self?.popupView.configure(
+                        description: "약속 장소를 선택해주세요",
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
+        
         // Routing
         reactor.route
             .subscribe(onNext: { [weak self] router in
@@ -271,6 +348,8 @@ public final class AddAppointmentLocationViewController: UIViewController, View 
                 $0.leading.trailing.equalToSuperview()
                 $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-16)
             }
+            
+            self.view.bringSubviewToFront(self.popupView)
         }
     }
     

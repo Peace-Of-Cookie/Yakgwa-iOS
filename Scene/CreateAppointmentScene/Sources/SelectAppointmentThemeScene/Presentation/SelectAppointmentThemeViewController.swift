@@ -48,6 +48,20 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
         return button
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutralBlack
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: SelectAppointmentThemeReactor
@@ -95,6 +109,16 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             $0.bottom.equalTo(bottomSheetButton.snp.top)
             $0.leading.equalToSuperview().offset(12)
             $0.centerX.equalToSuperview()
+        }
+        
+        self.view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
     
@@ -154,6 +178,29 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             .asDriver(onErrorJustReturn: nil)
             .drive(onNext: { [weak self] _ in
                 self?.collectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .emptyTheme:
+                    self?.popupView.configure(
+                        description: "약속의 테마를 선택해주세요",
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
             })
             .disposed(by: disposeBag)
         
