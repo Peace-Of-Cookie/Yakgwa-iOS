@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  LocationViewModel.swift
 //  
 //
 //  Created by Ekko on 8/11/24.

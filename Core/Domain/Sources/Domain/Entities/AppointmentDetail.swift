@@ -22,3 +22,21 @@ public struct AppointmentDetail: Equatable {
         self.participants = participants
     }
 }
+
+public extension AppointmentDetail {
+    func getTitle() -> String? {
+        return title
+    }
+    
+    func getDescription() -> String? {
+        return description
+    }
+    
+    func getThemeName() -> String? {
+        return themeName
+    }
+    
+    func getParticipants() -> [Participant]? {
+        return participants
+    }
+}

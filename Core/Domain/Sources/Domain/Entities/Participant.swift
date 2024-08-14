@@ -19,3 +19,17 @@ public struct Participant: Equatable {
         self.name = name
     }
 }
+
+public extension Participant {
+    func getRole() -> String? {
+        return role
+    }
+    
+    func getImageUrl() -> String? {
+        return imageUrl
+    }
+    
+    func getName() -> String? {
+        return name
+    }
+}
