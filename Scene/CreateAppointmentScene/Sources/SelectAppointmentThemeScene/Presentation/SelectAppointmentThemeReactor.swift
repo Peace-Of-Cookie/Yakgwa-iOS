@@ -63,10 +63,14 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .viewDidAppear:
-            return fetchThemeUseCase
-                .execute()
-                .map { Mutation.fetchThemes($0) }
-                .asObservable()
+            return Observable.concat([
+                Observable.just(Mutation.setLoading(true)),
+                fetchThemeUseCase
+                    .execute()
+                    .map { Mutation.fetchThemes($0) }
+                    .asObservable(),
+                Observable.just(Mutation.setLoading(false))
+            ])
             
         case .didTapNextButton:
             route.onNext(.date(newAppointment))

@@ -48,6 +48,14 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
         return button
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutralBlack
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: SelectAppointmentThemeReactor
@@ -95,6 +103,11 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             $0.bottom.equalTo(bottomSheetButton.snp.top)
             $0.leading.equalToSuperview().offset(12)
             $0.centerX.equalToSuperview()
+        }
+        
+        self.view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
         }
     }
     
@@ -155,6 +168,11 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             .drive(onNext: { [weak self] _ in
                 self?.collectionView.reloadData()
             })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
             .disposed(by: disposeBag)
         
         // Routing
