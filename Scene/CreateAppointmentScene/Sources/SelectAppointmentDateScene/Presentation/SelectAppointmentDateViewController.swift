@@ -86,6 +86,12 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
         return textField
     }()
     
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: SelectAppointmentDateReactor
@@ -143,6 +149,11 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
         calendarView.snp.makeConstraints {
             $0.top.equalTo(titleStack.snp.bottom).offset(16)
             $0.leading.trailing.equalToSuperview()
+        }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
     
@@ -205,6 +216,38 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
             })
             .disposed(by: disposeBag)
         
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                guard let self = self else { return }
+                self.popupView.isHidden = false
+                switch message {
+                case .emptyDate:
+                    self.popupView.configure(
+                        description: "약속 후보 날짜 또는 확정 시간을 입력해주세요.",
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self.popupView.didTapFisrtButton(completion: {
+                        self.popupView.isHidden = true
+                    })
+                case .expandRange:
+                    self.popupView.configure(
+                        description: "최대 2주까지 설정 가능합니다",
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    
+                    self.selectedDayRange = nil
+                    self.calendarView.setContent(self.makeContent())
+                    
+                    self.popupView.didTapFisrtButton(completion: {
+                        self.popupView.isHidden = true
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
+        
         // Routing
         reactor.route
             .subscribe(onNext: { [weak self] router in
@@ -241,6 +284,8 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
                 $0.leading.equalToSuperview().offset(16)
                 $0.centerX.equalToSuperview()
             }
+            
+            self.view.bringSubviewToFront(self.popupView)
         }
     }
     

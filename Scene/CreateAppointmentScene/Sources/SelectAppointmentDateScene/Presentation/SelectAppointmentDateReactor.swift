@@ -36,13 +36,21 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
     public enum Mutation {
         case updateDateRange(Set<ClosedRange<Date>>?)
         case updateMode(YakgwaSwitchViewState)
-        case showPopUp(String)
         case showPickerSheet(PickerSheetType)
+        case setPopupMessage(PopupMessage)
     }
     
     public struct State { 
         var mode: YakgwaSwitchViewState = .first
         @Pulse var pickerSheetShown: PickerSheetType?
+        @Pulse var popupMessage: (PopupMessage?)
+    }
+    
+    public enum PopupMessage {
+        /// 날짜 선택 안됨
+        case emptyDate
+        /// 2주 초과
+        case expandRange
     }
     
     // MARK: - Properties
@@ -60,11 +68,15 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
         case .selectDateRange(let dateRange):
-            guard let dateRange = dateRange else {
-                return .just(.showPopUp("날짜를 선택해주세요"))
-            }
+            guard let dateRange = dateRange else { return .empty() }
             guard let startDate = dateRange.first?.lowerBound else { return .empty() }
             guard let endDate = dateRange.first?.upperBound else { return .empty() }
+            
+            let diff = Calendar.current.dateComponents([.day], from: startDate, to: endDate).day ?? 0
+            if diff > 14 {
+                newAppointment.setDateToDirectInput()
+                return .just(.setPopupMessage(.expandRange))
+            }
             
             newAppointment.setVoteDate(startDate: startDate, endDate: endDate)
             return .empty()
@@ -91,6 +103,17 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
             return .empty()
             
         case .didTapNextButton:
+            print("엔터티: \(newAppointment)")
+            if currentState.mode == .first {
+                if newAppointment.getStartDate() == nil || newAppointment.getEndDate() == nil {
+                    return .just(.setPopupMessage(.emptyDate))
+                }
+            } else {
+                if newAppointment.getDate() == nil || newAppointment.getTime() == nil  {
+                    return .just(.setPopupMessage(.emptyDate))
+                }
+            }
+            
             route.onNext(.location(newAppointment))
             return Observable.empty()
         }
@@ -104,6 +127,8 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
             newState.mode = mode
         case .showPickerSheet(let type):
             newState.pickerSheetShown = type
+        case .setPopupMessage(let message):
+            newState.popupMessage = message
         default:
             break
         }
