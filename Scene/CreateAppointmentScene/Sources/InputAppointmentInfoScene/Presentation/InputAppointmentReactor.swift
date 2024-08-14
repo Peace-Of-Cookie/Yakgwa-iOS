@@ -31,12 +31,18 @@ public final class InputAppointmentReactor: Reactor, InputAppointmentRouting {
     public enum Mutation {
         case setTitle(String)
         case setDescription(String)
+        case setPopupMessage(PopupMessage)
     }
     
     public struct State {
         var isLoading: Bool = false
         var title: String = ""
         var description: String?
+        @Pulse var popupMessage: (PopupMessage?)
+    }
+    
+    public enum PopupMessage {
+        case emptyTitle
     }
     
     public let initialState: State = State()
@@ -54,6 +60,10 @@ public final class InputAppointmentReactor: Reactor, InputAppointmentRouting {
             
         // Routing
         case .didTapNextButton:
+            if currentState.title.isEmpty || currentState.title.count == 0 {
+                return .just(.setPopupMessage(.emptyTitle))
+            }
+            
             let newAppointment = NewAppointment(
                 title: currentState.title,
                 description: currentState.description,
@@ -71,6 +81,8 @@ public final class InputAppointmentReactor: Reactor, InputAppointmentRouting {
             newState.title = title
         case .setDescription(let description):
             newState.description = description
+        case .setPopupMessage(let message):
+            newState.popupMessage = message
         }
         return newState
     }

@@ -11,9 +11,9 @@ import RxCocoa
 
 public final class YakgwaPopUpView: UIView {
     // MARK: - Properties
-    private let descriptionString: String
-    private let firstButtonTitle: String
-    private let secondButtonTitle: String
+    private var descriptionString: String = ""
+    private var firstButtonTitle: String = ""
+    private var secondButtonTitle: String = ""
     
     private let firstButtonTappedSubject = PublishRelay<Void>()
     private let secondButtonTappedSubject = PublishRelay<Void>()
@@ -62,13 +62,7 @@ public final class YakgwaPopUpView: UIView {
     
     // MARK: - Initializers
     public init(
-        description: String,
-        firstButtonTitle: String = "",
-        secondButtonTitle: String = ""
     ) {
-        self.descriptionString = description
-        self.firstButtonTitle = firstButtonTitle
-        self.secondButtonTitle = secondButtonTitle
         super.init(frame: .zero)
         
         attribute()
@@ -126,8 +120,19 @@ public final class YakgwaPopUpView: UIView {
         buttonStack.addArrangedSubview(secondButton)
     }
     // MARK: - Public
+    public func configure(
+        description: String,
+        firstButtonTitle: String = "",
+        secondButtonTitle: String = ""
+    ) {
+        self.descriptionString = description
+        self.firstButtonTitle = firstButtonTitle
+        self.secondButtonTitle = secondButtonTitle
+        
+        attribute()
+    }
     
-    // MARK: - Actions
+    // MARK: - Actions (Rx)
     @objc
     private func firstButtonTapped() {
         firstButtonTappedSubject.accept(())
@@ -144,6 +149,14 @@ public final class YakgwaPopUpView: UIView {
     
     public var rx_tapSecondButton: Observable<Void> {
         return secondButtonTappedSubject.asObservable()
+    }
+    
+    // MARK: - Actions
+    @MainActor
+    public func didTapFisrtButton(completion: (() -> Void)? = nil) {
+        self.firstButton.addAction {
+            completion?()
+        }
     }
 }
 

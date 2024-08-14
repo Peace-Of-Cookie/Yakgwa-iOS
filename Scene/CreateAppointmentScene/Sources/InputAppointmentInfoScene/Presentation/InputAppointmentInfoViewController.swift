@@ -54,6 +54,12 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
         return button
     }()
     
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: InputAppointmentReactor
@@ -121,6 +127,11 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
             $0.bottom.equalToSuperview()
             $0.leading.trailing.equalToSuperview()
         }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -145,7 +156,24 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         // State
-    
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .emptyTitle:
+                    self?.popupView.configure(
+                        description: "약속 제목을 입력해주세요",
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
+        
         // Routing
         reactor.route
             .subscribe(onNext: { [weak self] router in
