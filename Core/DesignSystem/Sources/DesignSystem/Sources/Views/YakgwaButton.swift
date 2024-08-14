@@ -14,6 +14,10 @@ public enum YakgwaButtonStyle {
     case secondary
     /// 흰색
     case white
+    /// 팝업 primary
+    case popupFirst
+    /// 팝업 seconddary
+    case popupSecond
 }
 
 public enum YakgwaButtonImage: String {
@@ -52,10 +56,10 @@ public class YakGwaButton: UIButton {
     public convenience init(style: YakgwaButtonStyle) {
         self.init(frame: .zero)
         switch style {
-        case .primary:
+        case .primary, .popupSecond:
             self.backgroundColor = UIColor.primary700
             self.setTitleColor(UIColor.white, for: .normal)
-        case .secondary:
+        case .secondary, .popupFirst:
             self.backgroundColor = UIColor.primary100
             self.setTitleColor(UIColor.black, for: .normal)
         case .white:
@@ -73,11 +77,11 @@ public class YakGwaButton: UIButton {
     ) {
         self.init(frame: .zero)
         switch style {
-        case .primary:
+        case .primary, .popupSecond:
             self.backgroundColor = UIColor.primary700
             self.setTitleColor(UIColor.white, for: .normal)
             self.buttonImage = UIImage(named: image.rawValue, in: .module, with: nil)
-        case .secondary:
+        case .secondary, .popupFirst:
             self.backgroundColor = UIColor.primary100
             self.setTitleColor(UIColor.black, for: .normal)
             self.buttonImage = UIImage(named: image.rawValue, in: .module, with: nil)
@@ -100,6 +104,11 @@ public class YakGwaButton: UIButton {
         self.layer.cornerRadius = 12
         
         self.titleLabel?.font = UIFont.h2
+        
+        if self.style == .popupFirst || style == .popupSecond {
+            self.titleLabel?.font = UIFont.sb14
+        }
+        
         self.setTitleColor(UIColor.white, for: .normal)
         
         var configuration = UIButton.Configuration.plain()
@@ -129,9 +138,9 @@ public class YakGwaButton: UIButton {
         titleContainer.foregroundColor = style == .primary ? UIColor.white : UIColor.neutralBlack
         
         switch style {
-        case .primary:
+        case .primary, .popupSecond:
             titleContainer.foregroundColor = UIColor.white
-        case .secondary:
+        case .secondary, .popupFirst:
             titleContainer.foregroundColor = UIColor.neutralBlack
         case .white:
             titleContainer.foregroundColor = UIColor.neutral600

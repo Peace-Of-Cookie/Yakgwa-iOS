@@ -12,7 +12,7 @@ import RxCocoa
 public final class BottomSheetButton: UIView {
     // MARK: - Properties
     private var title: String
-    private let buttonTappedSubject = PublishSubject<Void>()
+    private let buttonTappedSubject = PublishRelay<Void>()
     private let disposeBag = DisposeBag()
     
     // MARK: - UI Components
@@ -56,7 +56,7 @@ public final class BottomSheetButton: UIView {
     
     // MARK: - Actions
     @objc private func buttonPressed() {
-        buttonTappedSubject.onNext(())
+        buttonTappedSubject.accept(())
     }
     
     // Exposing the tap event as an observable
