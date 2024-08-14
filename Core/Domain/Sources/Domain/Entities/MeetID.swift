@@ -14,3 +14,9 @@ public struct MeetID {
         self.meetId = meetId
     }
 }
+
+extension MeetID {
+    public func getMeetId() -> Int {
+        return meetId
+    }
+}
