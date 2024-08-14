@@ -35,6 +35,20 @@ public final class AppointmentDetailViewController: UIViewController, View {
         return view
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutralBlack
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: AppointmentDetailViewReactor
@@ -77,11 +91,57 @@ public final class AppointmentDetailViewController: UIViewController, View {
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
+        
+        self.view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     // MARK: - Binding
     public func bind(reactor: AppointmentDetailViewReactor) {
+        // Action
+        self.rx.viewDidAppear
+            .map { _ in Reactor.Action.viewDidAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        // State
+        reactor.state
+            .map { $0.details }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] detail in
+                print("디테일 : \(detail)")
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
 

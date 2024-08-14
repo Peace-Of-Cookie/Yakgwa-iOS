@@ -10,6 +10,7 @@ import UIKit
 import CoreKit
 import Util
 import Domain
+import Data
 
 import AddCandinateLocationScene
 import DetailScene
@@ -77,7 +78,16 @@ extension AddAppointmentLocationCoordinator {
     }
     
     private func routeToAppointmentDetailScene(with id: MeetID) {
-        let reactor = AppointmentDetailViewReactor(id: id)
+        let fetchAppointmentUsecase: FetchAppointmentDetailUsecaseProtocol = FetchAppointmentDetailUsecase(
+            repository: FetchAppointmentDetailRepository(
+                remoteDataSource: RemoteFetchAppointmentDetailDataSource()
+            )
+        )
+        let reactor = AppointmentDetailViewReactor(
+            id: id,
+            fetchAppointmentDetailUsecase: fetchAppointmentUsecase
+        )
+        
         let viewController = AppointmentDetailViewController(reactor: reactor)
         
         if let navigationController = self.navigationController {
