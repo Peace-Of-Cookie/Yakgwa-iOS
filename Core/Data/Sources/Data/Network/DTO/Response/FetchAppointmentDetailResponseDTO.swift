@@ -62,7 +62,11 @@ extension FetchAppointmentDetailResponseDTO {
             themeName: result.meetInfo.themeName,
             participants: result.participantInfo.map {
                 Participant(role: $0.meetRole, imageUrl: $0.imageUrl, name: $0.name)
-            }
+            },
+            status: nil,
+            dateTime: nil,
+            location: nil,
+            meetId: nil
         )
     }
 }

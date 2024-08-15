@@ -28,6 +28,8 @@
    }
  }
  */
+import Foundation
+
 import Domain
 
 public struct FetchCurrentAppointmentsResponseDTO: Decodable {
@@ -57,7 +59,22 @@ public struct FetchCurrentAppointmentsResponseDTO: Decodable {
 }
 
 extension FetchCurrentAppointmentsResponseDTO {
-    func toDomain() {
-        
+    func toDomain() -> [AppointmentDetail] {
+        return result.meetInfosWithStatus.map { meetInfoWithStatus in
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+            let date = dateFormatter.date(from: meetInfoWithStatus.meetInfo.meetDateTime) ?? Date()
+            
+            return AppointmentDetail(
+                title: meetInfoWithStatus.meetInfo.meetTitle,
+                description: meetInfoWithStatus.meetInfo.description,
+                themeName: meetInfoWithStatus.meetInfo.meetThemeName,
+                participants: nil,
+                status: meetInfoWithStatus.meetStatus,
+                dateTime: date,
+                location: meetInfoWithStatus.meetInfo.placeName,
+                meetId: meetInfoWithStatus.meetInfo.meetId
+            )
+        }
     }
 }
