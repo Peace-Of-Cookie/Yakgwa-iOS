@@ -12,6 +12,8 @@ public enum YakgwaCommonAPI {
     case createAppointment(CreateAppointmentRequestDTO)
     /// 장소 검색
     case fetchLocations(String)
+    /// 장소 상세 정보
+    case fetchAppointmentDetail(FetchAppointmentDetailRequestDTO)
 }
 
 extension YakgwaCommonAPI: YakgwaAPI {
@@ -21,6 +23,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .none
         case .fetchLocations:
             return .none
+        case .fetchAppointmentDetail:
+            return .meet
         }
     }
     
@@ -30,6 +34,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return "/meets"
         case .fetchLocations:
             return "/search"
+        case .fetchAppointmentDetail(let dto):
+            return "/\(dto.meetId)"
         }
     }
     
@@ -55,6 +61,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .post
         case .fetchLocations:
             return .get
+        case .fetchAppointmentDetail:
+            return .get
         }
     }
     
@@ -64,6 +72,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .requestJSONEncodable(dto)
         case .fetchLocations(let query):
             return .requestParameters(parameters: ["search": query], encoding: URLEncoding.queryString)
+        case .fetchAppointmentDetail(let dto):
+            return .requestPlain
         }
     }
     

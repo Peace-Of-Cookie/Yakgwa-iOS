@@ -14,12 +14,16 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
+        .package(path: "./Domain"),
+        .package(path: "./Data")
     ],
     targets: [
         .target(
             name: "DetailScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "Data", package: "Data"),
+                .product(name: "Domain", package: "Domain")
             ]
         ),
         .testTarget(
