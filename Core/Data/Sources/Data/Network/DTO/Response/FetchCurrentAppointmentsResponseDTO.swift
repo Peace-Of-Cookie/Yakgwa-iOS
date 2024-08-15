@@ -1,5 +1,5 @@
 //
-//  File.swift
+//  FetchCurrentAppointmentsResponseDTO.swift
 //  
 //
 //  Created by Ekko on 8/15/24.

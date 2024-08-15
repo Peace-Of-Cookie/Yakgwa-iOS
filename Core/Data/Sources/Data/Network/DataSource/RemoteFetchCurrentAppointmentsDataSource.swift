@@ -10,9 +10,9 @@ import Network
 import RxSwift
 
 final public class RemoteFetchCurrentAppointmentsDataSource: BaseRemoteDataSource<YakgwaCommonAPI>, RemoteFetchCurrentAppointmentDataSourceProtocol {
-    public func fetchCurrentAppointments() -> Single<FetchAppointmentDetailResponseDTO> {
+    public func fetchCurrentAppointments() -> Single<FetchCurrentAppointmentsResponseDTO> {
         request(
             .fetchCurrentAppointments
-        ).map(FetchAppointmentDetailResponseDTO.self)
+        ).map(FetchCurrentAppointmentsResponseDTO.self)
     }
 }

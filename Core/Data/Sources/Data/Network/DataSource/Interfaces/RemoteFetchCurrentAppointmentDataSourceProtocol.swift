@@ -10,5 +10,5 @@ import Network
 import RxSwift
 
 public protocol RemoteFetchCurrentAppointmentDataSourceProtocol {
-    func fetchCurrentAppointments() -> Single<FetchAppointmentDetailResponseDTO>
+    func fetchCurrentAppointments() -> Single<FetchCurrentAppointmentsResponseDTO>
 }
