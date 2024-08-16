@@ -52,4 +52,16 @@ public extension AppointmentDetail {
     func getParticipants() -> [Participant]? {
         return participants
     }
+    
+    func getDate() -> Date? {
+        return dateTime
+    }
+    
+    func getLocation() -> String? {
+        return location
+    }
+    
+    func getStatus() -> String? {
+        return status
+    }
 }

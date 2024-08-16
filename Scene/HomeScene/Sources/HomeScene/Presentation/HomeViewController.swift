@@ -17,7 +17,6 @@ public class HomeViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
     var sendRoutingEvent: ((HomeRouter) -> Void)?
-    // var testSubject: PublishSubject<HomeRouter> = PublishSubject<HomeRouter>()
     
     // MARK: - UI Components
     private lazy var yakgwaLogo: UIImageView = {
@@ -57,7 +56,20 @@ public class HomeViewController: UIViewController, View {
         return view
     }()
     
-    private var homeCollectionView: UICollectionView!
+    private lazy var homeCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.isScrollEnabled = true
+        view.showsHorizontalScrollIndicator = false
+        view.showsVerticalScrollIndicator = false
+        view.backgroundColor = .clear
+        view.clipsToBounds = true
+        view.register(AppointmentCell.self, forCellWithReuseIdentifier: AppointmentCell.identifier)
+        view.delegate = self
+
+        return view
+    }()
     
     // MARK: - Initializers
     public init(
@@ -93,11 +105,14 @@ public class HomeViewController: UIViewController, View {
             $0.leading.equalToSuperview().offset(16)
         }
         
-        view.addSubview(noAppointmentView)
-        noAppointmentView.snp.makeConstraints {
-            $0.top.equalTo(yakgwaLogo.snp.bottom).offset(32)
-            $0.leading.equalToSuperview().offset(16)
-            $0.centerX.equalToSuperview()
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
     
@@ -119,11 +134,25 @@ public class HomeViewController: UIViewController, View {
         
         // State
         reactor.state
+            .map { $0.noAppointmentViewIsHidden }
+            .subscribe(onNext: { [weak self] isHidden in
+                if isHidden {
+                    self?.showCollectionView()
+                } else {
+                    self?.showNoAppointmentView()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
             .map { $0.appointments }
             .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] appointments in
-                print("약속: \(appointments)")
-            })
+            .bind(to: homeCollectionView.rx.items(
+                cellIdentifier: "AppointmentCell",
+                cellType: AppointmentCell.self)
+            ) { index, appointment, cell in
+                cell.configure(with: appointment)
+            }
             .disposed(by: disposeBag)
         
         reactor.state.map { $0.isLoading }
@@ -158,5 +187,40 @@ public class HomeViewController: UIViewController, View {
                 }
             })
             .disposed(by: disposeBag)
+    }
+}
+
+extension HomeViewController {
+    private func showNoAppointmentView() {
+        homeCollectionView.removeFromSuperview()
+        
+        view.addSubview(noAppointmentView)
+        noAppointmentView.snp.makeConstraints {
+            $0.top.equalTo(yakgwaLogo.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+        }
+    }
+    
+    private func showCollectionView() {
+        noAppointmentView.removeFromSuperview()
+        
+        view.addSubview(homeCollectionView)
+        homeCollectionView.snp.makeConstraints {
+            $0.top.equalTo(yakgwaLogo.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(256)
+        }
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        return CGSize(width: collectionView.frame.width, height: 256)
     }
 }

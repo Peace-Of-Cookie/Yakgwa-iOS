@@ -29,12 +29,13 @@ public final class HomeReactor: Reactor, HomeRouting {
         case fetchAppointments([AppointmentDetail])
         case setLoading(Bool)
         case setPopupMessage(PopupMessage)
-
+        case setNoAppointmentViewHidden(Bool)
     }
     
     public struct State {
         var isLoading: Bool = false
         var appointments: [AppointmentDetail] = []
+        var noAppointmentViewIsHidden: Bool = false
         @Pulse var popupMessage: (PopupMessage?)
 
     }
@@ -53,7 +54,7 @@ public final class HomeReactor: Reactor, HomeRouting {
     
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-            // Routing
+        // Routing
         case .didTapCreateAppointmentButton:
             route.onNext(.create)
             return Observable.empty()
@@ -63,10 +64,14 @@ public final class HomeReactor: Reactor, HomeRouting {
                 Observable.just(Mutation.setLoading(true)),
                 fetchAppointmentUsecase
                     .execute()
-                    .map { Mutation.fetchAppointments($0) }
                     .asObservable()
+                    .flatMap { appointments -> Observable<Mutation> in
+                        let setHiddenMutation = Mutation.setNoAppointmentViewHidden(appointments.count > 0)
+                        let fetchAppointmentsMutation = Mutation.fetchAppointments(appointments)
+                        return Observable.from([setHiddenMutation, fetchAppointmentsMutation])
+                    }
                     .catch { error in
-                            .just(.setPopupMessage(.networkError(error)))
+                        return .just(.setPopupMessage(.networkError(error)))
                     },
                 Observable.just(Mutation.setLoading(false))
             ])
@@ -82,6 +87,9 @@ public final class HomeReactor: Reactor, HomeRouting {
             
         case let .fetchAppointments(appointments):
             newState.appointments = appointments
+            
+        case let .setNoAppointmentViewHidden(isHidden):
+            newState.noAppointmentViewIsHidden = isHidden
             
         case .setPopupMessage(let message):
             newState.popupMessage = message

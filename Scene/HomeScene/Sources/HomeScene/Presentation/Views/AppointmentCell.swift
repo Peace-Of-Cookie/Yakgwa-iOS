@@ -7,6 +7,8 @@
 
 import UIKit
 
+import Domain
+
 public final class AppointmentCell: UICollectionViewCell {
     // MARK: - Properties
     static let identifier = "AppointmentCell"
@@ -29,10 +31,17 @@ public final class AppointmentCell: UICollectionViewCell {
     }
     
     // MARK: - Privates
-    public func setUI() {
+    private func setUI() {
+        self.backgroundColor = .clear
+        
         contentView.addSubview(appointmentView)
         appointmentView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+    }
+    
+    // MARK: - Publics
+    public func configure(with appointment: AppointmentDetail) {
+        appointmentView.configure(with: appointment)
     }
 }
