@@ -22,7 +22,6 @@ public class HomeViewController: UIViewController, View {
     private lazy var yakgwaLogo: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "yakgwa_label_icon", in: .module, with: nil)
-        // image.backgroundColor = .systemRed
         return image
     }()
     
@@ -39,6 +38,7 @@ public class HomeViewController: UIViewController, View {
     
     private lazy var noAppointmentView: NoAppointmentView = {
         let view = NoAppointmentView()
+        view.isHidden = true
         return view
     }()
     
@@ -59,6 +59,11 @@ public class HomeViewController: UIViewController, View {
     private lazy var homeCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 16
+        
+        let inset = (UIScreen.main.bounds.width - (UIScreen.main.bounds.width - 40)) / 2
+        layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
         view.isScrollEnabled = true
         view.showsHorizontalScrollIndicator = false
@@ -221,6 +226,6 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        return CGSize(width: collectionView.frame.width, height: 256)
+        return CGSize(width: collectionView.frame.width - 40, height: 256)
     }
 }

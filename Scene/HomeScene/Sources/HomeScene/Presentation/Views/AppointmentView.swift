@@ -138,7 +138,7 @@ public class AppointmentView: UIView {
         return label
     }()
     
-    private lazy var testButton: YakGwaButton = {
+    private lazy var detailButton: YakGwaButton = {
         let button = YakGwaButton(style: .primary)
         button.title = "모임 내용 자세히 보기"
         button.buttonImage = UIImage(named: "arrow_icon", in: .module, with: nil)
@@ -197,16 +197,14 @@ public class AppointmentView: UIView {
                 
                 dDayLabel.isHidden = true
                 
-                self.addSubview(testButton)
-                testButton.snp.makeConstraints {
-                    $0.top.equalTo(infoStack.snp.bottom).offset(16)
-                    $0.leading.equalToSuperview().offset(16)
+                self.addSubview(detailButton)
+                detailButton.snp.makeConstraints {                    $0.leading.equalToSuperview().offset(16)
                     $0.bottom.equalToSuperview().offset(-16)
                     $0.centerX.equalToSuperview()
                 }
                 
                 infoStack.snp.makeConstraints {
-                    $0.bottom.equalTo(testButton.snp.top).offset(-32)
+                    $0.bottom.equalTo(detailButton.snp.top).offset(-32)
                     $0.centerX.equalToSuperview()
                 }
 
@@ -231,8 +229,8 @@ public class AppointmentView: UIView {
                 locationStack.addArrangedSubview(locationImageView)
                 locationStack.addArrangedSubview(locationLabel)
                 
-                self.addSubview(testButton)
-                testButton.snp.makeConstraints {
+                self.addSubview(detailButton)
+                detailButton.snp.makeConstraints {
                     $0.top.equalTo(infoStack.snp.bottom).offset(16)
                     $0.bottom.equalToSuperview().offset(-16)
                     $0.leading.equalToSuperview().offset(16)
