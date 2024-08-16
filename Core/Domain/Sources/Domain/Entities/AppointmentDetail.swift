@@ -64,4 +64,8 @@ public extension AppointmentDetail {
     func getStatus() -> String? {
         return status
     }
+    
+    func getId() -> Int? {
+        return meetId
+    }
 }

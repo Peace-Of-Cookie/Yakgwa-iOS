@@ -156,7 +156,13 @@ public class HomeViewController: UIViewController, View {
                 cellIdentifier: "AppointmentCell",
                 cellType: AppointmentCell.self)
             ) { index, appointment, cell in
+                
                 cell.configure(with: appointment)
+                
+                cell.appointmentView.detailButton.rx.tap
+                    .map { Reactor.Action.didTapDetailButton(index) }
+                    .bind(to: reactor.action)
+                    .disposed(by: cell.disposeBag)
             }
             .disposed(by: disposeBag)
         
@@ -186,10 +192,7 @@ public class HomeViewController: UIViewController, View {
         // Routing
         reactor.route
             .subscribe(onNext: { [weak self] router in
-                switch router {
-                case .create:
-                    self?.sendRoutingEvent?(.create)
-                }
+                self?.sendRoutingEvent?(router)
             })
             .disposed(by: disposeBag)
     }

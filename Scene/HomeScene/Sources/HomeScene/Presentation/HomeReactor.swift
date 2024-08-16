@@ -17,12 +17,15 @@ protocol HomeRouting {
 enum HomeRouter {
     /// 약속 생성 화면
     case create
+    /// 약속 상세 화면
+    case detail(MeetID)
 }
 
 public final class HomeReactor: Reactor, HomeRouting {
     public enum Action {
         case didTapCreateAppointmentButton
         case viewDidAppear
+        case didTapDetailButton(Int)
     }
     
     public enum Mutation {
@@ -48,6 +51,8 @@ public final class HomeReactor: Reactor, HomeRouting {
     let route: PublishSubject<HomeRouter> = PublishSubject<HomeRouter>()
     let fetchAppointmentUsecase: FetchCurrentAppointmentsUsecaseProtocol
     
+    var appointments: [AppointmentDetail] = []
+    
     public init(fetchAppointmentUsecase: FetchCurrentAppointmentsUsecaseProtocol) {
         self.fetchAppointmentUsecase = fetchAppointmentUsecase
     }
@@ -66,6 +71,7 @@ public final class HomeReactor: Reactor, HomeRouting {
                     .execute()
                     .asObservable()
                     .flatMap { appointments -> Observable<Mutation> in
+                        self.appointments = appointments
                         let setHiddenMutation = Mutation.setNoAppointmentViewHidden(appointments.count > 0)
                         let fetchAppointmentsMutation = Mutation.fetchAppointments(appointments)
                         return Observable.from([setHiddenMutation, fetchAppointmentsMutation])
@@ -75,6 +81,12 @@ public final class HomeReactor: Reactor, HomeRouting {
                     },
                 Observable.just(Mutation.setLoading(false))
             ])
+            
+        case .didTapDetailButton(let index):
+            if let meetId = self.appointments[index].getId() {
+                route.onNext(.detail(MeetID(meetId)))
+            }
+            return Observable.empty()
         }
     }
     

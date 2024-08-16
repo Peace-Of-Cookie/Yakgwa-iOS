@@ -20,7 +20,7 @@ public class AppointmentView: UIView {
 
     // MARK: - Properties
     private var viewState: AppointmentState
-
+    
     // MARK: - UI Components
     private lazy var tagStack: UIStackView = {
         let stack = UIStackView()
@@ -138,7 +138,7 @@ public class AppointmentView: UIView {
         return label
     }()
     
-    private lazy var detailButton: YakGwaButton = {
+    lazy var detailButton: YakGwaButton = {
         let button = YakGwaButton(style: .primary)
         button.title = "모임 내용 자세히 보기"
         button.buttonImage = UIImage(named: "arrow_icon", in: .module, with: nil)
@@ -198,7 +198,8 @@ public class AppointmentView: UIView {
                 dDayLabel.isHidden = true
                 
                 self.addSubview(detailButton)
-                detailButton.snp.makeConstraints {                    $0.leading.equalToSuperview().offset(16)
+                detailButton.snp.makeConstraints {                    
+                    $0.leading.equalToSuperview().offset(16)
                     $0.bottom.equalToSuperview().offset(-16)
                     $0.centerX.equalToSuperview()
                 }
