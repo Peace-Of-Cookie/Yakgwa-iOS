@@ -13,6 +13,8 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
+        .package(path: "./Domain"),
+        .package(path: "./Data"),
         .package(path: "./CreateAppointmentScene")
     ],
     targets: [
@@ -20,6 +22,8 @@ let package = Package(
             name: "HomeScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "Domain", package: "Domain"),
+                .product(name: "Data", package: "Data"),
                 .product(name: "InputAppointmentInfoScene", package: "CreateAppointmentScene")
             ],
             resources: [.process("Assets")]

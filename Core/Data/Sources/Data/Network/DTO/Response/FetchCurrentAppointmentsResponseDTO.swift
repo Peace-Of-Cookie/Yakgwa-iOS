@@ -48,11 +48,11 @@ public struct FetchCurrentAppointmentsResponseDTO: Decodable {
             
             struct MeetInfoDTO: Decodable {
                 let meetThemeName: String
-                let meetDateTime: String
-                let placeName: String
+                let meetDateTime: String?
+                let placeName: String?
                 let meetTitle: String
                 let meetId: Int
-                let description: String
+                let description: String?
             }
         }
     }
@@ -63,7 +63,7 @@ extension FetchCurrentAppointmentsResponseDTO {
         return result.meetInfosWithStatus.map { meetInfoWithStatus in
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-            let date = dateFormatter.date(from: meetInfoWithStatus.meetInfo.meetDateTime) ?? Date()
+            let date = dateFormatter.date(from: meetInfoWithStatus.meetInfo.meetDateTime ?? "") ?? Date()
             
             return AppointmentDetail(
                 title: meetInfoWithStatus.meetInfo.meetTitle,

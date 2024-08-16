@@ -43,6 +43,20 @@ public class HomeViewController: UIViewController, View {
         return view
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutral300
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
     private var homeCollectionView: UICollectionView!
     
     // MARK: - Initializers
@@ -109,6 +123,29 @@ public class HomeViewController: UIViewController, View {
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] appointments in
                 print("약속: \(appointments)")
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
             })
             .disposed(by: disposeBag)
         
