@@ -9,6 +9,8 @@ import UIKit
 
 import CoreKit
 import Util
+import Domain
+import Data
 
 import HomeScene
 import MyPageScene
@@ -40,12 +42,14 @@ public final class MainTabBarCoordinator: BaseCoordinator {
     // MARK: - Privates
     public func configureTabBar() {
         let reactor = HomeReactor(
-            fetchAppointmentUsecase: DefaultFetchAppointmentUsecase(
-                repository: FetchAppointmentRepository(
-                    remoteDataSource: RemoteFetchAppointmentDataSource()
+            fetchAppointmentUsecase: FetchCurrentAppointmentUsecase(
+                repository: FetchCurrentAppointmentsRepository(
+                    remoteDataSource: RemoteFetchCurrentAppointmentsDataSource(
+                    )
                 )
             )
         )
+        
         let homeViewController = HomeViewController(reactor: reactor)
         let homeCoordinator = HomeCoordinator(
             navigationController: UINavigationController(),

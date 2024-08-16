@@ -9,8 +9,11 @@ import UIKit
 
 import CoreKit
 import Util
+import Domain
+import Data
 
 import InputAppointmentInfoScene
+import DetailScene
 
 public final class HomeCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -30,6 +33,8 @@ public final class HomeCoordinator: BaseCoordinator {
             switch event {
             case .create:
                 self?.routeToCreateAppointment()
+            case .detail(let id):
+                self?.routeToAppointmentDetailScene(with: id)
             }
         }
         
@@ -58,5 +63,31 @@ extension HomeCoordinator {
         }
         
         inputAppointmentInfoViewController.tabBarController?.tabBar.isHidden = true
+    }
+    
+    private func routeToAppointmentDetailScene(with id: MeetID) {
+        let fetchAppointmentUsecase: FetchAppointmentDetailUsecaseProtocol = FetchAppointmentDetailUsecase(
+            repository: FetchAppointmentDetailRepository(
+                remoteDataSource: RemoteFetchAppointmentDetailDataSource()
+            )
+        )
+        let reactor = AppointmentDetailViewReactor(
+            id: id,
+            fetchAppointmentDetailUsecase: fetchAppointmentUsecase
+        )
+        
+        let viewController = AppointmentDetailViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let coordinator = AppointmentDetailCoordinator(
+                navigationController: navigationController,
+                viewController: viewController
+            )
+            
+            navigationController.delegate = self
+            coordinator.parentCoordinator = self
+            coordinator.start()
+            addChildCoordinator(coordinator)
+        }
     }
 }

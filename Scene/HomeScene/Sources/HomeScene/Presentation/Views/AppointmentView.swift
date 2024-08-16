@@ -9,6 +9,7 @@ import UIKit
 
 import CoreKit
 import SnapKit
+import Domain
 
 public enum AppointmentState {
     case waiting
@@ -19,7 +20,7 @@ public class AppointmentView: UIView {
 
     // MARK: - Properties
     private var viewState: AppointmentState
-
+    
     // MARK: - UI Components
     private lazy var tagStack: UIStackView = {
         let stack = UIStackView()
@@ -51,6 +52,8 @@ public class AppointmentView: UIView {
         label.text = "약과장의 약과모임"
         label.font = .sb20
         label.textColor = .neutralBlack
+        label.textAlignment = .center
+        label.numberOfLines = 1
         return label
     }()
 
@@ -59,6 +62,8 @@ public class AppointmentView: UIView {
         label.text = "모임 설명입니다. 모임 설명입니다"
         label.font = .m14
         label.textColor = .neutral500
+        label.textAlignment = .center
+        label.numberOfLines = 1
         return label
     }()
 
@@ -133,7 +138,7 @@ public class AppointmentView: UIView {
         return label
     }()
     
-    private lazy var testButton: YakGwaButton = {
+    lazy var detailButton: YakGwaButton = {
         let button = YakGwaButton(style: .primary)
         button.title = "모임 내용 자세히 보기"
         button.buttonImage = UIImage(named: "arrow_icon", in: .module, with: nil)
@@ -154,16 +159,11 @@ public class AppointmentView: UIView {
     private func setUI() {
         self.backgroundColor = .neutralWhite
         
-        self.snp.makeConstraints {
-            $0.width.equalTo(308)
-            $0.height.equalTo(256)
-        }
-        
         self.layer.cornerRadius = 16
         
         self.addSubview(tagStack)
         tagStack.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
+            $0.top.equalToSuperview().offset(24)
             $0.centerX.equalToSuperview()
         }
 
@@ -173,6 +173,7 @@ public class AppointmentView: UIView {
         self.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
             $0.top.equalTo(tagStack.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
 
@@ -183,47 +184,59 @@ public class AppointmentView: UIView {
         }
 
         self.addSubview(infoStack)
+    }
+    
+    // MARK: - Publics
+    public func configure(with appointment: AppointmentDetail) {
+        titleLabel.text = appointment.getTitle()
+        descriptionLabel.text = appointment.getDescription() ?? ""
+        tagView.setTag(appointment.getThemeName() ?? "")
+        
+        if let cellStatus = appointment.getStatus() {
+            if cellStatus == "BEFORE_CONFIRM" {
+                
+                dDayLabel.isHidden = true
+                
+                self.addSubview(detailButton)
+                detailButton.snp.makeConstraints {                    
+                    $0.leading.equalToSuperview().offset(16)
+                    $0.bottom.equalToSuperview().offset(-16)
+                    $0.centerX.equalToSuperview()
+                }
+                
+                infoStack.snp.makeConstraints {
+                    $0.bottom.equalTo(detailButton.snp.top).offset(-32)
+                    $0.centerX.equalToSuperview()
+                }
 
-        if self.viewState == .waiting {
-            infoStack.snp.makeConstraints {
-                $0.top.equalTo(descriptionLabel.snp.bottom).offset(16)
-                $0.centerX.equalToSuperview()
-            }
+                infoStack.addArrangedSubview(infoLabel)
+            } else {
+                infoStack.snp.makeConstraints {
+                    $0.top.equalTo(descriptionLabel.snp.bottom).offset(8)
+                    $0.centerX.equalToSuperview()
+                }
+                infoStack.addArrangedSubview(dateStack)
+                dateStack.addArrangedSubview(dateImageView)
+                dateStack.addArrangedSubview(dateLabel)
+                dateStack.addArrangedSubview(dateSeparator)
 
-            infoStack.addArrangedSubview(infoLabel)
+                dateSeparator.snp.makeConstraints {
+                    $0.height.equalTo(16)
+                    $0.width.equalTo(1)
+                }
 
-            self.addSubview(testButton)
-            testButton.snp.makeConstraints {
-                $0.top.equalTo(infoStack.snp.bottom).offset(16)
-                $0.bottom.equalToSuperview().offset(-16)
-                $0.centerX.equalToSuperview()
-            }
-        } else {
-            infoStack.snp.makeConstraints {
-                $0.top.equalTo(descriptionLabel.snp.bottom).offset(8)
-                $0.centerX.equalToSuperview()
-            }
-            infoStack.addArrangedSubview(dateStack)
-            dateStack.addArrangedSubview(dateImageView)
-            dateStack.addArrangedSubview(dateLabel)
-            dateStack.addArrangedSubview(dateSeparator)
-
-            dateSeparator.snp.makeConstraints {
-                $0.height.equalTo(16)
-                $0.width.equalTo(1)
-            }
-
-            dateStack.addArrangedSubview(timeLabel)
-            infoStack.addArrangedSubview(locationStack)
-            locationStack.addArrangedSubview(locationImageView)
-            locationStack.addArrangedSubview(locationLabel)
-            
-            self.addSubview(testButton)
-            testButton.snp.makeConstraints {
-                $0.top.equalTo(infoStack.snp.bottom).offset(16)
-                $0.bottom.equalToSuperview().offset(-16)
-                $0.leading.equalToSuperview().offset(16)
-                $0.centerX.equalToSuperview()
+                dateStack.addArrangedSubview(timeLabel)
+                infoStack.addArrangedSubview(locationStack)
+                locationStack.addArrangedSubview(locationImageView)
+                locationStack.addArrangedSubview(locationLabel)
+                
+                self.addSubview(detailButton)
+                detailButton.snp.makeConstraints {
+                    $0.top.equalTo(infoStack.snp.bottom).offset(16)
+                    $0.bottom.equalToSuperview().offset(-16)
+                    $0.leading.equalToSuperview().offset(16)
+                    $0.centerX.equalToSuperview()
+                }
             }
         }
     }

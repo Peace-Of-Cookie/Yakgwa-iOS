@@ -17,13 +17,11 @@ public class HomeViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
     var sendRoutingEvent: ((HomeRouter) -> Void)?
-    // var testSubject: PublishSubject<HomeRouter> = PublishSubject<HomeRouter>()
     
     // MARK: - UI Components
     private lazy var yakgwaLogo: UIImageView = {
         let image = UIImageView()
         image.image = UIImage(named: "yakgwa_label_icon", in: .module, with: nil)
-        // image.backgroundColor = .systemRed
         return image
     }()
     
@@ -40,10 +38,43 @@ public class HomeViewController: UIViewController, View {
     
     private lazy var noAppointmentView: NoAppointmentView = {
         let view = NoAppointmentView()
+        view.isHidden = true
         return view
     }()
     
-    private var homeCollectionView: UICollectionView!
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutral300
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
+    private lazy var homeCollectionView: UICollectionView = {
+        let layout = UICollectionViewFlowLayout()
+        layout.scrollDirection = .horizontal
+        layout.minimumLineSpacing = 16
+        
+        let inset = (UIScreen.main.bounds.width - (UIScreen.main.bounds.width - 40)) / 2
+        layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
+        
+        let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
+        view.isScrollEnabled = true
+        view.showsHorizontalScrollIndicator = false
+        view.showsVerticalScrollIndicator = false
+        view.backgroundColor = .clear
+        view.clipsToBounds = true
+        view.register(AppointmentCell.self, forCellWithReuseIdentifier: AppointmentCell.identifier)
+        view.delegate = self
+
+        return view
+    }()
     
     // MARK: - Initializers
     public init(
@@ -79,11 +110,14 @@ public class HomeViewController: UIViewController, View {
             $0.leading.equalToSuperview().offset(16)
         }
         
-        view.addSubview(noAppointmentView)
-        noAppointmentView.snp.makeConstraints {
-            $0.top.equalTo(yakgwaLogo.snp.bottom).offset(32)
-            $0.leading.equalToSuperview().offset(16)
-            $0.centerX.equalToSuperview()
+        view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
         }
     }
     
@@ -105,21 +139,96 @@ public class HomeViewController: UIViewController, View {
         
         // State
         reactor.state
+            .map { $0.noAppointmentViewIsHidden }
+            .subscribe(onNext: { [weak self] isHidden in
+                if isHidden {
+                    self?.showCollectionView()
+                } else {
+                    self?.showNoAppointmentView()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state
             .map { $0.appointments }
             .distinctUntilChanged()
-            .subscribe(onNext: { [weak self] appointments in
-                print("약속: \(appointments)")
+            .bind(to: homeCollectionView.rx.items(
+                cellIdentifier: "AppointmentCell",
+                cellType: AppointmentCell.self)
+            ) { index, appointment, cell in
+                
+                cell.configure(with: appointment)
+                
+                cell.appointmentView.detailButton.rx.tap
+                    .map { Reactor.Action.didTapDetailButton(index) }
+                    .bind(to: reactor.action)
+                    .disposed(by: cell.disposeBag)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
             })
             .disposed(by: disposeBag)
         
         // Routing
         reactor.route
             .subscribe(onNext: { [weak self] router in
-                switch router {
-                case .create:
-                    self?.sendRoutingEvent?(.create)
-                }
+                self?.sendRoutingEvent?(router)
             })
             .disposed(by: disposeBag)
+    }
+}
+
+extension HomeViewController {
+    private func showNoAppointmentView() {
+        homeCollectionView.removeFromSuperview()
+        
+        view.addSubview(noAppointmentView)
+        noAppointmentView.snp.makeConstraints {
+            $0.top.equalTo(yakgwaLogo.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+        }
+    }
+    
+    private func showCollectionView() {
+        noAppointmentView.removeFromSuperview()
+        
+        view.addSubview(homeCollectionView)
+        homeCollectionView.snp.makeConstraints {
+            $0.top.equalTo(yakgwaLogo.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+            $0.height.equalTo(256)
+        }
+    }
+}
+
+extension HomeViewController: UICollectionViewDelegateFlowLayout, UICollectionViewDelegate {
+    public func collectionView(
+        _ collectionView: UICollectionView,
+        layout collectionViewLayout: UICollectionViewLayout,
+        sizeForItemAt indexPath: IndexPath
+    ) -> CGSize {
+        return CGSize(width: collectionView.frame.width - 40, height: 256)
     }
 }

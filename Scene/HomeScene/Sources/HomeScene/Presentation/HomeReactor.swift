@@ -8,6 +8,7 @@
 import CoreKit
 
 import ReactorKit
+import Domain
 
 protocol HomeRouting {
     var route: PublishSubject<HomeRouter> { get }
@@ -16,43 +17,76 @@ protocol HomeRouting {
 enum HomeRouter {
     /// 약속 생성 화면
     case create
+    /// 약속 상세 화면
+    case detail(MeetID)
 }
 
 public final class HomeReactor: Reactor, HomeRouting {
     public enum Action {
         case didTapCreateAppointmentButton
         case viewDidAppear
+        case didTapDetailButton(Int)
     }
     
     public enum Mutation {
-        case fetchAppointments([Appointment])
+        case fetchAppointments([AppointmentDetail])
         case setLoading(Bool)
+        case setPopupMessage(PopupMessage)
+        case setNoAppointmentViewHidden(Bool)
     }
     
     public struct State {
         var isLoading: Bool = false
-        var appointments: [Appointment] = []
+        var appointments: [AppointmentDetail] = []
+        var noAppointmentViewIsHidden: Bool = false
+        @Pulse var popupMessage: (PopupMessage?)
+
+    }
+    
+    public enum PopupMessage {
+        case networkError(Error)
     }
     
     public let initialState: State = State()
     let route: PublishSubject<HomeRouter> = PublishSubject<HomeRouter>()
-    let fetchAppointmentUsecase: FetchAppointmentUsecase
+    let fetchAppointmentUsecase: FetchCurrentAppointmentsUsecaseProtocol
     
-    public init(fetchAppointmentUsecase: FetchAppointmentUsecase) {
+    var appointments: [AppointmentDetail] = []
+    
+    public init(fetchAppointmentUsecase: FetchCurrentAppointmentsUsecaseProtocol) {
         self.fetchAppointmentUsecase = fetchAppointmentUsecase
     }
     
     public func mutate(action: Action) -> Observable<Mutation> {
         switch action {
-            // Routing
+        // Routing
         case .didTapCreateAppointmentButton:
             route.onNext(.create)
             return Observable.empty()
+            
         case .viewDidAppear:
-            return fetchAppointmentUsecase
-                .execute()
-                .map { Mutation.fetchAppointments($0) }
-                .asObservable()
+            return Observable.concat([
+                Observable.just(Mutation.setLoading(true)),
+                fetchAppointmentUsecase
+                    .execute()
+                    .asObservable()
+                    .flatMap { appointments -> Observable<Mutation> in
+                        self.appointments = appointments
+                        let setHiddenMutation = Mutation.setNoAppointmentViewHidden(appointments.count > 0)
+                        let fetchAppointmentsMutation = Mutation.fetchAppointments(appointments)
+                        return Observable.from([setHiddenMutation, fetchAppointmentsMutation])
+                    }
+                    .catch { error in
+                        return .just(.setPopupMessage(.networkError(error)))
+                    },
+                Observable.just(Mutation.setLoading(false))
+            ])
+            
+        case .didTapDetailButton(let index):
+            if let meetId = self.appointments[index].getId() {
+                route.onNext(.detail(MeetID(meetId)))
+            }
+            return Observable.empty()
         }
     }
     
@@ -62,8 +96,15 @@ public final class HomeReactor: Reactor, HomeRouting {
         switch mutation {
         case let .setLoading(isLoading):
             newState.isLoading = isLoading
+            
         case let .fetchAppointments(appointments):
             newState.appointments = appointments
+            
+        case let .setNoAppointmentViewHidden(isHidden):
+            newState.noAppointmentViewIsHidden = isHidden
+            
+        case .setPopupMessage(let message):
+            newState.popupMessage = message
         }
         
         return newState

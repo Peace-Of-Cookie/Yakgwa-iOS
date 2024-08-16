@@ -7,12 +7,18 @@
 
 import UIKit
 
+import Domain
+
+import RxSwift
+
 public final class AppointmentCell: UICollectionViewCell {
     // MARK: - Properties
     static let identifier = "AppointmentCell"
     
+    var disposeBag: DisposeBag = DisposeBag()
+    
     // MARK: - UI Components
-    private lazy var appointmentView: AppointmentView = {
+    lazy var appointmentView: AppointmentView = {
         let view = AppointmentView()
         return view
     }()
@@ -28,11 +34,23 @@ public final class AppointmentCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    public override func prepareForReuse() {
+        super.prepareForReuse()
+        disposeBag = DisposeBag()
+    }
+    
     // MARK: - Privates
-    public func setUI() {
+    private func setUI() {
+        self.backgroundColor = .clear
+        
         contentView.addSubview(appointmentView)
         appointmentView.snp.makeConstraints {
             $0.edges.equalToSuperview()
         }
+    }
+    
+    // MARK: - Publics
+    public func configure(with appointment: AppointmentDetail) {
+        appointmentView.configure(with: appointment)
     }
 }
