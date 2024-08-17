@@ -126,8 +126,8 @@ extension AppointmentDetailViewReactor {
     }
     
     private func createFeedTemplate() -> FeedTemplate {
-        let appLink = Link(androidExecutionParams: ["inviteId": "30"],
-                           iosExecutionParams: ["inviteId": "30"])
+        let appLink = Link(androidExecutionParams: ["inviteId": "\(meetId.getMeetId())"],
+                           iosExecutionParams: ["inviteId": "\(meetId.getMeetId())"])
         let button = Button(title: "앱으로 보기", link: appLink)
         
         let content = Content(title: "\(detail?.getTitle() ?? "")",

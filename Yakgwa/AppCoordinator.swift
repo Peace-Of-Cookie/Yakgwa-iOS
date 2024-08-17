@@ -10,10 +10,13 @@ import UIKit
 import CoreKit
 import Util
 import Network
+import Domain
+import Data
 
 import SplashScene
 import MainScene
 import LoginScene
+import DetailScene
 
 final class AppCoordinator: Coordinator {
     // MARK: - Properties 
@@ -28,6 +31,7 @@ final class AppCoordinator: Coordinator {
     
     // MARK: - Functions
     func start() {
+        print("AppCoordinator start()🍀")
         presentSplashScene()
         // presentMainScene()
     }
@@ -36,6 +40,7 @@ final class AppCoordinator: Coordinator {
 extension AppCoordinator {
     /// Splash 화면 이동
     private func presentSplashScene() {
+        print("AppCoordinator presentSplashScene()🍀")
         self.childCoordinators = []
         
         let splashReactor = SplashReactor()
@@ -54,6 +59,7 @@ extension AppCoordinator {
     
     /// Login 화면 이동
     private func presentLoginScene() {
+        print("AppCoordinator presentLoginScene()🍀")
         self.childCoordinators = []
         
         let kakaoLoginService: KakaoLoginService = KakaoLoginService(apiDataSource: BaseRemoteDataSource<LoginAPI>())
@@ -76,6 +82,7 @@ extension AppCoordinator {
     
     /// Main 화면 이동
     private func presentMainScene() {
+        print("AppCoordinator presentMainScene()🍀")
         self.childCoordinators = []
         
         let reactor: MainTabBarViewReactor = MainTabBarViewReactor()
