@@ -111,6 +111,11 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.appointmentDetailView.inviteButton.rx.tap
+            .map { Reactor.Action.didTapInviteButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .compactMap { $0.details }

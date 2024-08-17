@@ -73,7 +73,7 @@ public final class DefaultAppointmentView: UIView {
         return view
     }()
     
-    private lazy var inviteButton: YakGwaButton = {
+    lazy var inviteButton: YakGwaButton = {
         let button = YakGwaButton(style: .secondary, image: .share)
         button.title = "초대하기"
         return button

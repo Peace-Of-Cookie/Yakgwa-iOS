@@ -10,6 +10,11 @@ import Domain
 
 import ReactorKit
 
+import KakaoSDKTemplate
+import SafariServices
+import KakaoSDKShare
+import KakaoSDKCommon
+
 protocol AppointmentDetailViewRouting {
     var route: PublishSubject<AppointmentDetailRouter> { get }
 }
@@ -21,6 +26,7 @@ enum AppointmentDetailRouter {
 public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewRouting {
     public enum Action {
         case viewDidAppear
+        case didTapInviteButton
     }
     
     public enum Mutation {
@@ -46,6 +52,7 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
     let fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol
     
     let meetId: MeetID
+    var detail: AppointmentDetail?
     
     public init(
         id: MeetID,
@@ -63,6 +70,9 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
                 Observable.just(Mutation.setLoading(true)),
                 fetchAppointmentDetailUsecase
                     .execute(with: self.meetId)
+                    .do { [weak self] detail in
+                        self?.detail = detail
+                    }
                     .map { Mutation.fetchAppointmentDetail($0) }
                     .asObservable()
                     .catch { error -> Observable<Mutation> in
@@ -70,6 +80,10 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
                     },
                 Observable.just(Mutation.setLoading(false))
             ])
+            
+        case .didTapInviteButton:
+            self.sendKakaoMessageWithFeedTemplate()
+            return .empty()
         }
     }
     
@@ -88,5 +102,41 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         }
         
         return newState
+    }
+}
+
+extension AppointmentDetailViewReactor {
+    private func sendKakaoMessageWithFeedTemplate() {
+        let template = createFeedTemplate()
+        if let feedTemplateJsonData = (try? SdkJSONEncoder.custom.encode(template)) {
+            if let templateJsonObject = SdkUtils.toJsonObject(feedTemplateJsonData) {
+                ShareApi.shared.shareDefault(templateObject: templateJsonObject) {(sharingResult, error) in
+                    if let error = error {
+                        print(error)
+                    } else {
+                        print("shareDefault() success.")
+                        
+                        //do something
+                        guard let sharingResult = sharingResult else { return }
+                        UIApplication.shared.open(sharingResult.url, options: [:], completionHandler: nil)
+                    }
+                }
+            }
+        }
+    }
+    
+    private func createFeedTemplate() -> FeedTemplate {
+        let appLink = Link(androidExecutionParams: ["inviteId": "30"],
+                           iosExecutionParams: ["inviteId": "30"])
+        let button = Button(title: "앱으로 보기", link: appLink)
+        
+        let content = Content(title: "\(detail?.getTitle() ?? "")",
+                              imageUrl: URL(string: "http://k.kakaocdn.net/dn/bp2Qmz/btsHbRn5Auu/I4MY1Ks8YoU2npkzSr7WT0/kakaolink40_original.png"), 
+                              description: "\(detail?.getDescription() ?? "")",
+                              link: appLink)
+        return FeedTemplate(
+            content: content,
+            buttons: [button]
+        )
     }
 }

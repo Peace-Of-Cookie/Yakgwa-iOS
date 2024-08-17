@@ -200,6 +200,8 @@ public class HomeViewController: UIViewController, View {
 
 extension HomeViewController {
     private func showNoAppointmentView() {
+        noAppointmentView.isHidden = false
+        
         homeCollectionView.removeFromSuperview()
         
         view.addSubview(noAppointmentView)
