@@ -185,8 +185,8 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
 
 extension InputAppointmentInfoViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
-        // print("didTapDetailLeftButton")
-        self.navigationController?.popViewController(animated: true)
+        let preViewController = self.navigationController?.popViewController(animated: true)
+        preViewController?.tabBarController?.tabBar.isHidden = false
     }
 }
 
