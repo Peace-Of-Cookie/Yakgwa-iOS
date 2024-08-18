@@ -111,3 +111,11 @@ public final class MainTabBarCoordinator: BaseCoordinator {
         }
     }
 }
+
+extension MainTabBarCoordinator {
+    public func routeToDetailScene(with meetId: MeetID) {
+        if let homeCoordinator = childCoordinators.first as? HomeCoordinator {
+            homeCoordinator.routeToAppointmentDetailScene(with: meetId)
+        }
+    }
+}

@@ -21,6 +21,10 @@ import AddAppointmentLocationScene
 import SelectAppointmentDateScene
 import MyPageScene
 import MainScene
+import DetailScene
+
+import Domain
+import Data
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
@@ -32,23 +36,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: windowScene)
         
-//        let splashReactor = SplashReactor()
-//        let splashViewController = SplashViewController(reactor: splashReactor)
         appCoordinator = AppCoordinator(window: self.window!)
 
         appCoordinator?.start()
         
+//        if let url = connectionOptions.urlContexts.first?.url {
+//            if (AuthApi.isKakaoTalkLoginUrl(url)) {
+//                let _ = AuthController.handleOpenUrl(url: url)
+//            }
+//        }
         
-        
-//        let mainTabBarReactor = MainTabBarViewReactor()
-//        let mainTabBarController = MainTabBarController(reactor: mainTabBarReactor)
-//        let mainTabBarCoordinator = MainTabBarCoordinator(window: self.window, viewController: mainTabBarController)
-//        mainTabBarCoordinator.start()
-        
-//        let testViewController = MyPageViewController()
-//        
-//        window.rootViewController = testViewController
-//        window.makeKeyAndVisible()
+        guard let url = connectionOptions.urlContexts.first?.url else { return }
+        handleDeepLinkWithKakao(url)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -85,7 +84,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 let _ = AuthController.handleOpenUrl(url: url)
             }
         }
+        
+        guard let url = URLContexts.first?.url else { return }
+        handleDeepLinkWithKakao(url)
+        // MARK: - URL
+        print("SceneDelegate with url: \(url)")
     }
+}
 
+extension SceneDelegate {
+    private func handleDeepLinkWithKakao(_ url: URL) {
+        
+        guard let scheme = url.scheme, scheme == "kakao6125fa6ae1efc29d385873c2b891e24e" else { return }
+        
+        let host = url.host
+        
+        if host == "kakaolink" {
+            let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
+            if let items = components?.queryItems?.first(where: { $0.name == "inviteId"})?.value {
+                if let meetId: Int = Int(items) {
+                    self.appCoordinator?.handleDeeplinkToDetailScene(with: MeetID(meetId))
+                }
+            }
+            
+        }
+    }
 }
 

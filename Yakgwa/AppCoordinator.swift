@@ -10,10 +10,13 @@ import UIKit
 import CoreKit
 import Util
 import Network
+import Domain
+import Data
 
 import SplashScene
 import MainScene
 import LoginScene
+import DetailScene
 
 final class AppCoordinator: Coordinator {
     // MARK: - Properties 
@@ -105,4 +108,35 @@ extension AppCoordinator: LoginSceneDelegate {
     func loginSceneToMainScene() {
         self.presentMainScene()
     }
+}
+
+extension AppCoordinator {
+    func handleDeeplinkToDetailScene(with meetId: MeetID) {
+        let isLoggedIn: Bool = true
+        
+        if isLoggedIn {
+            routeToDetailScene(from: .home ,meetId: meetId)
+        } else {
+            presentLoginScene()
+            routeToDetailScene(from: .login, meetId: meetId)
+        }
+    }
+    
+    private func routeToDetailScene(from scene: OriginScene, meetId: MeetID) {
+        switch scene {
+        case .home:
+            if let mainTabBarCoordinator = self.childCoordinators.first as? MainTabBarCoordinator {
+                mainTabBarCoordinator.routeToDetailScene(with: meetId)
+            }
+        case .login:
+            if let loginCoordinator = self.childCoordinators.first as? LoginCoordinator {
+                loginCoordinator.routeToDetailScene(with: meetId)
+            }
+        }
+    }
+}
+
+enum OriginScene {
+    case home
+    case login
 }
