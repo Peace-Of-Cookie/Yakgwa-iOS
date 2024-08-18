@@ -65,7 +65,7 @@ extension HomeCoordinator {
         inputAppointmentInfoViewController.tabBarController?.tabBar.isHidden = true
     }
     
-    private func routeToAppointmentDetailScene(with id: MeetID) {
+    public func routeToAppointmentDetailScene(with id: MeetID) {
         let fetchAppointmentUsecase: FetchAppointmentDetailUsecaseProtocol = FetchAppointmentDetailUsecase(
             repository: FetchAppointmentDetailRepository(
                 remoteDataSource: RemoteFetchAppointmentDetailDataSource()

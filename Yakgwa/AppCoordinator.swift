@@ -31,7 +31,6 @@ final class AppCoordinator: Coordinator {
     
     // MARK: - Functions
     func start() {
-        print("AppCoordinator start()🍀")
         presentSplashScene()
         // presentMainScene()
     }
@@ -40,7 +39,6 @@ final class AppCoordinator: Coordinator {
 extension AppCoordinator {
     /// Splash 화면 이동
     private func presentSplashScene() {
-        print("AppCoordinator presentSplashScene()🍀")
         self.childCoordinators = []
         
         let splashReactor = SplashReactor()
@@ -59,7 +57,6 @@ extension AppCoordinator {
     
     /// Login 화면 이동
     private func presentLoginScene() {
-        print("AppCoordinator presentLoginScene()🍀")
         self.childCoordinators = []
         
         let kakaoLoginService: KakaoLoginService = KakaoLoginService(apiDataSource: BaseRemoteDataSource<LoginAPI>())
@@ -82,7 +79,6 @@ extension AppCoordinator {
     
     /// Main 화면 이동
     private func presentMainScene() {
-        print("AppCoordinator presentMainScene()🍀")
         self.childCoordinators = []
         
         let reactor: MainTabBarViewReactor = MainTabBarViewReactor()
@@ -112,4 +108,35 @@ extension AppCoordinator: LoginSceneDelegate {
     func loginSceneToMainScene() {
         self.presentMainScene()
     }
+}
+
+extension AppCoordinator {
+    func handleDeeplinkToDetailScene(with meetId: MeetID) {
+        let isLoggedIn: Bool = true
+        
+        if isLoggedIn {
+            routeToDetailScene(from: .home ,meetId: meetId)
+        } else {
+            presentLoginScene()
+            routeToDetailScene(from: .login, meetId: meetId)
+        }
+    }
+    
+    private func routeToDetailScene(from scene: OriginScene, meetId: MeetID) {
+        switch scene {
+        case .home:
+            if let mainTabBarCoordinator = self.childCoordinators.first as? MainTabBarCoordinator {
+                mainTabBarCoordinator.routeToDetailScene(with: meetId)
+            }
+        case .login:
+            if let loginCoordinator = self.childCoordinators.first as? LoginCoordinator {
+                loginCoordinator.routeToDetailScene(with: meetId)
+            }
+        }
+    }
+}
+
+enum OriginScene {
+    case home
+    case login
 }

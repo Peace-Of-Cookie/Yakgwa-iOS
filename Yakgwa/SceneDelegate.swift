@@ -39,6 +39,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         appCoordinator = AppCoordinator(window: self.window!)
 
         appCoordinator?.start()
+        
+//        if let url = connectionOptions.urlContexts.first?.url {
+//            if (AuthApi.isKakaoTalkLoginUrl(url)) {
+//                let _ = AuthController.handleOpenUrl(url: url)
+//            }
+//        }
+        
+        guard let url = connectionOptions.urlContexts.first?.url else { return }
+        handleDeepLinkWithKakao(url)
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
@@ -94,14 +103,11 @@ extension SceneDelegate {
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
             if let items = components?.queryItems?.first(where: { $0.name == "inviteId"})?.value {
                 if let meetId: Int = Int(items) {
-                    routeToDetailScene(with: MeetID(meetId))
+                    self.appCoordinator?.handleDeeplinkToDetailScene(with: MeetID(meetId))
                 }
             }
             
         }
-    }
-    
-    private func routeToDetailScene(with meetId: MeetID) {
     }
 }
 
