@@ -15,6 +15,7 @@ import RxCocoa
 public final class MainTabBarController: UITabBarController, View {
     // MARK: - Properties
     public var disposeBag = DisposeBag()
+    var sendRoutingEvent: ((MainTabBarRouter) -> Void)?
     
     // MARK: - Initializers
     public init(
@@ -38,13 +39,19 @@ public final class MainTabBarController: UITabBarController, View {
     
     // MARK: - Privates
     public func bind(reactor: MainTabBarViewReactor) {
-        print("bind")
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
 extension MainTabBarController: MainTabBarDelegate {
     func centerButtonTapped() {
         print("약속 생성 화면으로 이동")
+        self.reactor?.action.onNext(.didTapCreateButton)
     }
 }
 

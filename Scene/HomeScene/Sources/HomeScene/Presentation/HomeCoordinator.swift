@@ -19,6 +19,8 @@ public final class HomeCoordinator: BaseCoordinator {
     // MARK: - Properties
     let viewController: HomeViewController
     
+    public var centerButtonTapped: (() -> Void)?
+    
     // MARK: - Initializers
     public init(
         navigationController: UINavigationController,
@@ -29,6 +31,14 @@ public final class HomeCoordinator: BaseCoordinator {
     }
     // MARK: - Public
     public override func start() {
+        setRoute()
+        setCenterButtonAction()
+        
+        self.navigationController?.viewControllers = [self.viewController]
+    }
+    
+    // MARK: - Private
+    private func setRoute() {
         self.viewController.sendRoutingEvent = { [weak self] event in
             switch event {
             case .create:
@@ -37,17 +47,18 @@ public final class HomeCoordinator: BaseCoordinator {
                 self?.routeToAppointmentDetailScene(with: id)
             }
         }
-        
-        self.navigationController?.viewControllers = [self.viewController]
     }
     
-    // MARK: - Private
-    
+    private func setCenterButtonAction() {
+        self.centerButtonTapped = { [weak self] in
+            self?.routeToCreateAppointment()
+        }
+    }
     // MARK: - Public
 }
 
 extension HomeCoordinator {
-    private func routeToCreateAppointment() {
+    public func routeToCreateAppointment() {
         let reactor = InputAppointmentReactor()
         let inputAppointmentInfoViewController = InputAppointmentInfoViewController(reactor: reactor)
         if let navigationController = self.navigationController {

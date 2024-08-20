@@ -14,7 +14,8 @@ let package = Package(
     dependencies: [
         .package(path: "./CoreKit"),
         .package(path: "./HomeScene"),
-        .package(path: "./MyPageScene")
+        .package(path: "./MyPageScene"),
+        .package(path: "./CreateAppointmentScene")
     ],
     targets: [
         .target(
@@ -22,7 +23,8 @@ let package = Package(
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
                 .product(name: "HomeScene", package: "HomeScene"),
-                .product(name: "MyPageScene", package: "MyPageScene")
+                .product(name: "MyPageScene", package: "MyPageScene"),
+                .product(name: "InputAppointmentInfoScene", package: "CreateAppointmentScene")
             ],
             resources: [.process("Assets")]
         ),

@@ -14,6 +14,7 @@ import Data
 
 import HomeScene
 import MyPageScene
+import InputAppointmentInfoScene
 
 @MainActor
 public final class MainTabBarCoordinator: BaseCoordinator {
@@ -37,6 +38,7 @@ public final class MainTabBarCoordinator: BaseCoordinator {
         configureTabBar()
         self.window.rootViewController = self.viewController
         self.window.makeKeyAndVisible()
+        self.setRoute()
     }
     
     // MARK: - Privates
@@ -55,6 +57,12 @@ public final class MainTabBarCoordinator: BaseCoordinator {
             navigationController: UINavigationController(),
             viewController: homeViewController
         )
+        
+        // CenterButtonTapped 클로저 전달
+        homeCoordinator.centerButtonTapped = { [weak homeCoordinator] in
+                    homeCoordinator?.routeToCreateAppointment()
+                }
+        
         homeCoordinator.start()
         homeCoordinator.parentCoordinator = self
         childCoordinators.append(homeCoordinator)
@@ -91,18 +99,6 @@ public final class MainTabBarCoordinator: BaseCoordinator {
 //        myPageNavController.delegate = self
     }
     
-    private func createNavController(for rootViewController: UIViewController, title: String?, image: UIImage, selectedImage: UIImage) -> UIViewController {
-        
-        let navController = UINavigationController(rootViewController:  rootViewController)
-        navController.navigationBar.isTranslucent = false
-        navController.navigationBar.backgroundColor = .white
-        navController.tabBarItem.title = title
-        navController.tabBarItem.image = image
-        navController.tabBarItem.selectedImage = selectedImage
-        // navController.interactivePopGestureRecognizer?.delegate = nil // 스와이프 제스처 enable true
-        return navController
-    }
-    
     // UINavigationControllerDelegate 메서드 오버라이드
     public func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
         if let tabBarController = navigationController.tabBarController {
@@ -113,9 +109,31 @@ public final class MainTabBarCoordinator: BaseCoordinator {
 }
 
 extension MainTabBarCoordinator {
+    private func setRoute() {
+        self.viewController.sendRoutingEvent = { [weak self] event in
+            switch event {
+            case .createAppointment:
+                self?.handleCenterButtonTap()
+            }
+        }
+    }
+    
+    /// Deeplink route to detail
     public func routeToDetailScene(with meetId: MeetID) {
         if let homeCoordinator = childCoordinators.first as? HomeCoordinator {
             homeCoordinator.routeToAppointmentDetailScene(with: meetId)
+        }
+    }
+    
+    private func handleCenterButtonTap() {
+        // guard let selectedIndex = self.viewController.selectedIndex else { return }
+        let selectedIndex = self.viewController.selectedIndex
+        
+        if selectedIndex == 0, let homeCoordinator = childCoordinators[selectedIndex] as? HomeCoordinator {
+            homeCoordinator.centerButtonTapped?()
+        } else if selectedIndex == 1, let myPageCoordinator = childCoordinators[selectedIndex] as? MyPageCoordinator {
+            print("마이페이지에서 centerButtonTapped 이벤트 발생!")
+            // myPageCoordinator.centerButtonTapped?()
         }
     }
 }
