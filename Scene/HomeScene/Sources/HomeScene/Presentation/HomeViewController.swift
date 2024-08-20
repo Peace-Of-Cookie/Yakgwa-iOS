@@ -61,7 +61,7 @@ public class HomeViewController: UIViewController, View {
         layout.scrollDirection = .horizontal
         layout.minimumLineSpacing = 16
         
-        let inset = (UIScreen.main.bounds.width - (UIScreen.main.bounds.width - 40)) / 2
+        let inset = (UIScreen.main.bounds.width - (UIScreen.main.bounds.width - 8)) / 2
         layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
         
         let view = UICollectionView(frame: .zero, collectionViewLayout: layout)
@@ -231,6 +231,6 @@ extension HomeViewController: UICollectionViewDelegateFlowLayout, UICollectionVi
         layout collectionViewLayout: UICollectionViewLayout,
         sizeForItemAt indexPath: IndexPath
     ) -> CGSize {
-        return CGSize(width: collectionView.frame.width - 40, height: 256)
+        return CGSize(width: collectionView.frame.width - 8, height: 256)
     }
 }
