@@ -16,6 +16,8 @@ public enum YakgwaCommonAPI {
     case fetchAppointmentDetail(FetchAppointmentDetailRequestDTO)
     /// 현재 참여중인 약속 목록
     case fetchCurrentAppointments
+    /// 모임 참여
+    case joinAppointment(JoinAppointmentRequestDTO)
 }
 
 extension YakgwaCommonAPI: YakgwaAPI {
@@ -28,6 +30,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
         case .fetchAppointmentDetail:
             return .meet
         case .fetchCurrentAppointments:
+            return .meet
+        case .joinAppointment:
             return .meet
         }
     }
@@ -42,6 +46,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return "/\(dto.meetId)"
         case .fetchCurrentAppointments:
             return ""
+        case .joinAppointment(let dto):
+            return "/\(dto.meetId)"
         }
     }
     
@@ -69,6 +75,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .get
         case .fetchAppointmentDetail:
             return .get
+        case .joinAppointment:
+            return .post
         default:
             return .get
         }
