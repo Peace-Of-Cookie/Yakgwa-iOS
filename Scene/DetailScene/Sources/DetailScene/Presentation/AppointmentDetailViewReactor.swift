@@ -71,6 +71,7 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
                 fetchAppointmentDetailUsecase
                     .execute(with: self.meetId)
                     .do { [weak self] detail in
+                        print("결과: \(detail)")
                         self?.detail = detail
                     }
                     .map { Mutation.fetchAppointmentDetail($0) }

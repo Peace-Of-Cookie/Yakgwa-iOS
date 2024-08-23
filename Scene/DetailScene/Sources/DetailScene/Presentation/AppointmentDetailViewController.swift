@@ -49,6 +49,18 @@ public final class AppointmentDetailViewController: UIViewController, View {
         return view
     }()
     
+    private lazy var dateVoteView: VoteView = {
+        let view = VoteView()
+        view.configure(type: .date)
+        return view
+    }()
+    
+    private lazy var locationVoteView: VoteView = {
+        let view = VoteView()
+        view.configure(type: .location)
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: AppointmentDetailViewReactor
@@ -88,6 +100,20 @@ public final class AppointmentDetailViewController: UIViewController, View {
         self.view.addSubview(appointmentDetailView)
         appointmentDetailView.snp.makeConstraints {
             $0.top.equalTo(navigationBar.snp.bottom).offset(32)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+        }
+        
+        self.view.addSubview(dateVoteView)
+        dateVoteView.snp.makeConstraints {
+            $0.top.equalTo(appointmentDetailView.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+        }
+        
+        self.view.addSubview(locationVoteView)
+        locationVoteView.snp.makeConstraints {
+            $0.top.equalTo(dateVoteView.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
