@@ -115,22 +115,22 @@ extension AppCoordinator {
         let isLoggedIn: Bool = true
         
         if isLoggedIn {
-            routeToDetailScene(from: .home ,meetId: meetId)
+            routeToInviteScene(from: .home ,meetId: meetId)
         } else {
             presentLoginScene()
-            routeToDetailScene(from: .login, meetId: meetId)
+            routeToInviteScene(from: .login, meetId: meetId)
         }
     }
     
-    private func routeToDetailScene(from scene: OriginScene, meetId: MeetID) {
+    private func routeToInviteScene(from scene: OriginScene, meetId: MeetID) {
         switch scene {
         case .home:
             if let mainTabBarCoordinator = self.childCoordinators.first as? MainTabBarCoordinator {
-                mainTabBarCoordinator.routeToDetailScene(with: meetId)
+                mainTabBarCoordinator.routeToInviteScene(with: meetId)
             }
         case .login:
             if let loginCoordinator = self.childCoordinators.first as? LoginCoordinator {
-                loginCoordinator.routeToDetailScene(with: meetId)
+                loginCoordinator.routeToInviteScene(with: meetId)
             }
         }
     }

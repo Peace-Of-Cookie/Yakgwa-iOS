@@ -14,6 +14,7 @@ import Data
 
 import InputAppointmentInfoScene
 import DetailScene
+import InviteScene
 
 public final class HomeCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -91,6 +92,33 @@ extension HomeCoordinator {
         
         if let navigationController = self.navigationController {
             let coordinator = AppointmentDetailCoordinator(
+                navigationController: navigationController,
+                viewController: viewController
+            )
+            
+            navigationController.delegate = self
+            coordinator.parentCoordinator = self
+            coordinator.start()
+            addChildCoordinator(coordinator)
+        }
+    }
+    
+    public func routeToInviteScene(with id: MeetID) {
+        let fetchAppointmentUsecase: FetchAppointmentDetailUsecaseProtocol = FetchAppointmentDetailUsecase(
+            repository: FetchAppointmentDetailRepository(
+                remoteDataSource: RemoteFetchAppointmentDetailDataSource()
+            )
+        )
+        
+        let reactor = InviteReactor(
+            id: id,
+            fetchAppointmentDetailUsecase: fetchAppointmentUsecase
+        )
+        
+        let viewController = InviteViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let coordinator = InviteCoordinator(
                 navigationController: navigationController,
                 viewController: viewController
             )

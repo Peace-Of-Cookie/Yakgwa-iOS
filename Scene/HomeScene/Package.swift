@@ -16,7 +16,8 @@ let package = Package(
         .package(path: "./Domain"),
         .package(path: "./Data"),
         .package(path: "./CreateAppointmentScene"),
-        .package(path: "./DetailScene")
+        .package(path: "./DetailScene"),
+        .package(path: "./InviteScene")
     ],
     targets: [
         .target(
@@ -26,7 +27,8 @@ let package = Package(
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "Data", package: "Data"),
                 .product(name: "InputAppointmentInfoScene", package: "CreateAppointmentScene"),
-                .product(name: "DetailScene", package: "DetailScene")
+                .product(name: "DetailScene", package: "DetailScene"),
+                .product(name: "InviteScene", package: "InviteScene")
             ],
             resources: [.process("Assets")]
         ),

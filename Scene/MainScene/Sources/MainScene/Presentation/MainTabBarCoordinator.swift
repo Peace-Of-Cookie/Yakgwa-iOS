@@ -119,9 +119,9 @@ extension MainTabBarCoordinator {
     }
     
     /// Deeplink route to detail
-    public func routeToDetailScene(with meetId: MeetID) {
+    public func routeToInviteScene(with meetId: MeetID) {
         if let homeCoordinator = childCoordinators.first as? HomeCoordinator {
-            homeCoordinator.routeToAppointmentDetailScene(with: meetId)
+            homeCoordinator.routeToInviteScene(with: meetId)
         }
     }
     
