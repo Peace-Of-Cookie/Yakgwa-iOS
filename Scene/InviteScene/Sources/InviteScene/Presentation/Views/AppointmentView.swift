@@ -1,35 +1,16 @@
 //
-//  DefaultAppointmentView.swift
+//  AppointmentView.swift
 //
 //
-//  Created by Ekko on 7/19/24.
+//  Created by Kim Dongjoo on 8/23/24.
 //
 
 import UIKit
 
 import CoreKit
 
-public enum DefaultAppointmentViewState {
-    /// default
-    case none
-    /// 초대 수락한 약과원이 존재(초대 마감 전)
-    case inviting
-    /// 초대 수락한 약과원이 있을 경우(초대 마감 후)
-    case invited
-}
-
-/// 투표 상태
-public enum DefaultAppointmentViewVotedState {
-    /// 투표 전
-    case before
-    /// 투표 후
-    case after
-}
-
-/// 약속 상태 View
-public final class DefaultAppointmentView: UIView {
+public final class AppointmentView: UIView {
     // MARK: - Properties
-    private let state: DefaultAppointmentViewState
     
     // MARK: - UI Components
     private lazy var tagView: TagView = {
@@ -73,15 +54,8 @@ public final class DefaultAppointmentView: UIView {
         return view
     }()
     
-    lazy var inviteButton: YakGwaButton = {
-        let button = YakGwaButton(style: .secondary, image: .share)
-        button.title = "초대하기"
-        return button
-    }()
-    
     // MARK: - Initializers
-    init(state: DefaultAppointmentViewState = .none) {
-        self.state = state
+    init() {
         super.init(frame: .zero)
         
         attribute()
@@ -94,12 +68,7 @@ public final class DefaultAppointmentView: UIView {
     
     // MARK: - Privates
     private func attribute() {
-        switch state {
-        case .none, .inviting:
-            endHourLabel.text = "N시간 뒤 초대 마감"
-        case .invited:
-            endHourLabel.text = "초대 완료"
-        }
+        
     }
     
     private func setUI() {
@@ -131,13 +100,6 @@ public final class DefaultAppointmentView: UIView {
         self.addSubview(invitedView)
         invitedView.snp.makeConstraints {
             $0.top.equalTo(endHourLabel.snp.bottom).offset(16)
-            $0.leading.equalToSuperview().offset(16)
-            $0.centerX.equalToSuperview()
-        }
-        
-        self.addSubview(inviteButton)
-        inviteButton.snp.makeConstraints {
-            $0.top.equalTo(invitedView.snp.bottom).offset(16)
             $0.bottom.equalToSuperview().offset(-16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()

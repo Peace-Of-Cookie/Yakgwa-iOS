@@ -68,7 +68,7 @@ public final class LocationVoteViewController: UIViewController {
         
         self.view.addSubview(tableView)
         tableView.snp.makeConstraints {
-            $0.top.equalTo(navigationBar.snp.bottom).offset(32)
+            $0.top.equalTo(navigationBar.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-8)
@@ -87,6 +87,8 @@ extension LocationVoteViewController: YakgwaNavigationDetailDelegate {
         print("didTapDetailLeftButton")
         self.navigationController?.popViewController(animated: true)
     }
+    
+    public func didTapDetailRightButton() { }
 }
 
 // MARK: - TableViewDelegates

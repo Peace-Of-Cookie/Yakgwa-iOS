@@ -17,7 +17,7 @@ public protocol YakgwaAPI: TargetType {
 
 extension YakgwaAPI {
     public var baseURL: URL {
-        return URL(string: "http://yakgwa.site/api/v1")!
+        return URL(string: "https://yakgwa.site/api/v1")!
     }
     
     public var path: String {

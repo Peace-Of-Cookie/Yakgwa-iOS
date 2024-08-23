@@ -14,8 +14,7 @@ import Data
 
 import MainScene
 import DetailScene
-
-
+import InviteScene
 
 protocol SceneFlowDelegate {
     func presentMainScene()
@@ -48,7 +47,7 @@ public final class LoginCoordinator: BaseCoordinator {
 }
 
 extension LoginCoordinator {
-    public func routeToDetailScene(with id: MeetID) {
+    public func routeToInviteScene(with id: MeetID) {
         guard let navigationController = self.navigationController else {
             print("Error: NavigationController is not set.")
             return
@@ -58,14 +57,22 @@ extension LoginCoordinator {
                 remoteDataSource: RemoteFetchAppointmentDetailDataSource()
             )
         )
-        let reactor = AppointmentDetailViewReactor(
-            id: id,
-            fetchAppointmentDetailUsecase: fetchAppointmentUsecase
+        
+        let joinAppointmentUsecase: JoinAppointmentUsecaseProtocol = JoinAppointmentUsecase(
+            repository: JoinAppointmentRepository(
+                remoteDataSource: RemoteJoinAppoinementDataSource()
+            )
         )
         
-        let viewController = AppointmentDetailViewController(reactor: reactor)
+        let reactor = InviteReactor(
+            id: id,
+            fetchAppointmentDetailUsecase: fetchAppointmentUsecase,
+            joinAppointmentUsecase: joinAppointmentUsecase
+        )
         
-        let coordinator = AppointmentDetailCoordinator(
+        let viewController = InviteViewController(reactor: reactor)
+        
+        let coordinator = InviteCoordinator(
             navigationController: self.navigationController ?? UINavigationController(),
             viewController: viewController
         )
@@ -74,5 +81,7 @@ extension LoginCoordinator {
         coordinator.parentCoordinator = self
         coordinator.start()
         addChildCoordinator(coordinator)
+        
+        viewController.tabBarController?.tabBar.isHidden = true
     }
 }

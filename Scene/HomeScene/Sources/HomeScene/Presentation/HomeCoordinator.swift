@@ -14,6 +14,7 @@ import Data
 
 import InputAppointmentInfoScene
 import DetailScene
+import InviteScene
 
 public final class HomeCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -100,5 +101,43 @@ extension HomeCoordinator {
             coordinator.start()
             addChildCoordinator(coordinator)
         }
+        
+        self.viewController.tabBarController?.tabBar.isHidden = true
+    }
+    
+    public func routeToInviteScene(with id: MeetID) {
+        let fetchAppointmentUsecase: FetchAppointmentDetailUsecaseProtocol = FetchAppointmentDetailUsecase(
+            repository: FetchAppointmentDetailRepository(
+                remoteDataSource: RemoteFetchAppointmentDetailDataSource()
+            )
+        )
+        
+        let joinAppointmentUsecase: JoinAppointmentUsecaseProtocol = JoinAppointmentUsecase(
+            repository: JoinAppointmentRepository(
+                remoteDataSource: RemoteJoinAppoinementDataSource()
+            )
+        )
+        
+        let reactor = InviteReactor(
+            id: id,
+            fetchAppointmentDetailUsecase: fetchAppointmentUsecase,
+            joinAppointmentUsecase: joinAppointmentUsecase
+        )
+        
+        let viewController = InviteViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let coordinator = InviteCoordinator(
+                navigationController: navigationController,
+                viewController: viewController
+            )
+            
+            navigationController.delegate = self
+            coordinator.parentCoordinator = self
+            coordinator.start()
+            addChildCoordinator(coordinator)
+        }
+        
+        viewController.tabBarController?.tabBar.isHidden = true
     }
 }
