@@ -105,4 +105,12 @@ public final class AppointmentView: UIView {
             $0.centerX.equalToSuperview()
         }
     }
+    
+    // MARK: - Public
+    func configure(with viewModel: AppointmentDetailViewModel) {
+        tagView.setTag(viewModel.theme)
+        titleLabel.text = viewModel.title
+        descriptionLabel.text = viewModel.description
+        invitedView.configure(with: viewModel.participants)
+    }
 }

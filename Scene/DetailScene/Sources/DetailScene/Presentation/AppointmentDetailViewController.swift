@@ -155,4 +155,6 @@ extension AppointmentDetailViewController: YakgwaNavigationDetailDelegate {
         print("didTapDetailLeftButton")
         self.navigationController?.popViewController(animated: true)
     }
+    
+    public func didTapDetailRightButton() { }
 }

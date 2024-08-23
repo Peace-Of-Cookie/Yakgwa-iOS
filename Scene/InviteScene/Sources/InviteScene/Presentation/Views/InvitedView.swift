@@ -41,6 +41,13 @@ public final class InvitedView: UIView  {
         return label
     }()
 
+    private lazy var testStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        return stack
+    }()
+    
     private lazy var profileStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -96,20 +103,30 @@ public final class InvitedView: UIView  {
             $0.centerX.equalToSuperview()
         }
         
-        self.addSubview(profileStack)
-        profileStack.addArrangedSubview(profileImageStack)
-        profileStack.addArrangedSubview(numberLabel)
-        profileStack.snp.makeConstraints {
+        self.addSubview(testStack)
+        testStack.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
-            $0.centerX.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+            $0.center.equalToSuperview()
         }
         
-        self.addSubview(showAllButton)
-        showAllButton.snp.makeConstraints {
-            $0.top.equalTo(profileStack.snp.bottom).offset(16)
-            $0.bottom.equalToSuperview().offset(-8)
-            $0.centerX.equalToSuperview()
-        }
+        testStack.addArrangedSubview(profileStack)
+        testStack.addArrangedSubview(showAllButton)
+        
+        // self.addSubview(profileStack)
+        profileStack.addArrangedSubview(profileImageStack)
+        profileStack.addArrangedSubview(numberLabel)
+//        profileStack.snp.makeConstraints {
+//            $0.top.equalToSuperview().offset(16)
+//            $0.centerX.equalToSuperview()
+//        }
+        
+//        self.addSubview(showAllButton)
+//        showAllButton.snp.makeConstraints {
+//            $0.top.equalTo(profileStack.snp.bottom).offset(16)
+//            $0.bottom.equalToSuperview().offset(-8)
+//            $0.centerX.equalToSuperview()
+//        }
     }
     
     // MARK: - Public
@@ -134,12 +151,12 @@ public final class InvitedView: UIView  {
             numberLabel.isHidden = false
             showAllButton.isHidden = false
             for _ in 0..<5 {
-                let profileView = ProfileView(isNew: true)
+                let profileView = ProfileView(isNew: false)
                 profileImageStack.addArrangedSubview(profileView)
             }
         } else {
             for _ in 0..<count {
-                let profileView = ProfileView(isNew: true)
+                let profileView = ProfileView(isNew: false)
                 profileImageStack.addArrangedSubview(profileView)
             }
         }
