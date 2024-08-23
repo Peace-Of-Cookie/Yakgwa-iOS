@@ -73,5 +73,7 @@ extension LoginCoordinator {
         coordinator.parentCoordinator = self
         coordinator.start()
         addChildCoordinator(coordinator)
+        
+        viewController.tabBarController?.tabBar.isHidden = true
     }
 }

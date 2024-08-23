@@ -128,5 +128,7 @@ extension HomeCoordinator {
             coordinator.start()
             addChildCoordinator(coordinator)
         }
+        
+        viewController.tabBarController?.tabBar.isHidden = true
     }
 }
