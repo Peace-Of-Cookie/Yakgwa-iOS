@@ -57,9 +57,17 @@ extension LoginCoordinator {
                 remoteDataSource: RemoteFetchAppointmentDetailDataSource()
             )
         )
+        
+        let joinAppointmentUsecase: JoinAppointmentUsecaseProtocol = JoinAppointmentUsecase(
+            repository: JoinAppointmentRepository(
+                remoteDataSource: RemoteJoinAppoinementDataSource()
+            )
+        )
+        
         let reactor = InviteReactor(
             id: id,
-            fetchAppointmentDetailUsecase: fetchAppointmentUsecase
+            fetchAppointmentDetailUsecase: fetchAppointmentUsecase,
+            joinAppointmentUsecase: joinAppointmentUsecase
         )
         
         let viewController = InviteViewController(reactor: reactor)

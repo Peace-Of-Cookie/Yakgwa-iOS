@@ -10,6 +10,9 @@ import UIKit
 import CoreKit
 import Util
 import Domain
+import Data
+
+import DetailScene
 
 public final class InviteCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -36,7 +39,48 @@ public final class InviteCoordinator: BaseCoordinator {
             switch event {
             case .back:
                 print("뒤로 가기")
+            case .detail(let id):
+                self?.routeToAppointmentDetailScene(with: id)
             }
+        }
+    }
+}
+
+extension InviteCoordinator {
+    private func routeToAppointmentDetailScene(with id: MeetID) {
+        let fetchAppointmentUsecase: FetchAppointmentDetailUsecaseProtocol = FetchAppointmentDetailUsecase(
+            repository: FetchAppointmentDetailRepository(
+                remoteDataSource: RemoteFetchAppointmentDetailDataSource()
+            )
+        )
+        let reactor = AppointmentDetailViewReactor(
+            id: id,
+            fetchAppointmentDetailUsecase: fetchAppointmentUsecase
+        )
+        
+        let viewController = AppointmentDetailViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            
+            var viewControllers = navigationController.viewControllers
+            
+            if let index = viewControllers.firstIndex(of: self.viewController) {
+                viewControllers.remove(at: index)
+            }
+            
+            navigationController.viewControllers = viewControllers
+            
+            let coordinator = AppointmentDetailCoordinator(
+                navigationController: navigationController,
+                viewController: viewController
+            )
+            
+            // TODO: - 코디네이터 메모리 관리 체크 필요
+            
+            navigationController.delegate = self
+            coordinator.parentCoordinator = self
+            coordinator.start()
+            addChildCoordinator(coordinator)
         }
     }
 }

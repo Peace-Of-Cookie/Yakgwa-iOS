@@ -14,7 +14,8 @@ let package = Package(
     dependencies: [
         .package(path: "./CoreKit"),
         .package(path: "./Domain"),
-        .package(path: "./Data")
+        .package(path: "./Data"),
+        .package(path: "./DetailScene")
     ],
     targets: [
         .target(
@@ -22,7 +23,8 @@ let package = Package(
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
                 .product(name: "Data", package: "Data"),
-                .product(name: "Domain", package: "Domain")
+                .product(name: "Domain", package: "Domain"),
+                .product(name: "DetailScene", package: "DetailScene")
             ]
         ),
         .testTarget(

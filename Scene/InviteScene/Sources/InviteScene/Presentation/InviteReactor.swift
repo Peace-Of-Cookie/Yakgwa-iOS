@@ -16,11 +16,13 @@ protocol InviteRouting {
 
 enum InviteRouter {
     case back
+    case detail(MeetID)
 }
 
 public final class InviteReactor: Reactor, InviteRouting {
     public enum Action {
         case viewDidAppear
+        case joinButtonDidTap
     }
     
     public enum Mutation {
@@ -44,16 +46,19 @@ public final class InviteReactor: Reactor, InviteRouting {
     let route: PublishSubject<InviteRouter> = PublishSubject<InviteRouter>()
     
     let fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol
+    let joinAppointmentUsecase: JoinAppointmentUsecaseProtocol
     
     let meetId: MeetID
     var detail: AppointmentDetail?
     
     public init(
         id: MeetID,
-        fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol
+        fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol,
+        joinAppointmentUsecase: JoinAppointmentUsecaseProtocol
     ) {
         self.meetId = id
         self.fetchAppointmentDetailUsecase = fetchAppointmentDetailUsecase
+        self.joinAppointmentUsecase = joinAppointmentUsecase
     }
     
     // MARK: - Mutate
@@ -73,6 +78,24 @@ public final class InviteReactor: Reactor, InviteRouting {
                         return Observable.just(.setPopupMessage(.networkError(error)))
                     },
                 Observable.just(Mutation.setLoading(false))
+            ])
+            
+        case .joinButtonDidTap:
+            guard let detail = self.detail else { return .empty() }
+            
+            return Observable.concat([
+                .just(Mutation.setLoading(true)),
+                joinAppointmentUsecase
+                    .execute(with: self.meetId)
+                    .asObservable()
+                    .flatMap { meetID -> Observable<Mutation> in
+                        self.route.onNext(.detail(self.meetId))
+                        return Observable.empty()
+                    }
+                    .catch { error -> Observable<Mutation> in
+                        return Observable.just(.setPopupMessage(.networkError(error)))
+                    },
+                .just(.setLoading(false))
             ])
         }
     }

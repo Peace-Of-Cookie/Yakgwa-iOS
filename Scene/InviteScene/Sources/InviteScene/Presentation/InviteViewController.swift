@@ -127,6 +127,11 @@ public final class InviteViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        bottomSheetButton.rx.tap
+            .map { Reactor.Action.joinButtonDidTap }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .compactMap { $0.details }
@@ -156,6 +161,13 @@ public final class InviteViewController: UIViewController, View {
                         self?.popupView.isHidden = true
                     })
                 }
+            })
+            .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
             })
             .disposed(by: disposeBag)
     }
