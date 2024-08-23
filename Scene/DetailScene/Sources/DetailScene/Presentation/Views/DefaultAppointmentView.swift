@@ -149,6 +149,6 @@ public final class DefaultAppointmentView: UIView {
         tagView.setTag(viewModel.theme)
         titleLabel.text = viewModel.title
         descriptionLabel.text = viewModel.description
-        // invitedView.configure(with: viewModel.invited)
+        invitedView.configure(with: viewModel.participants)
     }
 }

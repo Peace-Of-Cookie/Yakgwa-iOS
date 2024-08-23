@@ -40,13 +40,6 @@ public final class InvitedView: UIView  {
         label.textColor = .neutral600
         return label
     }()
-
-    private lazy var testStack: UIStackView = {
-        let stack = UIStackView()
-        stack.axis = .vertical
-        stack.spacing = 8
-        return stack
-    }()
     
     private lazy var profileStack: UIStackView = {
         let stack = UIStackView()
@@ -103,30 +96,14 @@ public final class InvitedView: UIView  {
             $0.centerX.equalToSuperview()
         }
         
-        self.addSubview(testStack)
-        testStack.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(16)
-            $0.leading.equalToSuperview().offset(16)
-            $0.center.equalToSuperview()
-        }
-        
-        testStack.addArrangedSubview(profileStack)
-        testStack.addArrangedSubview(showAllButton)
-        
-        // self.addSubview(profileStack)
+        self.addSubview(profileStack)
         profileStack.addArrangedSubview(profileImageStack)
         profileStack.addArrangedSubview(numberLabel)
-//        profileStack.snp.makeConstraints {
-//            $0.top.equalToSuperview().offset(16)
-//            $0.centerX.equalToSuperview()
-//        }
-        
-//        self.addSubview(showAllButton)
-//        showAllButton.snp.makeConstraints {
-//            $0.top.equalTo(profileStack.snp.bottom).offset(16)
-//            $0.bottom.equalToSuperview().offset(-8)
-//            $0.centerX.equalToSuperview()
-//        }
+        profileStack.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-16)
+        }
     }
     
     // MARK: - Public
@@ -154,6 +131,19 @@ public final class InvitedView: UIView  {
                 let profileView = ProfileView(isNew: false)
                 profileImageStack.addArrangedSubview(profileView)
             }
+            
+            self.profileStack.snp.remakeConstraints {
+                $0.top.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+            
+            self.addSubview(showAllButton)
+            showAllButton.snp.makeConstraints {
+                $0.top.equalTo(profileStack.snp.bottom).offset(16)
+                $0.bottom.equalToSuperview().offset(-8)
+                $0.centerX.equalToSuperview()
+            }
+            
         } else {
             for _ in 0..<count {
                 let profileView = ProfileView(isNew: false)

@@ -96,6 +96,12 @@ public class HomeViewController: UIViewController, View {
         setUI()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        self.tabBarController?.tabBar.isHidden = false
+    }
+    
     // MARK: - Privates
     private func setUI() {
         view.addSubview(alarmButton)

@@ -102,13 +102,7 @@ public final class InvitedView: UIView  {
         profileStack.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
-        }
-        
-        self.addSubview(showAllButton)
-        showAllButton.snp.makeConstraints {
-            $0.top.equalTo(profileStack.snp.bottom).offset(16)
-            $0.bottom.equalToSuperview().offset(-8)
-            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-16)
         }
     }
     
@@ -133,13 +127,27 @@ public final class InvitedView: UIView  {
         if count > 5 {
             numberLabel.isHidden = false
             showAllButton.isHidden = false
+            
+            
             for _ in 0..<5 {
-                let profileView = ProfileView(isNew: true)
+                let profileView = ProfileView(isNew: false)
                 profileImageStack.addArrangedSubview(profileView)
+            }
+            
+            self.profileStack.snp.remakeConstraints {
+                $0.top.equalToSuperview().offset(16)
+                $0.centerX.equalToSuperview()
+            }
+            
+            self.addSubview(showAllButton)
+            showAllButton.snp.makeConstraints {
+                $0.top.equalTo(profileStack.snp.bottom).offset(16)
+                $0.bottom.equalToSuperview().offset(-8)
+                $0.centerX.equalToSuperview()
             }
         } else {
             for _ in 0..<count {
-                let profileView = ProfileView(isNew: true)
+                let profileView = ProfileView(isNew: false)
                 profileImageStack.addArrangedSubview(profileView)
             }
         }

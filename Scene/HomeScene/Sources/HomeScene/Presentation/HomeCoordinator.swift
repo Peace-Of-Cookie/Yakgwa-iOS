@@ -101,6 +101,8 @@ extension HomeCoordinator {
             coordinator.start()
             addChildCoordinator(coordinator)
         }
+        
+        self.viewController.tabBarController?.tabBar.isHidden = true
     }
     
     public func routeToInviteScene(with id: MeetID) {
