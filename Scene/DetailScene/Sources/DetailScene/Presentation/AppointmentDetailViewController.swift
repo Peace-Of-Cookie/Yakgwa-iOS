@@ -30,6 +30,16 @@ public final class AppointmentDetailViewController: UIViewController, View {
         return button
     }()
     
+    private lazy var scrollView: UIScrollView = {
+        let view = UIScrollView()
+        return view
+    }()
+    
+    private lazy var contentView: UIView = {
+        let view = UIView()
+        return view
+    }()
+    
     private lazy var appointmentDetailView: DefaultAppointmentView = {
         let view = DefaultAppointmentView()
         return view
@@ -97,25 +107,39 @@ public final class AppointmentDetailViewController: UIViewController, View {
             $0.leading.trailing.equalToSuperview()
         }
         
-        self.view.addSubview(appointmentDetailView)
+        self.view.addSubview(scrollView)
+        scrollView.snp.makeConstraints {
+            $0.top.equalTo(navigationBar.snp.bottom).offset(8)
+            $0.leading.trailing.equalToSuperview()
+            $0.bottom.equalTo(bottomSheetButton.snp.top)
+        }
+        
+        scrollView.addSubview(contentView)
+        contentView.snp.makeConstraints {
+            $0.width.equalToSuperview()
+            $0.edges.equalToSuperview()
+        }
+        
+        self.contentView.addSubview(appointmentDetailView)
         appointmentDetailView.snp.makeConstraints {
-            $0.top.equalTo(navigationBar.snp.bottom).offset(32)
+            $0.top.equalToSuperview().offset(0)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
         
-        self.view.addSubview(dateVoteView)
+        self.contentView.addSubview(dateVoteView)
         dateVoteView.snp.makeConstraints {
             $0.top.equalTo(appointmentDetailView.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
         
-        self.view.addSubview(locationVoteView)
+        self.contentView.addSubview(locationVoteView)
         locationVoteView.snp.makeConstraints {
             $0.top.equalTo(dateVoteView.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-16)
         }
         
         self.view.addSubview(activityIndicator)
