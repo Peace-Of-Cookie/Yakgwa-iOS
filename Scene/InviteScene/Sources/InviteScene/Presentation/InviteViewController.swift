@@ -21,7 +21,8 @@ public final class InviteViewController: UIViewController, View {
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
         let nav = YakgwaNavigationDetailBar()
         nav.delegate = self
-        nav.configure(previousTitle: "약속 참여하기")
+        nav.configure(previousTitle: "약속 참여하기", rightButtonIsEnable: true)
+        nav.hideLeftButton()
         return nav
     }()
     
@@ -89,7 +90,7 @@ public final class InviteViewController: UIViewController, View {
         
         self.view.addSubview(appointmentDetailView)
         appointmentDetailView.snp.makeConstraints {
-            $0.top.equalTo(navigationBar.snp.bottom).offset(32)
+            $0.top.equalTo(navigationBar.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
@@ -109,6 +110,11 @@ public final class InviteViewController: UIViewController, View {
 extension InviteViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
         print("didTapDetailLeftButton")
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    public func didTapDetailRightButton() {
+        print("didTapDetailRightButton")
         self.navigationController?.popViewController(animated: true)
     }
 }

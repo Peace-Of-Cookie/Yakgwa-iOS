@@ -131,7 +131,7 @@ public final class DateVoteViewController: UIViewController {
         
         self.view.addSubview(calendarContainer)
         calendarContainer.snp.makeConstraints {
-            $0.top.equalTo(navigationBar.snp.bottom).offset(32)
+            $0.top.equalTo(navigationBar.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
@@ -231,6 +231,8 @@ extension DateVoteViewController: YakgwaNavigationDetailDelegate {
         print("didTapDetailLeftButton")
         self.navigationController?.popViewController(animated: true)
     }
+    
+    public func didTapDetailRightButton() { }
 }
 
 // MARK: - UICollectionViewDelegates

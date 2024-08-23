@@ -10,6 +10,7 @@ import Util
 
 public protocol YakgwaNavigationDetailDelegate: AnyObject {
     func didTapDetailLeftButton()
+    func didTapDetailRightButton()
 }
 
 public final class YakgwaNavigationDetailBar: UIView {
@@ -19,10 +20,24 @@ public final class YakgwaNavigationDetailBar: UIView {
     private let horizontalInset: CGFloat = 16
     
     // MARK: - UI Componenets
+    private lazy var leftStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 8
+        return stack
+    }()
+    
     private lazy var leftButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "backward_icon", in: .module, with: nil), for: .normal)
         button.addTarget(self, action: #selector(leftButtonTapped), for: .touchUpInside)
+        return button
+    }() 
+    
+    private lazy var rightButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "close_icon", in: .module, with: nil), for: .normal)
+        button.addTarget(self, action: #selector(rightButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -48,34 +63,52 @@ public final class YakgwaNavigationDetailBar: UIView {
     
     /// Navigation 버튼 타이틀 설정
     public func configure(
-        previousTitle: String?
+        previousTitle: String?,
+        rightButtonIsEnable: Bool = false
     ) {
         self.previousViewTitle.text = previousTitle
+        self.rightButton.isHidden = !rightButtonIsEnable
+    }
+    
+    public func hideLeftButton() {
+        self.leftButton.isHidden = true
     }
     
     // MARK: - Privates
     private func setUI() {
         self.snp.makeConstraints {
-            $0.height.equalTo(36)
+            $0.height.equalTo(56)
         }
         
-        self.addSubview(leftButton)
+        self.addSubview(leftStack)
+        leftStack.snp.makeConstraints {
+            $0.leading.equalTo(horizontalInset)
+            $0.centerY.equalToSuperview()
+        }
+        
+        leftStack.addArrangedSubview(leftButton)
         leftButton.snp.makeConstraints {
             $0.width.height.equalTo(20)
-            $0.centerY.equalToSuperview()
-            $0.leading.equalTo(horizontalInset)
         }
         
-        self.addSubview(previousViewTitle)
-        previousViewTitle.snp.makeConstraints {
-            $0.leading.equalTo(leftButton.snp.trailing).offset(8)
+        self.addSubview(rightButton)
+        rightButton.snp.makeConstraints {
+            $0.width.height.equalTo(20)
+            $0.trailing.equalTo(-horizontalInset)
             $0.centerY.equalToSuperview()
         }
+        
+        leftStack.addArrangedSubview(previousViewTitle)
     }
     
     @objc
     private func leftButtonTapped() {
         delegate?.didTapDetailLeftButton()
+    }
+    
+    @objc
+    private func rightButtonTapped() {
+        delegate?.didTapDetailRightButton()
     }
 }
 

@@ -63,9 +63,11 @@ public class KakaoLoginService: LoginServiceType {
                                         observer.onNext(true)
                                         observer.onCompleted()
                                     } catch {
+                                        print("Login Error: \(error.localizedDescription)")
                                         observer.onError(error)
                                     }
                                 }, onFailure: { error in
+                                    print("Login Error: \(error)")
                                     observer.onError(error)
                                 })
                                 .disposed(by: self.disposeBag)

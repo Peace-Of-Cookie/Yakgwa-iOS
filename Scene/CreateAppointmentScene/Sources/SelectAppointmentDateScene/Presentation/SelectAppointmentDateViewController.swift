@@ -417,6 +417,8 @@ extension SelectAppointmentDateViewController: YakgwaNavigationDetailDelegate {
         print("didTapDetailLeftButton")
         self.navigationController?.popViewController(animated: true)
     }
+    
+    public func didTapDetailRightButton() { }
 }
 
 extension SelectAppointmentDateViewController: YakgwaSwitchViewDelegate {

@@ -96,7 +96,7 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
         
         self.view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(navigationBar.snp.bottom).offset(40)
+            $0.top.equalTo(navigationBar.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(16)
         }
         self.view.addSubview(titleTextField)
@@ -188,6 +188,8 @@ extension InputAppointmentInfoViewController: YakgwaNavigationDetailDelegate {
         let preViewController = self.navigationController?.popViewController(animated: true)
         preViewController?.tabBarController?.tabBar.isHidden = false
     }
+    
+    public func didTapDetailRightButton() { }
 }
 
 extension InputAppointmentInfoViewController: YakgwaTextViewDelegate {

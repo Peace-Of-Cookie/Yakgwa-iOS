@@ -93,7 +93,7 @@ public final class AddCandinateLocationViewController: UIViewController, View {
         
         self.view.addSubview(searchTextField)
         searchTextField.snp.makeConstraints {
-            $0.top.equalTo(navigationBar.snp.bottom).offset(32)
+            $0.top.equalTo(navigationBar.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
@@ -187,6 +187,8 @@ public final class AddCandinateLocationViewController: UIViewController, View {
 }
 
 extension AddCandinateLocationViewController: YakgwaNavigationDetailDelegate {
+    public func didTapDetailRightButton() { }
+    
     public func didTapDetailLeftButton() {
         print("didTapDetailLeftButton")
         self.navigationController?.popViewController(animated: true)

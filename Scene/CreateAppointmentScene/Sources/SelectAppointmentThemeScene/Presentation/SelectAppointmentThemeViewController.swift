@@ -99,7 +99,7 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
         
         self.view.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
-            $0.top.equalTo(navigationBar.snp.bottom).offset(32)
+            $0.top.equalTo(navigationBar.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(16)
         }
         
@@ -221,4 +221,6 @@ extension SelectAppointmentThemeViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
         navigationController?.popViewController(animated: true)
     }
+    
+    public func didTapDetailRightButton() { }
 }
