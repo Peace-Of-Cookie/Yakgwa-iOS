@@ -18,6 +18,10 @@ public enum YakgwaCommonAPI {
     case fetchCurrentAppointments
     /// 모임 참여
     case joinAppointment(JoinAppointmentRequestDTO)
+    /// 투표를 위한 모임의 장소후보 정보 조화
+    case fetchLocationCandidates(Int)
+    /// 투표를 위한 모임의 장소투표후보지 추가
+    case addLocationCandidates(Int, AddLocationCandidateRequestDTO)
 }
 
 extension YakgwaCommonAPI: YakgwaAPI {
@@ -32,6 +36,10 @@ extension YakgwaCommonAPI: YakgwaAPI {
         case .fetchCurrentAppointments:
             return .meet
         case .joinAppointment:
+            return .meet
+        case .fetchLocationCandidates:
+            return .meet
+        case .addLocationCandidates:
             return .meet
         }
     }
@@ -48,6 +56,10 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return ""
         case .joinAppointment(let dto):
             return "/\(dto.meetId)"
+        case .fetchLocationCandidates(let meetId):
+            return "/\(meetId)/placeslots"
+        case .addLocationCandidates(let meetId, _):
+            return "/\(meetId)/placeslots"
         }
     }
     
@@ -77,6 +89,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .get
         case .joinAppointment:
             return .post
+        case .addLocationCandidates:
+            return .post
         default:
             return .get
         }
@@ -90,7 +104,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .requestParameters(parameters: ["search": query], encoding: URLEncoding.queryString)
         case .fetchAppointmentDetail(let dto):
             return .requestPlain
-            
+        case .addLocationCandidates(_, let dto):
+            return .requestJSONEncodable(dto)
         default:
             return .requestPlain
         }
