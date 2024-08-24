@@ -21,12 +21,16 @@ protocol AppointmentDetailViewRouting {
 
 enum AppointmentDetailRouter {
     case back
+    case dateVote(MeetID)
+    case locationVote(MeetID)
 }
 
 public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewRouting {
     public enum Action {
         case viewDidAppear
         case didTapInviteButton
+        case didTapDateVoteButton
+        case didTapLocationVoteButton
     }
     
     public enum Mutation {
@@ -84,6 +88,14 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
             
         case .didTapInviteButton:
             self.sendKakaoMessageWithFeedTemplate()
+            return .empty()
+            
+        case .didTapDateVoteButton:
+            route.onNext(.dateVote(meetId))
+            return .empty()
+            
+        case .didTapLocationVoteButton:
+            route.onNext(.locationVote(meetId))
             return .empty()
         }
     }

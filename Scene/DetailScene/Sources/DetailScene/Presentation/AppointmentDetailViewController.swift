@@ -166,6 +166,17 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.dateVoteView.voteButton.rx.tap
+            .map { Reactor.Action.didTapDateVoteButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        
+        self.locationVoteView.voteButton.rx.tap
+            .map { Reactor.Action.didTapLocationVoteButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .compactMap { $0.details }
@@ -195,6 +206,13 @@ public final class AppointmentDetailViewController: UIViewController, View {
                         self?.popupView.isHidden = true
                     })
                 }
+            })
+            .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
             })
             .disposed(by: disposeBag)
     }

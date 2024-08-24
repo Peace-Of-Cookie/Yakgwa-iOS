@@ -11,6 +11,8 @@ import CoreKit
 import Util
 import Domain
 
+import VoteScene
+
 public final class AppointmentDetailCoordinator: BaseCoordinator {
     // MARK: - Properties
     let viewController: AppointmentDetailViewController
@@ -36,7 +38,35 @@ public final class AppointmentDetailCoordinator: BaseCoordinator {
             switch event {
             case .back:
                 print("뒤로 가기")
+            case .dateVote(let id):
+                self?.routeToDateVoteScene(with: id)
+            case .locationVote(let id):
+                self?.routeToLocationVoteScene(with: id)
             }
         }
+    }
+}
+
+extension AppointmentDetailCoordinator {
+    private func routeToDateVoteScene(with id: MeetID) {
+        let reactor: DateVoteReactor = DateVoteReactor(id: id)
+        
+        let dateVoteViewController: DateVoteViewController = DateVoteViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let dateVoteCoordinator: DateVoteCoordinator = DateVoteCoordinator(
+                navigationController: navigationController,
+                viewController: dateVoteViewController
+            )
+            
+            navigationController.delegate = self
+            dateVoteCoordinator.parentCoordinator = self
+            dateVoteCoordinator.start()
+            addChildCoordinator(dateVoteCoordinator)
+        }
+    }
+    
+    private func routeToLocationVoteScene(with id: MeetID) {
+        
     }
 }

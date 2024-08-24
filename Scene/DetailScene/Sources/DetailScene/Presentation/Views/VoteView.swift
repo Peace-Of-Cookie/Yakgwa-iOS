@@ -40,7 +40,7 @@ public final class VoteView: UIView {
         return label
     }()
     
-    private lazy var voteButton: YakGwaButton = {
+    lazy var voteButton: YakGwaButton = {
         let button = YakGwaButton(style: .primary)
         button.title = "시간 투표하기"
         return button

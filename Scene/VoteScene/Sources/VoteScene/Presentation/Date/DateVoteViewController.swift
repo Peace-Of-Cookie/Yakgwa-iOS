@@ -8,9 +8,13 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
 
-public final class DateVoteViewController: UIViewController {
+public final class DateVoteViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((DateVoteRouter) -> Void)?
+    
     private var dates: [Date] = []
     private var timeSlots: [String] = []
     var startDate: Date?
@@ -98,7 +102,10 @@ public final class DateVoteViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: DateVoteReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -178,6 +185,11 @@ public final class DateVoteViewController: UIViewController {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-16)
         }
+    }
+    
+    // MARK: - Binding
+    public func bind(reactor: DateVoteReactor) {
+        
     }
 }
 
@@ -302,8 +314,4 @@ extension DateVoteViewController: UICollectionViewDataSource, UICollectionViewDe
         }
         return UICollectionReusableView()
     }
-}
-
-#Preview {
-    DateVoteViewController()
 }
