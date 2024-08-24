@@ -118,6 +118,11 @@ public final class LocationVoteViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        tableView.rx.itemSelected
+            .map { Reactor.Action.didTapCandidateCell($0.row) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state.map { $0.candidates }
             .distinctUntilChanged()

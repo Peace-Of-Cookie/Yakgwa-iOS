@@ -74,6 +74,7 @@ final class LocationVotingCell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        attribute()
         setUI()
     }
     
@@ -81,7 +82,21 @@ final class LocationVotingCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life cycles
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        titleLabel.text = nil
+        addressLabel.text = nil
+        containerView.layer.borderWidth = 0
+        containerView.layer.borderColor = UIColor.clear.cgColor
+    }
+    
     // MARK: - Privates
+    private func attribute() {
+        self.selectionStyle = .none
+    }
+    
     private func setUI() {
         self.backgroundColor = .neutral200
         self.layer.cornerRadius = 15
@@ -165,5 +180,12 @@ final class LocationVotingCell: UITableViewCell {
             }
         }
         
+        if viewModel.isSelected {
+            containerView.layer.borderWidth = 1
+            containerView.layer.borderColor = UIColor.primary800.cgColor
+        } else {
+            containerView.layer.borderWidth = 0
+            containerView.layer.borderColor = UIColor.clear.cgColor
+        }
     }
 }
