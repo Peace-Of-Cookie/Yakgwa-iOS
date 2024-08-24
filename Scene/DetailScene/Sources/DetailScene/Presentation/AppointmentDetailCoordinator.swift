@@ -67,6 +67,20 @@ extension AppointmentDetailCoordinator {
     }
     
     private func routeToLocationVoteScene(with id: MeetID) {
+        let reactor: LocationVoteReactor = LocationVoteReactor(id: id)
         
+        let locationVoteViewController: LocationVoteViewController = LocationVoteViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let locationVoteCoordinator: LocationVoteCoordinator = LocationVoteCoordinator(
+                navigationController: navigationController,
+                viewController: locationVoteViewController
+            )
+            
+            navigationController.delegate = self
+            locationVoteCoordinator.parentCoordinator = self
+            locationVoteCoordinator.start()
+            addChildCoordinator(locationVoteCoordinator)
+        }
     }
 }

@@ -8,9 +8,12 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
 
-public final class LocationVoteViewController: UIViewController {
+public final class LocationVoteViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((LocationVoteRouter) -> Void)?
     
     // MARK: - UI Components
     private lazy var navigationBar: YakgwaNavigationDetailBar = {
@@ -21,7 +24,7 @@ public final class LocationVoteViewController: UIViewController {
     }()
     
     private lazy var bottomSheetButton: BottomSheetButton = {
-        let button = BottomSheetButton(title: "다음으로")
+        let button = BottomSheetButton(title: "투표 완료")
         return button
     }()
     
@@ -35,7 +38,10 @@ public final class LocationVoteViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: LocationVoteReactor
+    ) {
+        defer { self.reactor = reactor}
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -74,6 +80,11 @@ public final class LocationVoteViewController: UIViewController {
             $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-8)
         }
     }
+    
+    // MARK: - Binding
+    public func bind(reactor: LocationVoteReactor) {
+        
+    }
 }
 
 // MARK: - Privates
@@ -106,8 +117,4 @@ extension LocationVoteViewController: UITableViewDelegate, UITableViewDataSource
 //    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
 //        return 0
 //    }
-}
-
-#Preview {
-    LocationVoteViewController()
 }
