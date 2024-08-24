@@ -31,10 +31,24 @@ public final class LocationVoteViewController: UIViewController, View {
     private lazy var tableView: UITableView = {
         let tableView = UITableView()
         tableView.delegate = self
-        tableView.dataSource = self
         tableView.register(LocationVotingCell.self, forCellReuseIdentifier: LocationVotingCell.identifier)
         tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
         return tableView
+    }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutralBlack
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
     }()
     
     // MARK: - Initializers
@@ -79,11 +93,61 @@ public final class LocationVoteViewController: UIViewController, View {
             $0.centerX.equalToSuperview()
             $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-8)
         }
+        
+        self.view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
     }
     
     // MARK: - Binding
     public func bind(reactor: LocationVoteReactor) {
+        // Action
+        self.rx.viewDidAppear
+            .map { _ in Reactor.Action.viewDidAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
+        self.bottomSheetButton.rx.tap
+            .map { Reactor.Action.voteButtonDidTap }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        reactor.state.map { $0.candidates }
+            .distinctUntilChanged()
+            .bind(to: tableView.rx.items(cellIdentifier: LocationVotingCell.identifier, cellType: LocationVotingCell.self)) { index, candidate, cell in
+                cell.configure(with: candidate)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
     }
 }
 

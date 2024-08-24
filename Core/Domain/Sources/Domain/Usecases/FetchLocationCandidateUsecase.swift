@@ -10,7 +10,7 @@ import RxSwift
 public final class FetchLocationCandidateUsecase: FetchLocationCandidateUsecaseProtocol {
     private let repository: FetchLocationCandidateRepositoryProtocol
     
-    init(repository: FetchLocationCandidateRepositoryProtocol) {
+    public init(repository: FetchLocationCandidateRepositoryProtocol) {
         self.repository = repository
     }
     

@@ -60,12 +60,21 @@ final class LocationVotingCell: UITableViewCell {
         return label
     }()
     
+    private lazy var zeroLabel: UILabel = {
+        let label = UILabel()
+        label.text = "0명"
+        label.font = .m12
+        label.textColor = .neutral800
+        label.isHidden = true
+        return label
+        
+    }()
+    
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         setUI()
-        setProfileStack()
     }
     
     required init?(coder: NSCoder) {
@@ -108,12 +117,42 @@ final class LocationVotingCell: UITableViewCell {
             $0.leading.equalToSuperview().offset(16)
             $0.bottom.equalToSuperview().offset(-16)
         }
+        
+        containerView.addSubview(zeroLabel)
+        zeroLabel.snp.makeConstraints {
+            $0.top.equalTo(addressLabel.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().offset(16)
+        }
     }
     
 #warning("TODO : - UI Test ")
     private func setProfileStack() {
         let count = 6
         if count > 5 {
+            numberLabel.isHidden = false
+            for _ in 0..<5 {
+                let profileView = ProfileView(isNew: false)
+                profileImageStack.addArrangedSubview(profileView)
+            }
+        } else {
+            for _ in 0..<count {
+                let profileView = ProfileView(isNew: false)
+                profileImageStack.addArrangedSubview(profileView)
+            }
+        }
+        
+    }
+    
+    // MARK: - Public
+    func configure(with viewModel: CandidateViewModel) {
+        titleLabel.text = viewModel.title
+        addressLabel.text = viewModel.address
+        
+        let count: Int = viewModel.userInfo.count
+        
+        if count == 0 {
+            zeroLabel.isHidden = false
+        } else if count > 5 {
             numberLabel.isHidden = false
             for _ in 0..<5 {
                 let profileView = ProfileView(isNew: false)

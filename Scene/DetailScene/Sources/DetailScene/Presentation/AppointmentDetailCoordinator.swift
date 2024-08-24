@@ -10,6 +10,7 @@ import UIKit
 import CoreKit
 import Util
 import Domain
+import Data
 
 import VoteScene
 
@@ -67,7 +68,9 @@ extension AppointmentDetailCoordinator {
     }
     
     private func routeToLocationVoteScene(with id: MeetID) {
-        let reactor: LocationVoteReactor = LocationVoteReactor(id: id)
+        let fetchLocationCandidateUsecase: FetchLocationCandidateUsecaseProtocol = FetchLocationCandidateUsecase(repository: FetchLocationCandidateRepository(remoteDataSource: RemoteFetchLocationCandidateDataSource()))
+        
+        let reactor: LocationVoteReactor = LocationVoteReactor(id: id, fetchLocationCandidateUsecase: fetchLocationCandidateUsecase)
         
         let locationVoteViewController: LocationVoteViewController = LocationVoteViewController(reactor: reactor)
         
