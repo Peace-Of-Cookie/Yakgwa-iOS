@@ -57,7 +57,7 @@ extension YakgwaDomain {
         case .meet:
             return "/meets"
         case .vote:
-            return "/vote"
+            return "/meets"
         case .user:
             return "/users"
         case .none:

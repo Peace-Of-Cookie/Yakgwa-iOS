@@ -1,0 +1,23 @@
+//
+//  VoteTimeRequestDTO.swift
+//
+//
+//  Created by Ekko on 8/24/24.
+//
+
+import Foundation
+import Domain
+
+/*
+ {
+   "enableTimes": [
+     {
+       "enableTime": "2024-08-24T02:15:34.907Z"
+     }
+   ]
+ }
+ */
+
+public struct VoteTimeRequestDTO: Encodable {
+    
+}

@@ -22,6 +22,10 @@ public enum YakgwaCommonAPI {
     case fetchLocationCandidates(Int)
     /// 투표를 위한 모임의 장소투표후보지 추가
     case addLocationCandidates(Int, AddLocationCandidateRequestDTO)
+    /// 모임의 장소 투표
+    case voteLocation(Int, VoteLocationRequestDTO)
+    /// 모임의 시간 투표
+    case voteTime(Int, VoteTimeRequestDTO)
 }
 
 extension YakgwaCommonAPI: YakgwaAPI {
@@ -41,6 +45,10 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .meet
         case .addLocationCandidates:
             return .meet
+        case .voteTime:
+            return .vote
+        case .voteLocation:
+            return .vote
         }
     }
     
@@ -60,6 +68,10 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return "/\(meetId)/placeslots"
         case .addLocationCandidates(let meetId, _):
             return "/\(meetId)/placeslots"
+        case .voteLocation(let meetId, _):
+            return "/\(meetId)/places"
+        case .voteTime(let meetId, _):
+            return "/\(meetId)/times"
         }
     }
     
@@ -91,6 +103,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .post
         case .addLocationCandidates:
             return .post
+        case .voteTime, .voteLocation:
+            return .post
         default:
             return .get
         }
@@ -105,6 +119,10 @@ extension YakgwaCommonAPI: YakgwaAPI {
         case .fetchAppointmentDetail(let dto):
             return .requestPlain
         case .addLocationCandidates(_, let dto):
+            return .requestJSONEncodable(dto)
+        case .voteLocation(_, let dto):
+            return .requestJSONEncodable(dto)
+        case .voteTime(_, let dto):
             return .requestJSONEncodable(dto)
         default:
             return .requestPlain
