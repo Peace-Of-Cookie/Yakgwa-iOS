@@ -153,6 +153,13 @@ public final class LocationVoteViewController: UIViewController, View {
                 }
             })
             .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

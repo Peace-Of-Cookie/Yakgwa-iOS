@@ -8,5 +8,5 @@
 import RxSwift
 
 public protocol VoteLocationUsecaseProtocol {
-    func execute(meetId: Int, with entity: [LocationCandidate]) -> Single<Void>
+    func execute(meetId: MeetID, with entity: [LocationCandidate]) -> Single<Void>
 }

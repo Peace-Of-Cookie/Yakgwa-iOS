@@ -17,9 +17,9 @@ public class VoteLocationRepository: VoteLocationRepositoryProtocol {
         self.remoteDataSource = remoteDataSource
     }
     
-    public func voteLocation(meetId: Int, with entity: [LocationCandidate]) -> Single<Void> {
+    public func voteLocation(meetId: MeetID, with entity: [LocationCandidate]) -> Single<Void> {
         return remoteDataSource
-            .voteLocation(query: meetId, reqeustDTO: VoteLocationRequestDTO(from: entity))
+            .voteLocation(query: meetId.getMeetId(), reqeustDTO: VoteLocationRequestDTO(from: entity))
             .map { _ in }
     }
 }

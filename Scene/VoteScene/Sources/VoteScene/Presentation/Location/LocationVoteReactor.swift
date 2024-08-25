@@ -51,6 +51,7 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
     
     // Usecases
     let fetchLocationCandidateUsecase: FetchLocationCandidateUsecaseProtocol
+    let voteLocationUsecase: VoteLocationUsecaseProtocol
     
     let meetId: MeetID
     var candidates: [LocationCandidate] = []
@@ -58,10 +59,12 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
     
     public init(
         id: MeetID,
-        fetchLocationCandidateUsecase: FetchLocationCandidateUsecaseProtocol
+        fetchLocationCandidateUsecase: FetchLocationCandidateUsecaseProtocol,
+        voteLocationUsecase: VoteLocationUsecaseProtocol
     ) {
         self.meetId = id
         self.fetchLocationCandidateUsecase = fetchLocationCandidateUsecase
+        self.voteLocationUsecase = voteLocationUsecase
     }
     
     // MARK: - Mutation
@@ -89,8 +92,20 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
             return .empty()
             
         case .voteButtonDidTap:
-            return .empty()
-            
+            return Observable.concat([
+                .just(.setLoading(true)),
+                voteLocationUsecase
+                    .execute(meetId: self.meetId, with: self.selectLocation)
+                    .asObservable()
+                    .flatMap { _ -> Observable<Mutation> in
+                        self.route.onNext(.back)
+                        return .empty()
+                    }
+                    .catch({ error in
+                        return Observable.just(.setPopupMessage(.networkError(error)))
+                    }),
+                .just(.setLoading(false))
+            ])
         case .didTapCandidateCell(let index):
             let candidate = candidates[index]
             
@@ -128,7 +143,8 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
                 return viewModel
             }
             
-        case .removeFromSelect(let candidate):            newState.candidates = newState.candidates.map { viewModel in
+        case .removeFromSelect(let candidate):
+            newState.candidates = newState.candidates.map { viewModel in
                 var viewModel = viewModel
                 if viewModel.title == candidate.title {
                     viewModel.isSelected = false

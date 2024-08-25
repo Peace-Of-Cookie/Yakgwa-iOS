@@ -70,7 +70,10 @@ extension AppointmentDetailCoordinator {
     private func routeToLocationVoteScene(with id: MeetID) {
         let fetchLocationCandidateUsecase: FetchLocationCandidateUsecaseProtocol = FetchLocationCandidateUsecase(repository: FetchLocationCandidateRepository(remoteDataSource: RemoteFetchLocationCandidateDataSource()))
         
-        let reactor: LocationVoteReactor = LocationVoteReactor(id: id, fetchLocationCandidateUsecase: fetchLocationCandidateUsecase)
+        let voteLocationUsecase: VoteLocationUsecaseProtocol =
+        VoteLocationUsecase(repository: VoteLocationRepository(remoteDataSource: RemoteVoteLocationDataSource()))
+        
+        let reactor: LocationVoteReactor = LocationVoteReactor(id: id, fetchLocationCandidateUsecase: fetchLocationCandidateUsecase, voteLocationUsecase: voteLocationUsecase)
         
         let locationVoteViewController: LocationVoteViewController = LocationVoteViewController(reactor: reactor)
         

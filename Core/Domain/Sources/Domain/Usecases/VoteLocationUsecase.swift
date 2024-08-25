@@ -8,13 +8,15 @@
 import RxSwift
 
 public final class VoteLocationUsecase: VoteLocationUsecaseProtocol {
+        
     private let repository: VoteLocationRepositoryProtocol
     
     public init(repository: VoteLocationRepositoryProtocol) {
         self.repository = repository
     }
     
-    public func execute(meetId: Int, with entity: [LocationCandidate]) -> Single<Void> {
+    public func execute(meetId: MeetID, with entity: [LocationCandidate]) -> RxSwift.Single<Void> {
         return repository.voteLocation(meetId: meetId, with: entity)
     }
+
 }

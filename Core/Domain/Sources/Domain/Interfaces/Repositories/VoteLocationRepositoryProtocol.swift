@@ -10,5 +10,5 @@ import Network
 import RxSwift
 
 public protocol VoteLocationRepositoryProtocol {
-    func voteLocation(meetId: Int, with entity: [LocationCandidate]) -> Single<Void>
+    func voteLocation(meetId: MeetID, with entity: [LocationCandidate]) -> Single<Void>
 }

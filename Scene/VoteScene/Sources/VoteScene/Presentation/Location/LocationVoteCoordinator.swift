@@ -34,8 +34,8 @@ public final class LocationVoteCoordinator: BaseCoordinator {
     private func setRoute() {
         self.viewController.sendRoutingEvent = { [weak self] event in
             switch event {
-            case .back:
-                print("뒤로 가기")
+            case .back:                
+                self?.navigationController?.popViewController(animated: true)
             case .addCandindate:
                 print("후보 추가 화면")
             }
