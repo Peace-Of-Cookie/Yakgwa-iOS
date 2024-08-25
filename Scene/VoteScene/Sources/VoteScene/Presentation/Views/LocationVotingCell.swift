@@ -90,6 +90,7 @@ final class LocationVotingCell: UITableViewCell {
         addressLabel.text = nil
         containerView.layer.borderWidth = 0
         containerView.layer.borderColor = UIColor.clear.cgColor
+        profileImageStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
     }
     
     // MARK: - Privates
@@ -138,24 +139,6 @@ final class LocationVotingCell: UITableViewCell {
             $0.top.equalTo(addressLabel.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
         }
-    }
-    
-#warning("TODO : - UI Test ")
-    private func setProfileStack() {
-        let count = 6
-        if count > 5 {
-            numberLabel.isHidden = false
-            for _ in 0..<5 {
-                let profileView = ProfileView(isNew: false)
-                profileImageStack.addArrangedSubview(profileView)
-            }
-        } else {
-            for _ in 0..<count {
-                let profileView = ProfileView(isNew: false)
-                profileImageStack.addArrangedSubview(profileView)
-            }
-        }
-        
     }
     
     // MARK: - Public
