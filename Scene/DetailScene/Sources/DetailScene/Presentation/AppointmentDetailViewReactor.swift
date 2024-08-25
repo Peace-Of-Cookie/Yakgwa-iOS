@@ -36,11 +36,13 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
     public enum Mutation {
         case setLoading(Bool)
         case fetchAppointmentDetail(AppointmentDetail)
+        case fetchMyVoteLocations(VoteLocationInfo)
         case setPopupMessage(PopupMessage)
     }
     
     public struct State {
         var details: AppointmentDetailViewModel?
+        var locationVoteInfo: VoteLocationInfo?
         var isLoading: Bool = false
         @Pulse var popupMessage: (PopupMessage?)
     }
@@ -54,16 +56,19 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
     let route: PublishSubject<AppointmentDetailRouter> = PublishSubject<AppointmentDetailRouter>()
     
     let fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol
+    let fetchMyVoteLocationsUsecase: FetchMyVoteLocationsUsecaseProtocol
     
     let meetId: MeetID
     var detail: AppointmentDetail?
     
     public init(
         id: MeetID,
-        fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol
+        fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol,
+        fetchMyVoteLocationsUsecase: FetchMyVoteLocationsUsecaseProtocol
     ) {
         self.meetId = id
         self.fetchAppointmentDetailUsecase = fetchAppointmentDetailUsecase
+        self.fetchMyVoteLocationsUsecase = fetchMyVoteLocationsUsecase
     }
     
     // MARK: - Mutate
@@ -79,6 +84,13 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
                         self?.detail = detail
                     }
                     .map { Mutation.fetchAppointmentDetail($0) }
+                    .asObservable()
+                    .catch { error -> Observable<Mutation> in
+                        return Observable.just(.setPopupMessage(.networkError(error)))
+                    },
+                fetchMyVoteLocationsUsecase
+                    .execute(with: self.meetId)
+                    .map { Mutation.fetchMyVoteLocations($0) }
                     .asObservable()
                     .catch { error -> Observable<Mutation> in
                         return Observable.just(.setPopupMessage(.networkError(error)))
@@ -112,6 +124,9 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
             
         case .setPopupMessage(let message):
             newState.popupMessage = message
+            
+        case .fetchMyVoteLocations(let info):
+            newState.locationVoteInfo = info
         }
         
         return newState
