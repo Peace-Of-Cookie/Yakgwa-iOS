@@ -8,6 +8,8 @@
 import Network
 import Local
 
+public typealias MeetID = Int
+
 public enum YakgwaCommonAPI {
     case createAppointment(CreateAppointmentRequestDTO)
     /// 장소 검색
@@ -26,6 +28,10 @@ public enum YakgwaCommonAPI {
     case voteLocation(Int, VoteLocationRequestDTO)
     /// 모임의 시간 투표
     case voteTime(Int, VoteTimeRequestDTO)
+    /// 내가 투표한 시간 조회
+    case fetchMyVoteTime(MeetID)
+    /// 내가 투표한 장소 조회
+    case fetchMyVoteLocation(MeetID)
 }
 
 extension YakgwaCommonAPI: YakgwaAPI {
@@ -48,6 +54,10 @@ extension YakgwaCommonAPI: YakgwaAPI {
         case .voteTime:
             return .vote
         case .voteLocation:
+            return .vote
+        case .fetchMyVoteTime:
+            return .vote
+        case .fetchMyVoteLocation:
             return .vote
         }
     }
@@ -72,6 +82,10 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return "/\(meetId)/places"
         case .voteTime(let meetId, _):
             return "/\(meetId)/times"
+        case .fetchMyVoteTime(let meetId):
+            return "/\(meetId)/times"
+        case .fetchMyVoteLocation(let meetId):
+            return "/\(meetId)/places"
         }
     }
     
