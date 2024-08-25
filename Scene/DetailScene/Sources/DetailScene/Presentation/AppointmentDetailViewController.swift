@@ -186,6 +186,14 @@ public final class AppointmentDetailViewController: UIViewController, View {
             })
             .disposed(by: disposeBag)
         
+        reactor.state
+            .compactMap { $0.locationVoteInfo }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] info in
+                print("투표 정보 \(info)")
+            })
+            .disposed(by: disposeBag)
+        
         reactor.state.map { $0.isLoading }
             .distinctUntilChanged()
             .bind(to: activityIndicator.rx.isAnimating)
