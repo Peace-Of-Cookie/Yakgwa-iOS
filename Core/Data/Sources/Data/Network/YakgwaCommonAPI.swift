@@ -22,6 +22,8 @@ public enum YakgwaCommonAPI {
     case fetchLocationCandidates(Int)
     /// 투표를 위한 모임의 장소투표후보지 추가
     case addLocationCandidates(Int, AddLocationCandidateRequestDTO)
+    /// 투표를 위한 모임의 시간 조회
+    case fetchDateCandidates(Int)
     /// 모임의 장소 투표
     case voteLocation(Int, VoteLocationRequestDTO)
     /// 모임의 시간 투표
@@ -48,6 +50,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
         case .fetchLocationCandidates:
             return .meet
         case .addLocationCandidates:
+            return .meet
+        case .fetchDateCandidates:
             return .meet
         case .voteTime:
             return .vote
@@ -76,6 +80,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return "/\(meetId)/placeslots"
         case .addLocationCandidates(let meetId, _):
             return "/\(meetId)/placeslots"
+        case .fetchDateCandidates(let meetId):
+            return "/\(meetId)/times"
         case .voteLocation(let meetId, _):
             return "/\(meetId)/places"
         case .voteTime(let meetId, _):
