@@ -38,7 +38,7 @@ public struct FetchMyVoteLocationsResponseDTO: Decodable {
     
     public struct ResultDTO: Decodable {
         let meetStatus: MeetStatus
-        let placeInfos: [PlaceInfoDTO]
+        let placeInfos: [PlaceInfoDTO]?
         
         public struct PlaceInfoDTO: Decodable {
             let placeSlotId: Int
@@ -61,7 +61,7 @@ extension FetchMyVoteLocationsResponseDTO {
     public func toDomain() -> VoteLocationInfo {
         return VoteLocationInfo(
             meetStatus: result.meetStatus.rawValue,
-            placeInfos: result.placeInfos.map { $0.toDomain() }
+            placeInfos: result.placeInfos?.map { $0.toDomain() } ?? []
         )
     }
 }

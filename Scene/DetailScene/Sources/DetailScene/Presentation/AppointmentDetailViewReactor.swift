@@ -37,12 +37,14 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         case setLoading(Bool)
         case fetchAppointmentDetail(AppointmentDetail)
         case fetchMyVoteLocations(VoteLocationInfo)
+        case fetchMyVoteDates(VoteDateInfo)
         case setPopupMessage(PopupMessage)
     }
     
     public struct State {
         var details: AppointmentDetailViewModel?
         var locationVoteInfo: VoteLocationInfo?
+        var dateVoteInfo: VoteDateInfo?
         var isLoading: Bool = false
         @Pulse var popupMessage: (PopupMessage?)
     }
@@ -57,6 +59,7 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
     
     let fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol
     let fetchMyVoteLocationsUsecase: FetchMyVoteLocationsUsecaseProtocol
+    let fetchDateCandidatesUsecase: FetchDateCandidatesUsecaseProtocol
     
     let meetId: MeetID
     var detail: AppointmentDetail?
@@ -64,11 +67,13 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
     public init(
         id: MeetID,
         fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol,
-        fetchMyVoteLocationsUsecase: FetchMyVoteLocationsUsecaseProtocol
+        fetchMyVoteLocationsUsecase: FetchMyVoteLocationsUsecaseProtocol,
+        fetchDateCandidatesUsecase: FetchDateCandidatesUsecaseProtocol
     ) {
         self.meetId = id
         self.fetchAppointmentDetailUsecase = fetchAppointmentDetailUsecase
         self.fetchMyVoteLocationsUsecase = fetchMyVoteLocationsUsecase
+        self.fetchDateCandidatesUsecase = fetchDateCandidatesUsecase
     }
     
     // MARK: - Mutate
@@ -80,7 +85,7 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
                 fetchAppointmentDetailUsecase
                     .execute(with: self.meetId)
                     .do { [weak self] detail in
-                        print("결과: \(detail)")
+                        print("약속 상세 정보(\(self?.meetId.getMeetId())):  \(detail)")
                         self?.detail = detail
                     }
                     .map { Mutation.fetchAppointmentDetail($0) }
@@ -91,6 +96,13 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
                 fetchMyVoteLocationsUsecase
                     .execute(with: self.meetId)
                     .map { Mutation.fetchMyVoteLocations($0) }
+                    .asObservable()
+                    .catch { error -> Observable<Mutation> in
+                        return Observable.just(.setPopupMessage(.networkError(error)))
+                    },
+                fetchDateCandidatesUsecase
+                    .execute(with: self.meetId)
+                    .map { Mutation.fetchMyVoteDates($0) }
                     .asObservable()
                     .catch { error -> Observable<Mutation> in
                         return Observable.just(.setPopupMessage(.networkError(error)))
@@ -127,6 +139,9 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
             
         case .fetchMyVoteLocations(let info):
             newState.locationVoteInfo = info
+            
+        case .fetchMyVoteDates(let info):
+            newState.dateVoteInfo = info
         }
         
         return newState
