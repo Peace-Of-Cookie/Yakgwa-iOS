@@ -49,8 +49,8 @@ public struct FetchDateCandidateResponseDTO: Decodable {
         }
 
         public struct VoteDate: Decodable {
-            public let startVoteDate: String?
-            public let endVoteDate: String?
+            public let startVoteDate: String
+            public let endVoteDate: String
         }
     }
 }
@@ -58,8 +58,7 @@ public struct FetchDateCandidateResponseDTO: Decodable {
 extension FetchDateCandidateResponseDTO {
     func toDomain() -> VoteDateInfo {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-        
+        dateFormatter.dateFormat = "yyyy-MM-dd"
         return VoteDateInfo(
             meetStatus: result.meetStatus,
             timeInfo: result.timeInfos?.map { $0.toDomain() },
