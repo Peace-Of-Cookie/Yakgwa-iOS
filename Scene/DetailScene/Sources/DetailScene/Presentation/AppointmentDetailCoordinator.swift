@@ -39,8 +39,8 @@ public final class AppointmentDetailCoordinator: BaseCoordinator {
             switch event {
             case .back:
                 print("뒤로 가기")
-            case .dateVote(let id):
-                self?.routeToDateVoteScene(with: id)
+            case .dateVote(let id, let dates):
+                self?.routeToDateVoteScene(with: id, dates: dates)
             case .locationVote(let id):
                 self?.routeToLocationVoteScene(with: id)
             }
@@ -49,8 +49,8 @@ public final class AppointmentDetailCoordinator: BaseCoordinator {
 }
 
 extension AppointmentDetailCoordinator {
-    private func routeToDateVoteScene(with id: MeetID) {
-        let reactor: DateVoteReactor = DateVoteReactor(id: id)
+    private func routeToDateVoteScene(with id: MeetID, dates: (Date, Date)) {
+        let reactor: DateVoteReactor = DateVoteReactor(id: id, candidateDates: dates)
         
         let dateVoteViewController: DateVoteViewController = DateVoteViewController(reactor: reactor)
         

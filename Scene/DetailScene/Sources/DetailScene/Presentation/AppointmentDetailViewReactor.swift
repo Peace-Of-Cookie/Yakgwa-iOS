@@ -21,7 +21,7 @@ protocol AppointmentDetailViewRouting {
 
 enum AppointmentDetailRouter {
     case back
-    case dateVote(MeetID)
+    case dateVote(MeetID, (Date, Date))
     case locationVote(MeetID)
 }
 
@@ -63,6 +63,7 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
     
     let meetId: MeetID
     var detail: AppointmentDetail?
+    var candidateDate: (Date, Date)?
     
     public init(
         id: MeetID,
@@ -102,6 +103,9 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
                     },
                 fetchDateCandidatesUsecase
                     .execute(with: self.meetId)
+                    .do { [weak self] result in
+                        self?.candidateDate = result.getCandidateDate()
+                    }
                     .map { Mutation.fetchMyVoteDates($0) }
                     .asObservable()
                     .catch { error -> Observable<Mutation> in
@@ -115,7 +119,9 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
             return .empty()
             
         case .didTapDateVoteButton:
-            route.onNext(.dateVote(meetId))
+            if let candidateDate = candidateDate {
+                route.onNext(.dateVote(meetId, candidateDate))
+            }
             return .empty()
             
         case .didTapLocationVoteButton:

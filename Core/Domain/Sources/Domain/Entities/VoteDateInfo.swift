@@ -30,3 +30,13 @@ public struct VoteDateInfo: Equatable {
         self.endVoteDate = endVoteDate
     }
 }
+
+extension VoteDateInfo {
+    public func getCandidateDate() -> (Date, Date) {
+        if let startVoteDate = startVoteDate, let endVoteDate = endVoteDate {
+            return (startVoteDate, endVoteDate)
+        } else {
+            return (Date(), Date())
+        }
+    }
+}
