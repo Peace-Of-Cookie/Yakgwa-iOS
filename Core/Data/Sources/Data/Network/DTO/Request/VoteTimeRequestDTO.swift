@@ -19,5 +19,9 @@ import Domain
  */
 
 public struct VoteTimeRequestDTO: Encodable {
+    public let enableTimes: [EnableTimeDTO]
     
+    public struct EnableTimeDTO: Encodable {
+        public let enableTime: String
+    }
 }

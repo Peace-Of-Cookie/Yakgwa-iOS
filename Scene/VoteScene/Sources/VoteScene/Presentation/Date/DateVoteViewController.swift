@@ -208,8 +208,8 @@ public final class DateVoteViewController: UIViewController, View {
         
         timeCollectionView.rx.itemSelected
             .map { [weak self] indexPath -> Reactor.Action in
-                let selectedTime = self?.timeSlots[indexPath.item]
-                return Reactor.Action.timeSelected(selectedTime!)
+                let selectedTime = indexPath.row
+                return Reactor.Action.timeSelected(selectedTime)
             }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
@@ -250,7 +250,7 @@ public final class DateVoteViewController: UIViewController, View {
         // 프린트 테스트중
         reactor.state.map { $0.selectedTimes }
             .subscribe(onNext: {[weak self] result in
-                 print("선택한 날짜: \(result)")
+                print("선택한 날짜: \(result)")
             })
             .disposed(by: disposeBag)
     }
@@ -349,7 +349,7 @@ extension DateVoteViewController: UICollectionViewDataSource, UICollectionViewDe
             cell.timeLabel.text = date
             
             if let selectedDate = reactor?.currentState.showDateTimePicker,
-               let selectedTimes = reactor?.currentState.selectedTimes[selectedDate],
+               let selectedTimes = reactor?.currentState.selectedTimes[selectedDate].map({ "\($0)시" }),
                selectedTimes.contains(date) {
                 cell.boxView.backgroundColor = .primary100
             } else {

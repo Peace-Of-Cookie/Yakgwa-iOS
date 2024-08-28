@@ -25,7 +25,7 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
     public enum Action {
         case viewDidAppear
         case dateSelected(Date)
-        case timeSelected(String)
+        case timeSelected(Int)
     }
     
     public enum Mutation {
@@ -33,13 +33,13 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
         case setPopupMessage(PopupMessage)
         case setDate((Date, Date))
         case selectedDate(Date)
-        case setSelectedTimes(Date, [String])
+        case setSelectedTimes(Date, [Int])
     }
     
     public struct State {
         var candidateDates: ((Date, Date))?
         var showDateTimePicker: Date? = nil
-        var selectedTimes: [Date: [String]] = [:]
+        var selectedTimes: [Date: [Int]] = [:]
         var isLoading: Bool = false
         @Pulse var popupMessage: (PopupMessage?)
     }
