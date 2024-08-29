@@ -26,6 +26,7 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
         case viewDidAppear
         case dateSelected(Date)
         case timeSelected(Int)
+        case didTapVoteButton
     }
     
     public enum Mutation {
@@ -84,6 +85,21 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
             }
             
             return .just(.setSelectedTimes(selectedDate, times))
+        
+        case .didTapVoteButton:
+            var voteDates: [VoteDate] = []
+            
+            for (date, times) in currentState.selectedTimes {
+                print("date: \(date), times: \(times)")
+                for time in times {
+                    if let voteDate = VoteDate(voteDate: date, times: time) {
+                        voteDates.append(voteDate)
+                    }
+                }
+            }
+            
+            print("투표 할 날짜: \(voteDates)")
+            return .empty()
         }
     }
     

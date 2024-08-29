@@ -214,6 +214,11 @@ public final class DateVoteViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapVoteButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state.map { $0.candidateDates }
             .subscribe(onNext:  { [weak self] dates in
