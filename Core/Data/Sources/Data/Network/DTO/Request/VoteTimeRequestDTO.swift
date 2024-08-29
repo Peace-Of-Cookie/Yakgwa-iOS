@@ -25,3 +25,9 @@ public struct VoteTimeRequestDTO: Encodable {
         public let enableTime: String
     }
 }
+
+public extension VoteTimeRequestDTO {
+    init(from entities: [VoteDate]) {
+        self.enableTimes = entities.map { EnableTimeDTO(enableTime: $0.getVoteDateString()) }
+    }
+}
