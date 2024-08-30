@@ -54,16 +54,19 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
     let route: PublishSubject<DateVoteRouter> = PublishSubject<DateVoteRouter>()
     
     // Usecase
+    let voteDateUsecase: VoteDateUsecaseProtocol
     
     let meetId: MeetID
     let candidateDates: (Date, Date)
     
     public init(
         id: MeetID,
-        candidateDates: (Date, Date)
+        candidateDates: (Date, Date),
+        voteDateUsecase: VoteDateUsecaseProtocol
     ) {
         self.meetId = id
         self.candidateDates = candidateDates
+        self.voteDateUsecase = voteDateUsecase
     }
 
     // MARK: - Mutation
@@ -89,6 +92,7 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
         case .didTapVoteButton:
             var voteDates: [VoteDate] = []
             
+            // Mapping to entity
             for (date, times) in currentState.selectedTimes {
                 print("date: \(date), times: \(times)")
                 for time in times {
@@ -99,7 +103,20 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
             }
             
             print("투표 할 날짜: \(voteDates)")
-            return .empty()
+            return Observable.concat([
+                .just(.setLoading(true)),
+                voteDateUsecase
+                    .execute(meetId: self.meetId, with: voteDates)
+                    .asObservable()
+                    .flatMap { _ -> Observable<Mutation> in
+                        self.route.onNext(.back)
+                        return .empty()
+                    }
+                    .catch({ error in
+                        return Observable.just(.setPopupMessage(.networkError(error)))
+                    }),
+                .just(.setLoading(false))
+            ])
         }
     }
     
