@@ -50,7 +50,9 @@ public final class AppointmentDetailCoordinator: BaseCoordinator {
 
 extension AppointmentDetailCoordinator {
     private func routeToDateVoteScene(with id: MeetID, dates: (Date, Date)) {
-        let reactor: DateVoteReactor = DateVoteReactor(id: id, candidateDates: dates)
+        let voteDateUsecase: VoteDateUsecaseProtocol = VoteDateUsecase(repository: VoteDateRepository(remoteDataSource: RemoteVoteDateDataSource()))
+        
+        let reactor: DateVoteReactor = DateVoteReactor(id: id, candidateDates: dates, voteDateUsecase: voteDateUsecase)
         
         let dateVoteViewController: DateVoteViewController = DateVoteViewController(reactor: reactor)
         
