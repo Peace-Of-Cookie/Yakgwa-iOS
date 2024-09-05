@@ -17,7 +17,7 @@ public struct LoginResponseDTO: Codable {
     
     struct LoginResult: Codable {
         let tokenSet: TokenSet
-        let isNew: Bool
+        let isNew: Bool?
         
         struct TokenSet: Codable {
             let accessToken: String
