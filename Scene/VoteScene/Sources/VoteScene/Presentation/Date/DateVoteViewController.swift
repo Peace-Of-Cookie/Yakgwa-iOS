@@ -34,7 +34,7 @@ public final class DateVoteViewController: UIViewController, View {
         let button = BottomSheetButton(title: "다음으로")
         return button
     }()
-
+    
     private lazy var dateCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
@@ -252,10 +252,9 @@ public final class DateVoteViewController: UIViewController, View {
             })
             .disposed(by: disposeBag)
         
-        // 프린트 테스트중
         reactor.state.map { $0.selectedTimes }
             .subscribe(onNext: {[weak self] result in
-                print("선택한 날짜: \(result)")
+                self?.timeCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
     }
@@ -354,13 +353,12 @@ extension DateVoteViewController: UICollectionViewDataSource, UICollectionViewDe
             cell.timeLabel.text = date
             
             if let selectedDate = reactor?.currentState.showDateTimePicker,
-               let selectedTimes = reactor?.currentState.selectedTimes[selectedDate].map({ "\($0)시" }),
-               selectedTimes.contains(date) {
+               let selectedTimes = reactor?.currentState.selectedTimes.keys.first(where: { Calendar.current.isDate($0, equalTo: selectedDate, toGranularity: .day) }),
+               reactor?.currentState.selectedTimes[selectedTimes]?.contains(indexPath.item) == true {
                 cell.boxView.backgroundColor = .primary100
             } else {
                 cell.boxView.backgroundColor = .neutral300
             }
-            
             return cell
         }
     }
