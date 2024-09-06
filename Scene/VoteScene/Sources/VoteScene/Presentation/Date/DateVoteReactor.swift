@@ -101,8 +101,6 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
                     }
                 }
             }
-            
-            print("투표 할 날짜: \(voteDates)")
             return Observable.concat([
                 .just(.setLoading(true)),
                 voteDateUsecase

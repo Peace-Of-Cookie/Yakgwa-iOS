@@ -11,7 +11,8 @@ import RxSwift
 
 final public class RemoteVoteDateDataSource: BaseRemoteDataSource<YakgwaCommonAPI>, RemoteVoteDateDataSourceProtocol {
     public func voteDate(query: Int, requestDTO: VoteTimeRequestDTO) -> Single<VoteTimeResponseDTO> {
-        request(
+        print("투표 시간 Request DTO: \(requestDTO)")
+        return request(
             .voteTime(query, requestDTO)
         ).map(VoteTimeResponseDTO.self)
     }

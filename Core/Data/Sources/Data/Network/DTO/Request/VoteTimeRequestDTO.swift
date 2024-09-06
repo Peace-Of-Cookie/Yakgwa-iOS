@@ -12,7 +12,7 @@ import Domain
  {
    "enableTimes": [
      {
-       "enableTime": "2024-08-24T02:15:34.907Z"
+       "enableTime": "2024-08-24 02:00"
      }
    ]
  }

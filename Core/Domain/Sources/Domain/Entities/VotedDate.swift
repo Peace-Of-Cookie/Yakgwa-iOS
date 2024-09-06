@@ -23,7 +23,7 @@ public struct VoteDate: Equatable {
         }
         
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         
         let formattedDate = dateFormatter.string(from: newDate)
         
@@ -38,7 +38,7 @@ public struct VoteDate: Equatable {
 extension VoteDate {
     public func getVoteDateString() -> String {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
         return dateFormatter.string(from: voteDate)
     }
 }
