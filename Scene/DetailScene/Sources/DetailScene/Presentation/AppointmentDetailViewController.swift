@@ -154,7 +154,7 @@ public final class AppointmentDetailViewController: UIViewController, View {
         
         voteStack.addArrangedSubview(dateVoteView)
         voteStack.addArrangedSubview(locationVoteView)
-                
+        
         self.view.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints {
             $0.center.equalToSuperview()
@@ -198,6 +198,52 @@ public final class AppointmentDetailViewController: UIViewController, View {
                 self?.appointmentDetailView.configure(with: detail)
             })
             .disposed(by: disposeBag)
+        
+        // DateVoteInfo에 따른 뷰 교체
+        reactor.state.map { $0.showDateVoteInfo }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] showDateVoteInfo in
+                guard let self = self else { return }
+                if showDateVoteInfo {
+                    // myVotedDateView를 보여줌
+                    if self.voteStack.arrangedSubviews.contains(self.dateVoteView) {
+                        self.voteStack.removeArrangedSubview(self.dateVoteView)
+                        self.dateVoteView.removeFromSuperview()
+                        self.voteStack.insertArrangedSubview(self.myVotedDateView, at: 0)
+                    }
+                } else {
+                    // dateVoteView를 보여줌
+                    if self.voteStack.arrangedSubviews.contains(self.myVotedDateView) {
+                        self.voteStack.removeArrangedSubview(self.myVotedDateView)
+                        self.myVotedDateView.removeFromSuperview()
+                        self.voteStack.insertArrangedSubview(self.dateVoteView, at: 0)
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
+            
+            // LocationVoteInfo에 따른 뷰 교체
+            reactor.state.map { $0.showLocationVoteInfo }
+                .distinctUntilChanged()
+                .subscribe(onNext: { [weak self] showLocationVoteInfo in
+                    guard let self = self else { return }
+                    if showLocationVoteInfo {
+                        // myVotedLocationView를 보여줌
+                        if self.voteStack.arrangedSubviews.contains(self.locationVoteView) {
+                            self.voteStack.removeArrangedSubview(self.locationVoteView)
+                            self.locationVoteView.removeFromSuperview()
+                            self.voteStack.insertArrangedSubview(self.myVotedLocationView, at: 1)
+                        }
+                    } else {
+                        // locationVoteView를 보여줌
+                        if self.voteStack.arrangedSubviews.contains(self.myVotedLocationView) {
+                            self.voteStack.removeArrangedSubview(self.myVotedLocationView)
+                            self.myVotedLocationView.removeFromSuperview()
+                            self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
+                        }
+                    }
+                })
+                .disposed(by: disposeBag)
         
         reactor.state
             .compactMap { $0.locationVoteInfo }

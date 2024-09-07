@@ -42,6 +42,10 @@ public struct VoteLocationInfo: Equatable {
 }
 
 public extension VoteLocationInfo {
+    func getCount() -> Int {
+        return placeInfos.count
+    }
+    
     func getMeetStatus() -> MeetStatus? {
         return self.meetStatus
     }
