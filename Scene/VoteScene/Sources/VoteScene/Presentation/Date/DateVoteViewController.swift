@@ -257,6 +257,13 @@ public final class DateVoteViewController: UIViewController, View {
                 self?.timeCollectionView.reloadData()
             })
             .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
