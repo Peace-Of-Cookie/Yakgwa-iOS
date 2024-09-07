@@ -59,6 +59,13 @@ public final class AppointmentDetailViewController: UIViewController, View {
         return view
     }()
     
+    private lazy var voteStack: UIStackView = {
+        let view = UIStackView()
+        view.axis = .vertical
+        view.spacing = 8
+        return view
+    }()
+    
     private lazy var dateVoteView: VoteView = {
         let view = VoteView()
         view.configure(type: .date)
@@ -68,6 +75,16 @@ public final class AppointmentDetailViewController: UIViewController, View {
     private lazy var locationVoteView: VoteView = {
         let view = VoteView()
         view.configure(type: .location)
+        return view
+    }()
+    
+    private lazy var myVotedDateView: MyVotedDateView = {
+        let view = MyVotedDateView()
+        return view
+    }()
+    
+    private lazy var myVotedLocationView: MyVotedLocationView = {
+        let view = MyVotedLocationView()
         return view
     }()
     
@@ -127,21 +144,17 @@ public final class AppointmentDetailViewController: UIViewController, View {
             $0.centerX.equalToSuperview()
         }
         
-        self.contentView.addSubview(dateVoteView)
-        dateVoteView.snp.makeConstraints {
+        self.contentView.addSubview(voteStack)
+        voteStack.snp.makeConstraints {
             $0.top.equalTo(appointmentDetailView.snp.bottom).offset(8)
-            $0.leading.equalToSuperview().offset(16)
-            $0.centerX.equalToSuperview()
-        }
-        
-        self.contentView.addSubview(locationVoteView)
-        locationVoteView.snp.makeConstraints {
-            $0.top.equalTo(dateVoteView.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-16)
         }
         
+        voteStack.addArrangedSubview(dateVoteView)
+        voteStack.addArrangedSubview(locationVoteView)
+                
         self.view.addSubview(activityIndicator)
         activityIndicator.snp.makeConstraints {
             $0.center.equalToSuperview()
