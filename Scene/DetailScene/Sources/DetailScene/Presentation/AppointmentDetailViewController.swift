@@ -249,7 +249,7 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .compactMap { $0.locationVoteInfo }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] info in
-                print("투표 정보 \(info)")
+                self?.myVotedLocationView.configure(with: info)
             })
             .disposed(by: disposeBag)
         
