@@ -69,14 +69,16 @@ extension FetchDateCandidateResponseDTO {
 }
 
 extension FetchDateCandidateResponseDTO.Result.TimeInfo {
-        func toDomain() -> VoteDateInfo.TimeInfo {
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
-            let date = dateFormatter.date(from: voteTime ?? "") ?? Date()
-            
-            return VoteDateInfo.TimeInfo(
-                timeId: timeId,
-                voteTime: date
-            )
-        }
+    func toDomain() -> VoteDateInfo.TimeInfo {        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm"
+        dateFormatter.timeZone = TimeZone(identifier: "Asia/Seoul") // 한국 시간대를 사용
+        dateFormatter.locale = Locale(identifier: "ko_KR") // 한국어로 지역화
+        
+        let date = dateFormatter.date(from: voteTime ?? "")
+        return VoteDateInfo.TimeInfo(
+            timeId: timeId,
+            voteTime: date
+        )
+    }
 }

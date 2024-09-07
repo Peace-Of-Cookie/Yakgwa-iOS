@@ -43,4 +43,14 @@ extension VoteDateInfo {
     public func getTimeInfoCount() -> Int {
         return timeInfo?.count ?? 0
     }
+    
+    public func getTimeInfo() -> [TimeInfo]? {
+        return timeInfo
+    }
+}
+
+extension VoteDateInfo.TimeInfo {
+    public func getVoteTime() -> Date? {
+        return voteTime
+    }
 }

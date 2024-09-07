@@ -8,6 +8,7 @@
 import UIKit
 
 import CoreKit
+import Domain
 
 public final class MyVotedDateView: UIView {
     // MARK: - Properties
@@ -47,7 +48,6 @@ public final class MyVotedDateView: UIView {
         
         attribute()
         setUI()
-        test()
     }
     
     required init?(coder: NSCoder) {
@@ -91,12 +91,20 @@ public final class MyVotedDateView: UIView {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-16)
         }
-    }
-    
-    private func test() {
-        for i in 0..<3 {
+    }}
+
+extension MyVotedDateView {
+    public func configure(with viewModel: VoteDateInfo) {
+        guard let timeInfo = viewModel.getTimeInfo() else { return }
+        
+        for time in timeInfo {
             let label = UILabel()
-            label.text = "2021.07.20 15:00 | \(i)시"
+            let timeDate = time.getVoteTime()
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy.MM.dd HH"
+            let timeString = dateFormatter.string(from: timeDate ?? Date())
+            
+            label.text = timeString
             label.font = .m12
             label.textColor = .neutral800
             self.votedStackView.addArrangedSubview(label)

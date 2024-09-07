@@ -257,7 +257,7 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .compactMap { $0.dateVoteInfo }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] info in
-                print("시간 투표 정보 \(info)")
+                self?.myVotedDateView.configure(with: info)
             })
             .disposed(by: disposeBag)
         
