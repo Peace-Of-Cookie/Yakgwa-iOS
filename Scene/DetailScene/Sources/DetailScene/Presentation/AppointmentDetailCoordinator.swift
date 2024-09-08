@@ -10,6 +10,9 @@ import UIKit
 import CoreKit
 import Util
 import Domain
+import Data
+
+import VoteScene
 
 public final class AppointmentDetailCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -36,7 +39,56 @@ public final class AppointmentDetailCoordinator: BaseCoordinator {
             switch event {
             case .back:
                 print("뒤로 가기")
+            case .dateVote(let id, let dates):
+                self?.routeToDateVoteScene(with: id, dates: dates)
+            case .locationVote(let id):
+                self?.routeToLocationVoteScene(with: id)
             }
+        }
+    }
+}
+
+extension AppointmentDetailCoordinator {
+    private func routeToDateVoteScene(with id: MeetID, dates: (Date, Date)) {
+        let voteDateUsecase: VoteDateUsecaseProtocol = VoteDateUsecase(repository: VoteDateRepository(remoteDataSource: RemoteVoteDateDataSource()))
+        
+        let reactor: DateVoteReactor = DateVoteReactor(id: id, candidateDates: dates, voteDateUsecase: voteDateUsecase)
+        
+        let dateVoteViewController: DateVoteViewController = DateVoteViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let dateVoteCoordinator: DateVoteCoordinator = DateVoteCoordinator(
+                navigationController: navigationController,
+                viewController: dateVoteViewController
+            )
+            
+            navigationController.delegate = self
+            dateVoteCoordinator.parentCoordinator = self
+            dateVoteCoordinator.start()
+            addChildCoordinator(dateVoteCoordinator)
+        }
+    }
+    
+    private func routeToLocationVoteScene(with id: MeetID) {
+        let fetchLocationCandidateUsecase: FetchLocationCandidateUsecaseProtocol = FetchLocationCandidateUsecase(repository: FetchLocationCandidateRepository(remoteDataSource: RemoteFetchLocationCandidateDataSource()))
+        
+        let voteLocationUsecase: VoteLocationUsecaseProtocol =
+        VoteLocationUsecase(repository: VoteLocationRepository(remoteDataSource: RemoteVoteLocationDataSource()))
+        
+        let reactor: LocationVoteReactor = LocationVoteReactor(id: id, fetchLocationCandidateUsecase: fetchLocationCandidateUsecase, voteLocationUsecase: voteLocationUsecase)
+        
+        let locationVoteViewController: LocationVoteViewController = LocationVoteViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let locationVoteCoordinator: LocationVoteCoordinator = LocationVoteCoordinator(
+                navigationController: navigationController,
+                viewController: locationVoteViewController
+            )
+            
+            navigationController.delegate = self
+            locationVoteCoordinator.parentCoordinator = self
+            locationVoteCoordinator.start()
+            addChildCoordinator(locationVoteCoordinator)
         }
     }
 }

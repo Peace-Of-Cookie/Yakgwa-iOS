@@ -8,9 +8,13 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
 
-public final class DateVoteViewController: UIViewController {
+public final class DateVoteViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((DateVoteRouter) -> Void)?
+    
     private var dates: [Date] = []
     private var timeSlots: [String] = []
     var startDate: Date?
@@ -30,7 +34,7 @@ public final class DateVoteViewController: UIViewController {
         let button = BottomSheetButton(title: "다음으로")
         return button
     }()
-
+    
     private lazy var dateCollectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
@@ -98,7 +102,10 @@ public final class DateVoteViewController: UIViewController {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: DateVoteReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -178,6 +185,85 @@ public final class DateVoteViewController: UIViewController {
             $0.leading.trailing.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-16)
         }
+    }
+    
+    // MARK: - Binding
+    public func bind(reactor: DateVoteReactor) {
+        // Action
+        self.rx.viewDidAppear
+            .map { _ in Reactor.Action.viewDidAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        dateCollectionView.rx.itemSelected
+            .map { [weak self] indexPath -> Reactor.Action in
+                guard let self = self else {
+                    return Reactor.Action.dateSelected(Date())
+                }
+                let selectedDate = self.dates[indexPath.item]
+                return Reactor.Action.dateSelected(selectedDate)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        timeCollectionView.rx.itemSelected
+            .map { [weak self] indexPath -> Reactor.Action in
+                let selectedTime = indexPath.row
+                return Reactor.Action.timeSelected(selectedTime)
+            }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        bottomSheetButton.rx.tap
+            .map { Reactor.Action.didTapVoteButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        reactor.state.map { $0.candidateDates }
+            .subscribe(onNext:  { [weak self] dates in
+                guard let self = self else { return }
+                
+                if let dates = dates {
+                    self.startDate = dates.0
+                    self.endDate = dates.1
+                    self.dates = self.generateCalendarDates(startDate: dates.0, endDate: dates.1)
+                    self.dateCollectionView.reloadData()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.showDateTimePicker }
+            .subscribe(onNext: {[weak self] result in
+                guard let self = self else { return }
+                if let date = result {
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "yyyy/MM/dd"
+                    self.timeTableDateLabel.text = formatter.string(from: date)
+                    
+                    let calendar = Calendar.current
+                    let startOfDay = calendar.startOfDay(for: Date())
+                    let endOfDay = calendar.date(byAdding: DateComponents(hour: 24), to: startOfDay)!
+                    
+                    self.timeSlots = self.generateHourlyTimeSlots(from: startOfDay, to: endOfDay)
+                    self.dateCollectionView.reloadData()
+                    self.timeCollectionView.reloadData()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.selectedTimes }
+            .subscribe(onNext: {[weak self] result in
+                self?.timeCollectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
 }
 
@@ -261,11 +347,11 @@ extension DateVoteViewController: UICollectionViewDataSource, UICollectionViewDe
                 cell.contentView.backgroundColor = .white
             }
             
-//            if date == reactor?.currentState.showDateTimePicker {
-//                cell.contentView.backgroundColor = .primary300
-//            } else {
-//                cell.contentView.backgroundColor = .neutralWhite
-//            }
+            if date == reactor?.currentState.showDateTimePicker {
+                cell.contentView.backgroundColor = .primary300
+            } else {
+                cell.contentView.backgroundColor = .neutralWhite
+            }
             
             return cell
         } else {
@@ -273,14 +359,13 @@ extension DateVoteViewController: UICollectionViewDataSource, UICollectionViewDe
             let date = timeSlots[indexPath.item]
             cell.timeLabel.text = date
             
-//            if let selectedDate = reactor?.currentState.showDateTimePicker,
-//               let selectedTimes = reactor?.currentState.selectedTimes[selectedDate],
-//               selectedTimes.contains(date) {
-//                cell.boxView.backgroundColor = .primary100
-//            } else {
-//                cell.boxView.backgroundColor = .neutral300
-//            }
-            
+            if let selectedDate = reactor?.currentState.showDateTimePicker,
+               let selectedTimes = reactor?.currentState.selectedTimes.keys.first(where: { Calendar.current.isDate($0, equalTo: selectedDate, toGranularity: .day) }),
+               reactor?.currentState.selectedTimes[selectedTimes]?.contains(indexPath.item) == true {
+                cell.boxView.backgroundColor = .primary100
+            } else {
+                cell.boxView.backgroundColor = .neutral300
+            }
             return cell
         }
     }
@@ -302,8 +387,4 @@ extension DateVoteViewController: UICollectionViewDataSource, UICollectionViewDe
         }
         return UICollectionReusableView()
     }
-}
-
-#Preview {
-    DateVoteViewController()
 }

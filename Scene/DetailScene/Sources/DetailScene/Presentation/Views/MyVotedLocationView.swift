@@ -8,6 +8,7 @@
 import UIKit
 
 import CoreKit
+import Domain
 
 public final class MyVotedLocationView: UIView {
     // MARK: - Properties
@@ -46,7 +47,6 @@ public final class MyVotedLocationView: UIView {
         super.init(frame: .zero)
         
         setUI()
-        test()
     }
     
     required init?(coder: NSCoder) {
@@ -59,6 +59,9 @@ public final class MyVotedLocationView: UIView {
     }
     
     private func setUI() {
+        self.backgroundColor = .neutralWhite
+        self.layer.cornerRadius = 25
+        
         self.addSubview(titleLabel)
         titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
@@ -83,19 +86,23 @@ public final class MyVotedLocationView: UIView {
         
         self.addSubview(revoteButton)
         revoteButton.snp.makeConstraints {
-            $0.top.equalTo(locationStack.snp.bottom).offset(16)
+            $0.top.equalTo(stackContainer.snp.bottom).offset(16)
             $0.bottom.equalToSuperview().offset(-16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
     }
-    
-    private func test() {
-        let locationView = LocationView()
-        locationStack.addArrangedSubview(locationView)
+}
+
+extension MyVotedLocationView {
+    public func configure(with viewModel: VoteLocationInfo) {
+        let locationInfo = viewModel.getPlaceInfo()
         
-        let locationView2 = LocationView()
-        locationStack.addArrangedSubview(locationView2)
+        for location in locationInfo {
+            let locationView = LocationView(with: location)
+            
+            locationStack.addArrangedSubview(locationView)
+        }
     }
 }
 
@@ -120,10 +127,12 @@ public final class LocationView: UIView {
     }()
     
     // MARK: - Initializers
-    public init() {
+    public init(with viewModel: VoteLocationInfo.PlaceInfo) {
         super.init(frame: .zero)
         
         setUI()
+        locationLabel.text = viewModel.getTitle()
+        descriptionLabel.text = viewModel.getAddress()
     }
     
     required init?(coder: NSCoder) {

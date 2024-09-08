@@ -1,0 +1,196 @@
+//
+//  LocationVoteViewController.swift
+//
+//
+//  Created by Ekko on 7/21/24.
+//
+
+import UIKit
+
+import CoreKit
+import ReactorKit
+
+public final class LocationVoteViewController: UIViewController, View {
+    // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((LocationVoteRouter) -> Void)?
+    
+    // MARK: - UI Components
+    private lazy var navigationBar: YakgwaNavigationDetailBar = {
+        let nav = YakgwaNavigationDetailBar()
+        nav.delegate = self
+        nav.configure(previousTitle: "약속 시간 투표")
+        return nav
+    }()
+    
+    private lazy var bottomSheetButton: BottomSheetButton = {
+        let button = BottomSheetButton(title: "투표 완료")
+        return button
+    }()
+    
+    private lazy var tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.delegate = self
+        tableView.register(LocationVotingCell.self, forCellReuseIdentifier: LocationVotingCell.identifier)
+        tableView.backgroundColor = .clear
+        tableView.separatorStyle = .none
+        return tableView
+    }()
+    
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutralBlack
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
+    // MARK: - Initializers
+    public init(
+        reactor: LocationVoteReactor
+    ) {
+        defer { self.reactor = reactor}
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Life cycles
+    public override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        setUI()
+    }
+    
+    private func setUI() {
+        self.view.backgroundColor = .neutral200
+        
+        self.view.addSubview(navigationBar)
+        navigationBar.snp.makeConstraints {
+            $0.top.equalTo(self.view.safeAreaLayoutGuide)
+            $0.leading.trailing.equalToSuperview()
+        }
+        
+        self.view.addSubview(bottomSheetButton)
+        bottomSheetButton.snp.makeConstraints {
+            $0.height.equalTo(92)
+            $0.bottom.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
+        }
+        
+        self.view.addSubview(tableView)
+        tableView.snp.makeConstraints {
+            $0.top.equalTo(navigationBar.snp.bottom).offset(16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalTo(bottomSheetButton.snp.top).offset(-8)
+        }
+        
+        self.view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
+    
+    // MARK: - Binding
+    public func bind(reactor: LocationVoteReactor) {
+        // Action
+        self.rx.viewDidAppear
+            .map { _ in Reactor.Action.viewDidAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.bottomSheetButton.rx.tap
+            .map { Reactor.Action.voteButtonDidTap }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        tableView.rx.itemSelected
+            .map { Reactor.Action.didTapCandidateCell($0.row) }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        reactor.state.map { $0.candidates }
+            .distinctUntilChanged()
+            .bind(to: tableView.rx.items(cellIdentifier: LocationVotingCell.identifier, cellType: LocationVotingCell.self)) { index, candidate, cell in
+                cell.configure(with: candidate)
+            }
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
+    }
+}
+
+// MARK: - Privates
+extension LocationVoteViewController {
+
+}
+
+// MARK: - NavigationBarDelegate
+extension LocationVoteViewController: YakgwaNavigationDetailDelegate {
+    public func didTapDetailLeftButton() {
+        print("didTapDetailLeftButton")
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    public func didTapDetailRightButton() { }
+}
+
+// MARK: - TableViewDelegates
+extension LocationVoteViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 3
+    }
+    
+    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: LocationVotingCell.identifier, for: indexPath) as! LocationVotingCell
+        return cell
+    }
+    
+//    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+//        return 0
+//    }
+}

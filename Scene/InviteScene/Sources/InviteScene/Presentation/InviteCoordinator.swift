@@ -53,9 +53,24 @@ extension InviteCoordinator {
                 remoteDataSource: RemoteFetchAppointmentDetailDataSource()
             )
         )
+        
+        let fetchMyVoteLocationsUsecase: FetchMyVoteLocationsUsecaseProtocol = FetchMyVoteLocationsUsecase(
+            repository: FetchMyVoteLocationsRepository(
+                remoteDataSource: RemoteFetchMyVoteLocationsDataSource()
+            )
+        )
+        
+        let fetchDateCandidatesUsecase: FetchDateCandidatesUsecaseProtocol = FetchDateCandidatesUsecase(
+            repository: FetchDateCandidatesRepository(
+                remoteDataSource: RemoteFetchDateCandidatesDataSource()
+            )
+        )
+        
         let reactor = AppointmentDetailViewReactor(
             id: id,
-            fetchAppointmentDetailUsecase: fetchAppointmentUsecase
+            fetchAppointmentDetailUsecase: fetchAppointmentUsecase,
+            fetchMyVoteLocationsUsecase: fetchMyVoteLocationsUsecase,
+            fetchDateCandidatesUsecase: fetchDateCandidatesUsecase
         )
         
         let viewController = AppointmentDetailViewController(reactor: reactor)

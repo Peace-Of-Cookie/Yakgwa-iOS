@@ -21,22 +21,32 @@ protocol AppointmentDetailViewRouting {
 
 enum AppointmentDetailRouter {
     case back
+    case dateVote(MeetID, (Date, Date))
+    case locationVote(MeetID)
 }
 
 public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewRouting {
     public enum Action {
         case viewDidAppear
         case didTapInviteButton
+        case didTapDateVoteButton
+        case didTapLocationVoteButton
     }
     
     public enum Mutation {
         case setLoading(Bool)
         case fetchAppointmentDetail(AppointmentDetail)
+        case fetchMyVoteLocations(VoteLocationInfo)
+        case fetchMyVoteDates(VoteDateInfo)
         case setPopupMessage(PopupMessage)
     }
     
     public struct State {
         var details: AppointmentDetailViewModel?
+        var locationVoteInfo: VoteLocationInfo?
+        var dateVoteInfo: VoteDateInfo?
+        var showLocationVoteInfo: Bool = false
+        var showDateVoteInfo: Bool = false
         var isLoading: Bool = false
         @Pulse var popupMessage: (PopupMessage?)
     }
@@ -50,16 +60,23 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
     let route: PublishSubject<AppointmentDetailRouter> = PublishSubject<AppointmentDetailRouter>()
     
     let fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol
+    let fetchMyVoteLocationsUsecase: FetchMyVoteLocationsUsecaseProtocol
+    let fetchDateCandidatesUsecase: FetchDateCandidatesUsecaseProtocol
     
     let meetId: MeetID
     var detail: AppointmentDetail?
+    var candidateDate: (Date, Date)?
     
     public init(
         id: MeetID,
-        fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol
+        fetchAppointmentDetailUsecase: FetchAppointmentDetailUsecaseProtocol,
+        fetchMyVoteLocationsUsecase: FetchMyVoteLocationsUsecaseProtocol,
+        fetchDateCandidatesUsecase: FetchDateCandidatesUsecaseProtocol
     ) {
         self.meetId = id
         self.fetchAppointmentDetailUsecase = fetchAppointmentDetailUsecase
+        self.fetchMyVoteLocationsUsecase = fetchMyVoteLocationsUsecase
+        self.fetchDateCandidatesUsecase = fetchDateCandidatesUsecase
     }
     
     // MARK: - Mutate
@@ -71,9 +88,27 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
                 fetchAppointmentDetailUsecase
                     .execute(with: self.meetId)
                     .do { [weak self] detail in
+                        print("약속 상세 정보(\(self?.meetId.getMeetId())):  \(detail)")
                         self?.detail = detail
                     }
                     .map { Mutation.fetchAppointmentDetail($0) }
+                    .asObservable()
+                    .catch { error -> Observable<Mutation> in
+                        return Observable.just(.setPopupMessage(.networkError(error)))
+                    },
+                fetchMyVoteLocationsUsecase
+                    .execute(with: self.meetId)
+                    .map { Mutation.fetchMyVoteLocations($0) }
+                    .asObservable()
+                    .catch { error -> Observable<Mutation> in
+                        return Observable.just(.setPopupMessage(.networkError(error)))
+                    },
+                fetchDateCandidatesUsecase
+                    .execute(with: self.meetId)
+                    .do { [weak self] result in
+                        self?.candidateDate = result.getCandidateDate()
+                    }
+                    .map { Mutation.fetchMyVoteDates($0) }
                     .asObservable()
                     .catch { error -> Observable<Mutation> in
                         return Observable.just(.setPopupMessage(.networkError(error)))
@@ -83,6 +118,16 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
             
         case .didTapInviteButton:
             self.sendKakaoMessageWithFeedTemplate()
+            return .empty()
+            
+        case .didTapDateVoteButton:
+            if let candidateDate = candidateDate {
+                route.onNext(.dateVote(meetId, candidateDate))
+            }
+            return .empty()
+            
+        case .didTapLocationVoteButton:
+            route.onNext(.locationVote(meetId))
             return .empty()
         }
     }
@@ -99,6 +144,14 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
             
         case .setPopupMessage(let message):
             newState.popupMessage = message
+            
+        case .fetchMyVoteLocations(let info):
+            newState.locationVoteInfo = info
+            newState.showLocationVoteInfo = info.getCount() > 0
+            
+        case .fetchMyVoteDates(let info):
+            newState.dateVoteInfo = info
+            newState.showDateVoteInfo = info.getTimeInfoCount() > 0
         }
         
         return newState

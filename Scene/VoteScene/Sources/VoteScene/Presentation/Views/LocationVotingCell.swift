@@ -60,19 +60,44 @@ final class LocationVotingCell: UITableViewCell {
         return label
     }()
     
+    private lazy var zeroLabel: UILabel = {
+        let label = UILabel()
+        label.text = "0명"
+        label.font = .m12
+        label.textColor = .neutral800
+        label.isHidden = true
+        return label
+        
+    }()
+    
     // MARK: - Initializers
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
+        attribute()
         setUI()
-        setProfileStack()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
+    // MARK: - Life cycles
+    override func prepareForReuse() {
+        super.prepareForReuse()
+        
+        titleLabel.text = nil
+        addressLabel.text = nil
+        containerView.layer.borderWidth = 0
+        containerView.layer.borderColor = UIColor.clear.cgColor
+        profileImageStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+    }
+    
     // MARK: - Privates
+    private func attribute() {
+        self.selectionStyle = .none
+    }
+    
     private func setUI() {
         self.backgroundColor = .neutral200
         self.layer.cornerRadius = 15
@@ -108,12 +133,24 @@ final class LocationVotingCell: UITableViewCell {
             $0.leading.equalToSuperview().offset(16)
             $0.bottom.equalToSuperview().offset(-16)
         }
+        
+        containerView.addSubview(zeroLabel)
+        zeroLabel.snp.makeConstraints {
+            $0.top.equalTo(addressLabel.snp.bottom).offset(8)
+            $0.leading.equalToSuperview().offset(16)
+        }
     }
     
-#warning("TODO : - UI Test ")
-    private func setProfileStack() {
-        let count = 6
-        if count > 5 {
+    // MARK: - Public
+    func configure(with viewModel: CandidateViewModel) {
+        titleLabel.text = viewModel.title
+        addressLabel.text = viewModel.address
+        
+        let count: Int = viewModel.userInfo.count
+        
+        if count == 0 {
+            zeroLabel.isHidden = false
+        } else if count > 5 {
             numberLabel.isHidden = false
             for _ in 0..<5 {
                 let profileView = ProfileView(isNew: false)
@@ -126,5 +163,12 @@ final class LocationVotingCell: UITableViewCell {
             }
         }
         
+        if viewModel.isSelected {
+            containerView.layer.borderWidth = 1
+            containerView.layer.borderColor = UIColor.primary800.cgColor
+        } else {
+            containerView.layer.borderWidth = 0
+            containerView.layer.borderColor = UIColor.clear.cgColor
+        }
     }
 }
