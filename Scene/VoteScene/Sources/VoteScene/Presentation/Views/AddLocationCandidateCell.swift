@@ -22,7 +22,7 @@ final class AddLocationCandidateCell: UITableViewCell {
     }()
     
     private lazy var addButton: YakGwaButton = {
-        let button = YakGwaButton(style: .secondary, image: .plus)
+        let button = YakGwaButton(style: .white, image: .plus)
         button.title = "후보지 추가하기"
         return button
     }()

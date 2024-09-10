@@ -25,6 +25,7 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
         case addCondidateButtonDidTap
         case voteButtonDidTap
         case didTapCandidateCell(Int)
+        case returnToScene([Location])
     }
     
     public enum Mutation {
@@ -107,17 +108,25 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
                 .just(.setLoading(false))
             ])
         case .didTapCandidateCell(let index):
-            let candidate = candidates[index]
-            
-            // 이미 선택된 경우
-            if let existingIndex = self.selectLocation.firstIndex(of: candidate) {
-                self.selectLocation.remove(at: existingIndex)
-                return Observable.just(Mutation.removeFromSelect(candidate))
+            if index == self.candidates.count {
+                self.route.onNext(.addCandindate)
+                return .empty()
+            } else {
+                let candidate = candidates[index]
+                
+                // 이미 선택된 경우
+                if let existingIndex = self.selectLocation.firstIndex(of: candidate) {
+                    self.selectLocation.remove(at: existingIndex)
+                    return Observable.just(Mutation.removeFromSelect(candidate))
+                }
+                
+                selectLocation.append(candidate)
+                
+                return Observable.just(Mutation.addToSelect(candidate))
             }
-            
-            selectLocation.append(candidate)
-            
-            return Observable.just(Mutation.addToSelect(candidate))
+        
+        case .returnToScene(let locations):
+            return .empty()
         }
     }
     

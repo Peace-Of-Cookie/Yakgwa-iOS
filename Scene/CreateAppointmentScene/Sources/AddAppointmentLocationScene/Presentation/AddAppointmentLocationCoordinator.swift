@@ -18,6 +18,7 @@ import DetailScene
 public final class AddAppointmentLocationCoordinator: BaseCoordinator {
     // MARK: - Properties
     let viewController: AddAppointmentLocationViewController
+    public var onLocationsSelected: (([Location]) -> Void)?
     
     // MARK: - Initializers
     public init(
