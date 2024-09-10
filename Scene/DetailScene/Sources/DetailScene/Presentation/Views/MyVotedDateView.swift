@@ -37,7 +37,7 @@ public final class MyVotedDateView: UIView {
         return stackView
     }()
     
-    private lazy var revoteButton: YakGwaButton = {
+    lazy var revoteButton: YakGwaButton = {
         let button = YakGwaButton(style: .secondary, image: .rightArrowBlack)
         button.title = "시간 다시 투표하기"
         return button
@@ -95,6 +95,8 @@ public final class MyVotedDateView: UIView {
 
 extension MyVotedDateView {
     public func configure(with viewModel: VoteDateInfo) {
+        self.votedStackView.subviews.forEach { $0.removeFromSuperview() }
+        
         guard let timeInfo = viewModel.getTimeInfo() else { return }
         
         for time in timeInfo {

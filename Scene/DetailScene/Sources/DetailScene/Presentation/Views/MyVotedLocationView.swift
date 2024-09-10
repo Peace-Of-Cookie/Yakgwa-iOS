@@ -36,7 +36,7 @@ public final class MyVotedLocationView: UIView {
         return stack
     }()
     
-    private lazy var revoteButton: YakGwaButton = {
+    lazy var revoteButton: YakGwaButton = {
         let button = YakGwaButton(style: .secondary, image: .rightArrowBlack)
         button.title = "장소 다시 투표하기"
         return button
@@ -96,6 +96,7 @@ public final class MyVotedLocationView: UIView {
 
 extension MyVotedLocationView {
     public func configure(with viewModel: VoteLocationInfo) {
+        self.locationStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
         let locationInfo = viewModel.getPlaceInfo()
         
         for location in locationInfo {
