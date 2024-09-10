@@ -32,6 +32,20 @@ public final class DefaultAppointmentView: UIView {
     private let state: DefaultAppointmentViewState
     
     // MARK: - UI Components
+    private lazy var voteStateView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .primary700
+        return view
+    }()
+    
+    private lazy var voteStateLabel: UILabel = {
+        let label = UILabel()
+        label.font = .sb14
+        label.textColor = .neutralWhite
+        label.text = "투표를 완료했어요"
+        return label
+    }()
+    
     private lazy var tagView: TagView = {
         let view = TagView(tag: "테마명")
         return view
@@ -57,14 +71,6 @@ public final class DefaultAppointmentView: UIView {
         label.text = "모임 설명입니다. 모임 설명입니다."
         label.font = .m14
         label.textColor = .neutral500
-        return label
-    }()
-    
-    private lazy var endHourLabel: UILabel = {
-        let label = UILabel()
-        label.text = "N시간 뒤 초대 마감"
-        label.font = .sb14
-        label.textColor = .primary800
         return label
     }()
     
@@ -94,17 +100,12 @@ public final class DefaultAppointmentView: UIView {
     
     // MARK: - Privates
     private func attribute() {
-        switch state {
-        case .none, .inviting:
-            endHourLabel.text = "N시간 뒤 초대 마감"
-        case .invited:
-            endHourLabel.text = "초대 완료"
-        }
     }
     
     private func setUI() {
         self.layer.cornerRadius = 25
         self.backgroundColor = .neutralWhite
+        self.clipsToBounds = true
         
         self.addSubview(tagView)
         tagView.snp.makeConstraints {
@@ -122,15 +123,9 @@ public final class DefaultAppointmentView: UIView {
             $0.trailing.equalToSuperview().offset(-16)
         }
         
-        self.addSubview(endHourLabel)
-        endHourLabel.snp.makeConstraints {
-            $0.top.equalTo(titleStack.snp.bottom).offset(16)
-            $0.leading.equalTo(tagView)
-        }
-        
         self.addSubview(invitedView)
         invitedView.snp.makeConstraints {
-            $0.top.equalTo(endHourLabel.snp.bottom).offset(16)
+            $0.top.equalTo(titleStack.snp.bottom).offset(16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
         }
@@ -150,5 +145,25 @@ public final class DefaultAppointmentView: UIView {
         titleLabel.text = viewModel.title
         descriptionLabel.text = viewModel.description
         invitedView.configure(with: viewModel.participants)
+    }
+    
+    func changeVoteState() {
+        self.addSubview(voteStateView)
+        voteStateView.snp.makeConstraints {
+            $0.height.equalTo(40)
+            $0.top.equalToSuperview()
+            $0.leading.trailing.equalToSuperview()
+        }
+        
+        voteStateView.addSubview(voteStateLabel)
+        voteStateLabel.snp.makeConstraints {
+            $0.centerY.equalToSuperview()
+            $0.leading.equalToSuperview().offset(16)
+        }
+        
+        tagView.snp.remakeConstraints {
+            $0.top.equalTo(voteStateView.snp.bottom).offset(16)
+            $0.leading.equalToSuperview().offset(16)
+        }
     }
 }

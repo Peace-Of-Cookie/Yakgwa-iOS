@@ -190,6 +190,16 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
+        self.myVotedDateView.revoteButton.rx.tap
+            .map { Reactor.Action.didTapDateVoteButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.myVotedLocationView.revoteButton.rx.tap
+            .map { Reactor.Action.didTapLocationVoteButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
         // State
         reactor.state
             .compactMap { $0.details }
@@ -280,6 +290,15 @@ public final class AppointmentDetailViewController: UIViewController, View {
                     self?.popupView.didTapFisrtButton(completion: {
                         self?.popupView.isHidden = true
                     })
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.voted }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] voted in
+                if voted {
+                    self?.appointmentDetailView.changeVoteState()
                 }
             })
             .disposed(by: disposeBag)
