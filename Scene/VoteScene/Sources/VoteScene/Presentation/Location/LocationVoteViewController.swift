@@ -9,6 +9,7 @@ import UIKit
 
 import CoreKit
 import ReactorKit
+import Domain
 
 public final class LocationVoteViewController: UIViewController, View {
     // MARK: - Properties
@@ -32,6 +33,7 @@ public final class LocationVoteViewController: UIViewController, View {
         let tableView = UITableView()
         tableView.delegate = self
         tableView.register(LocationVotingCell.self, forCellReuseIdentifier: LocationVotingCell.identifier)
+        tableView.register(AddLocationCandidateCell.self, forCellReuseIdentifier: AddLocationCandidateCell.identifier)
         tableView.backgroundColor = .clear
         tableView.separatorStyle = .none
         return tableView
@@ -126,8 +128,21 @@ public final class LocationVoteViewController: UIViewController, View {
         // State
         reactor.state.map { $0.candidates }
             .distinctUntilChanged()
-            .bind(to: tableView.rx.items(cellIdentifier: LocationVotingCell.identifier, cellType: LocationVotingCell.self)) { index, candidate, cell in
-                cell.configure(with: candidate)
+            .map { candidates -> [LocationVoteCandidateType] in
+                var allCandidates = candidates.map { LocationVoteCandidateType.candidate($0) }
+                allCandidates.append(.addLocation) // 마지막에 AddLocationCandidateCell 추가
+                return allCandidates
+            }
+            .bind(to: tableView.rx.items) { tableView, index, item in
+                switch item {
+                case .candidate(let candidate):
+                    let cell = tableView.dequeueReusableCell(withIdentifier: LocationVotingCell.identifier, for: IndexPath(row: index, section: 0)) as! LocationVotingCell
+                    cell.configure(with: candidate)
+                    return cell
+                case .addLocation:
+                    let cell = tableView.dequeueReusableCell(withIdentifier: AddLocationCandidateCell.identifier, for: IndexPath(row: index, section: 0)) as! AddLocationCandidateCell
+                    return cell
+                }
             }
             .disposed(by: disposeBag)
         
@@ -180,4 +195,10 @@ extension LocationVoteViewController: YakgwaNavigationDetailDelegate {
 
 // MARK: - TableViewDelegates
 extension LocationVoteViewController: UITableViewDelegate {
+}
+
+// MARK: - TableView CandidateType
+enum LocationVoteCandidateType {
+    case candidate(CandidateViewModel) // 후보지 셀
+    case addLocation // 후보지 추가 셀
 }
