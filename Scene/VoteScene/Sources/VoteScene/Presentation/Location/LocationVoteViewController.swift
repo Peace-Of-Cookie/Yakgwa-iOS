@@ -179,18 +179,5 @@ extension LocationVoteViewController: YakgwaNavigationDetailDelegate {
 }
 
 // MARK: - TableViewDelegates
-extension LocationVoteViewController: UITableViewDelegate, UITableViewDataSource {
-    
-    public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
-    }
-    
-    public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: LocationVotingCell.identifier, for: indexPath) as! LocationVotingCell
-        return cell
-    }
-    
-//    public func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return 0
-//    }
+extension LocationVoteViewController: UITableViewDelegate {
 }
