@@ -294,6 +294,15 @@ public final class AppointmentDetailViewController: UIViewController, View {
             })
             .disposed(by: disposeBag)
         
+        reactor.state.map { $0.voted }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] voted in
+                if voted {
+                    self?.appointmentDetailView.changeVoteState()
+                }
+            })
+            .disposed(by: disposeBag)
+        
         // Routing
         reactor.route
             .subscribe(onNext: { [weak self] router in
