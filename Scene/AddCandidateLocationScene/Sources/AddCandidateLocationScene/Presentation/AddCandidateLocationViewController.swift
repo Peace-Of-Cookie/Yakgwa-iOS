@@ -1,8 +1,8 @@
 //
-//  AddCandinateLocationViewController.swift
+//  AddCandidateLocationViewController.swift
 //
 //
-//  Created by Kim Dongjoo on 8/6/24.
+//  Created by Kim Dongjoo on 9/11/24.
 //
 
 import UIKit
@@ -144,7 +144,7 @@ public final class AddCandinateLocationViewController: UIViewController, View {
                 cell.configure(
                     title: element.title,
                     address: element.address,
-                    isBookmarked: false, 
+                    isBookmarked: false,
                     isSelected: element.isSelected
                 )
             }

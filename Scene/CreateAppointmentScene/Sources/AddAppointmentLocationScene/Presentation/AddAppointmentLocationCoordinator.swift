@@ -12,7 +12,7 @@ import Util
 import Domain
 import Data
 
-import AddCandinateLocationScene
+import AddCandidateLocationScene
 import DetailScene
 
 public final class AddAppointmentLocationCoordinator: BaseCoordinator {

@@ -1,8 +1,8 @@
 //
-//  AddCandinateLocationCoordinator.swift
+//  AddCandidateLocationCoordinator.swift
 //
 //
-//  Created by Kim Dongjoo on 8/6/24.
+//  Created by Kim Dongjoo on 9/11/24.
 //
 
 import UIKit
@@ -50,3 +50,4 @@ extension AddCandinateLocationCoordinator {
         self.navigationController?.popViewController(animated: true)
     }
 }
+
