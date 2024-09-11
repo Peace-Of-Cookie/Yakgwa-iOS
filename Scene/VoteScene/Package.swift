@@ -13,12 +13,14 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
+        .package(path: "./AddCandidateLocationScene")
     ],
     targets: [
         .target(
             name: "VoteScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "AddCandidateLocationScene", package: "AddCandidateLocationScene")
             ]
         ),
         .testTarget(
