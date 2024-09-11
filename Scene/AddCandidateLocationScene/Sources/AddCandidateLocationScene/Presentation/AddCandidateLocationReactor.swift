@@ -10,7 +10,7 @@ import Domain
 
 import ReactorKit
 
-protocol AddCandinateLocationRouting {
+protocol AddCandidateLocationRouting {
     var route: PublishSubject<AddCandinateLocationRouter> { get }
 }
 
@@ -26,7 +26,7 @@ public enum AddCandidatePopupMessage: String, Error {
     case error = "에러가 발생했어요"
 }
 
-public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRouting {
+public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRouting {
     public enum Action {
         case didTapNextButton
         case editQuery(String)

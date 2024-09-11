@@ -58,10 +58,10 @@ extension AddAppointmentLocationCoordinator {
             )
         )
         let reactor = AddCandinateLocationReactor(fetchLocationUsecase: fetchLocationUsecase)
-        let viewController = AddCandinateLocationViewController(reactor: reactor)
+        let viewController = AddCandidateLocationViewController(reactor: reactor)
         
         if let navigationController = self.navigationController {
-            let coordinator = AddCandinateLocationCoordinator(
+            let coordinator = AddCandidateLocationCoordinator(
                 navigationController: navigationController,
                 viewController: viewController
             )

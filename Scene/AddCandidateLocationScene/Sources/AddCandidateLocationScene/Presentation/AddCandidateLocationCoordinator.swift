@@ -11,15 +11,15 @@ import CoreKit
 import Util
 import Domain
 
-public final class AddCandinateLocationCoordinator: BaseCoordinator {
+public final class AddCandidateLocationCoordinator: BaseCoordinator {
     // MARK: - Properties
-    let viewController: AddCandinateLocationViewController
+    let viewController: AddCandidateLocationViewController
     public var onLocationsSelected: (([Location]) -> Void)?
     
     // MARK: - Initilizers
     public init(
         navigationController: UINavigationController,
-        viewController: AddCandinateLocationViewController
+        viewController: AddCandidateLocationViewController
     ) {
         self.viewController = viewController
         super.init(navigationController: navigationController)
@@ -44,7 +44,7 @@ public final class AddCandinateLocationCoordinator: BaseCoordinator {
     }
 }
 
-extension AddCandinateLocationCoordinator {
+extension AddCandidateLocationCoordinator {
     private func routeToAddAppointmentLocationScene(with locations: [Location]) {
         self.onLocationsSelected?(locations)
         self.navigationController?.popViewController(animated: true)

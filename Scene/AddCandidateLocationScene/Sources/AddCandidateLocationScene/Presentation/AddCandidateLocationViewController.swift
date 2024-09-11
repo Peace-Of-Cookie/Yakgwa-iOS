@@ -10,7 +10,7 @@ import UIKit
 import CoreKit
 import ReactorKit
 
-public final class AddCandinateLocationViewController: UIViewController, View {
+public final class AddCandidateLocationViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
     var sendRoutingEvent: ((AddCandinateLocationRouter) -> Void)?
@@ -186,7 +186,7 @@ public final class AddCandinateLocationViewController: UIViewController, View {
     }
 }
 
-extension AddCandinateLocationViewController: YakgwaNavigationDetailDelegate {
+extension AddCandidateLocationViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailRightButton() { }
     
     public func didTapDetailLeftButton() {
