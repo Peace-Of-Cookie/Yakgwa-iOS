@@ -53,7 +53,7 @@ public final class AddAppointmentLocationCoordinator: BaseCoordinator {
 extension AddAppointmentLocationCoordinator {
     private func routeToAddCandinateLocationScene() {
         let fetchLocationUsecase: FetchLocationsUsecaseProtocol = FetchLocationsUsecase(
-            repository: AddCandinateLocationRepository(
+            repository: FetchLocationRepository(
                 remoteDataSource: RemoteFetchLocationsDataSource()
             )
         )

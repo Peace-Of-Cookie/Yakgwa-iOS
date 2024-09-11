@@ -35,6 +35,7 @@
 		4620886B2C5B4B69000630BB /* Domain */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Domain; sourceTree = "<group>"; };
 		4658A6BE2C78251800DA688B /* InviteScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = InviteScene; sourceTree = "<group>"; };
 		46B12B3C2C3E19F800B969FC /* HomeScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = HomeScene; sourceTree = "<group>"; };
+		46C0D7312C911BA2000A9635 /* AddCandidateLocationScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = AddCandidateLocationScene; sourceTree = "<group>"; };
 		46E0FEC42C69A9F1006A3053 /* Data */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = Data; sourceTree = "<group>"; };
 		6A005FA52C4A891100F59C16 /* DetailScene */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = DetailScene; sourceTree = "<group>"; };
 		6A3776EC2C37CF8300D657F9 /* Yakgwa.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Yakgwa.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -144,6 +145,7 @@
 		6AFFBF372C3D8A1B007E191E /* Scene */ = {
 			isa = PBXGroup;
 			children = (
+				46C0D7312C911BA2000A9635 /* AddCandidateLocationScene */,
 				4658A6BE2C78251800DA688B /* InviteScene */,
 				6AE6D8722C4DE8A10061B8CC /* MyPageScene */,
 				6AB295D92C4BB6560002B0F0 /* VoteScene */,
