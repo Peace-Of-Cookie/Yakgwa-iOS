@@ -39,23 +39,34 @@ public final class LocationVoteCoordinator: BaseCoordinator {
             switch event {
             case .back:                
                 self?.navigationController?.popViewController(animated: true)
-            case .addCandindate:
-                self?.routeToAddCandinateLocationScene()
+            case .addCandindate(let meetId):
+                self?.routeToAddCandinateLocationScene(meetId: meetId)
             }
         }
     }
 }
 
 extension LocationVoteCoordinator {
-    private func routeToAddCandinateLocationScene() {
+    private func routeToAddCandinateLocationScene(meetId: MeetID) {
         let fetchLocationUsecase: FetchLocationsUsecaseProtocol = FetchLocationsUsecase(
             repository: FetchLocationRepository(
-                remoteDataSource: RemoteFetchLocationsDataSource()
+                remoteDataSource: RemoteFetchLocationsDataSource(
+                )
             )
         )
+        
+        let addCandidateLocationUsecase: AddCandidateLocationUsecaseProtocol = AddCandidateLocationUsecase(
+            reposiroty: AddCandidateLocationRepository(
+                remoteDataSource: RemoteAddCandidateLocationDataSource(
+                )
+            )
+        )
+        
         let reactor = AddCandinateLocationReactor(
             fetchLocationUsecase: fetchLocationUsecase,
-            previousScene: .voteLocation
+            addCandidateLocationUsecase: addCandidateLocationUsecase,
+            previousScene: .voteLocation,
+            meetId: meetId
         )
         let viewController = AddCandidateLocationViewController(reactor: reactor)
         

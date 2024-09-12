@@ -169,6 +169,16 @@ public final class AddCandidateLocationViewController: UIViewController, View {
                     self?.popupView.didTapFisrtButton(completion: {
                         self?.popupView.isHidden = true
                     })
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+
                 }
             })
             .disposed(by: disposeBag)

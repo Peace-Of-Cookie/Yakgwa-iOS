@@ -54,6 +54,7 @@ public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRou
     
     public enum PopupMessage {
         case tooManyCandidates
+        case networkError(Error)
     }
     
     // MARK: - Properties
@@ -61,17 +62,22 @@ public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRou
     let route: PublishSubject<AddCandinateLocationRouter> = PublishSubject<AddCandinateLocationRouter>()
     
     let fetchLocationUsecase: FetchLocationsUsecaseProtocol
+    let addCandidateLocationUsecase: AddCandidateLocationUsecaseProtocol?
     
     var previousScene: PreviousScene?
+    var meetId: MeetID?
     
     var searchResults: [Location] = []
     var candidateLocations: [Location] = []
     
     public init(
         fetchLocationUsecase: FetchLocationsUsecaseProtocol,
-        previousScene: PreviousScene?
+        addCandidateLocationUsecase: AddCandidateLocationUsecaseProtocol? = nil,
+        previousScene: PreviousScene?,
+        meetId: MeetID? = nil
     ) {
         self.fetchLocationUsecase = fetchLocationUsecase
+        self.addCandidateLocationUsecase = addCandidateLocationUsecase
         self.previousScene = previousScene
     }
     
@@ -93,8 +99,21 @@ public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRou
             
         case .didTapNextButton:
             if previousScene == .voteLocation {
-                route.onNext(.back)
-                return Observable.empty()
+                guard let addCandidateLocationUsecase = addCandidateLocationUsecase else { return Observable.empty() }
+                return Observable.concat([
+                    .just(.setLoading(true)),
+                    addCandidateLocationUsecase
+                        .execute(meetId: meetId!, with: candidateLocations.first!)
+                        .asObservable()
+                        .map { _ in
+                            self.route.onNext(.back)
+                            return Mutation.setLoading(false)
+                        }
+                        .catch { error -> Observable<Mutation> in
+                            return Observable.just(.setPopupMessage(.networkError(error)))
+                        },
+                    .just(.setLoading(false))
+                ])
             }
             route.onNext(.add(candidateLocations))
             return Observable.empty()

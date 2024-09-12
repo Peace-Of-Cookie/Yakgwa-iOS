@@ -16,13 +16,12 @@ protocol LocationVoteRouting {
 
 enum LocationVoteRouter {
     case back
-    case addCandindate
+    case addCandindate(MeetID)
 }
 
 public final class LocationVoteReactor: Reactor, LocationVoteRouting {
     public enum Action {
         case viewDidAppear
-        case addCondidateButtonDidTap
         case voteButtonDidTap
         case didTapCandidateCell(Int)
         case returnToScene([Location])
@@ -88,10 +87,6 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
                 Observable.just(Mutation.setLoading(false))
             ])
             
-        case .addCondidateButtonDidTap:
-            self.route.onNext(.addCandindate)
-            return .empty()
-            
         case .voteButtonDidTap:
             return Observable.concat([
                 .just(.setLoading(true)),
@@ -109,7 +104,7 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
             ])
         case .didTapCandidateCell(let index):
             if index == self.candidates.count {
-                self.route.onNext(.addCandindate)
+                self.route.onNext(.addCandindate(self.meetId))
                 return .empty()
             } else {
                 let candidate = candidates[index]
