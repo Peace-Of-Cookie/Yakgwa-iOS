@@ -53,7 +53,10 @@ extension LocationVoteCoordinator {
                 remoteDataSource: RemoteFetchLocationsDataSource()
             )
         )
-        let reactor = AddCandinateLocationReactor(fetchLocationUsecase: fetchLocationUsecase)
+        let reactor = AddCandinateLocationReactor(
+            fetchLocationUsecase: fetchLocationUsecase,
+            previousScene: .voteLocation
+        )
         let viewController = AddCandidateLocationViewController(reactor: reactor)
         
         if let navigationController = self.navigationController {

@@ -57,7 +57,10 @@ extension AddAppointmentLocationCoordinator {
                 remoteDataSource: RemoteFetchLocationsDataSource()
             )
         )
-        let reactor = AddCandinateLocationReactor(fetchLocationUsecase: fetchLocationUsecase)
+        let reactor = AddCandinateLocationReactor(
+            fetchLocationUsecase: fetchLocationUsecase,
+            previousScene: .createAppointment
+        )
         let viewController = AddCandidateLocationViewController(reactor: reactor)
         
         if let navigationController = self.navigationController {

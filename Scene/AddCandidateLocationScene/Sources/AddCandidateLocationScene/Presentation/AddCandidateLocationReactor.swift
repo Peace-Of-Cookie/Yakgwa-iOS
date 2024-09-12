@@ -26,6 +26,11 @@ public enum AddCandidatePopupMessage: String, Error {
     case error = "에러가 발생했어요"
 }
 
+public enum PreviousScene {
+    case createAppointment
+    case voteLocation
+}
+
 public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRouting {
     public enum Action {
         case didTapNextButton
@@ -57,13 +62,17 @@ public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRou
     
     let fetchLocationUsecase: FetchLocationsUsecaseProtocol
     
+    var previousScene: PreviousScene?
+    
     var searchResults: [Location] = []
     var candidateLocations: [Location] = []
     
     public init(
-        fetchLocationUsecase: FetchLocationsUsecaseProtocol
+        fetchLocationUsecase: FetchLocationsUsecaseProtocol,
+        previousScene: PreviousScene?
     ) {
         self.fetchLocationUsecase = fetchLocationUsecase
+        self.previousScene = previousScene
     }
     
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -83,6 +92,10 @@ public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRou
             ])
             
         case .didTapNextButton:
+            if previousScene == .voteLocation {
+                route.onNext(.back)
+                return Observable.empty()
+            }
             route.onNext(.add(candidateLocations))
             return Observable.empty()
             
