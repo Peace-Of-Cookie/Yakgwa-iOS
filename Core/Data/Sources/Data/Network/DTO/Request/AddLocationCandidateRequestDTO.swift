@@ -38,3 +38,19 @@ public struct AddLocationCandidateRequestDTO: Encodable {
         let mapy: String
     }
 }
+
+public extension AddLocationCandidateRequestDTO {
+    init(from entity: Location) {
+        let title = entity.getTitle() ?? ""
+        let link = entity.getLink() ?? ""
+        let category = entity.getCategory() ?? ""
+        let description = entity.getDescription() ?? ""
+        let telephone = entity.getTelephone() ?? ""
+        let address = entity.getAddress() ?? ""
+        let roadAddress = entity.getRoadAddress() ?? ""
+        let mapx = entity.getMapx() ?? ""
+        let mapy = entity.getMapy() ?? ""
+        
+        placeInfo = PlaceInfoDTO(title: title, link: link, category: category, description: description, telephone: telephone, address: address, roadAddress: roadAddress, mapx: mapx, mapy: mapy)
+    }
+}

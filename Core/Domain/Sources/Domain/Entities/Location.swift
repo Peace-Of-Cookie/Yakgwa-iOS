@@ -37,3 +37,41 @@ public struct Location: Equatable {
         self.mapy = mapy
     }
 }
+
+public extension Location {
+    func getTitle() -> String? {
+        return title
+    }
+    
+    func getLink() -> String? {
+        return link
+    }
+    
+    func getCategory() -> String? {
+        return category
+    }
+    
+    func getDescription() -> String? {
+        return description
+    }
+    
+    func getTelephone() -> String? {
+        return telephone
+    }
+    
+    func getAddress() -> String? {
+        return address
+    }
+    
+    func getRoadAddress() -> String? {
+        return roadAddress
+    }
+    
+    func getMapx() -> String? {
+        return mapx
+    }
+    
+    func getMapy() -> String? {
+        return mapy
+    }
+}
