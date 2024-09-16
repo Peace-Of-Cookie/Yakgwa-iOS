@@ -79,6 +79,7 @@ public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRou
         self.fetchLocationUsecase = fetchLocationUsecase
         self.addCandidateLocationUsecase = addCandidateLocationUsecase
         self.previousScene = previousScene
+        self.meetId = meetId
     }
     
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -99,11 +100,15 @@ public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRou
             
         case .didTapNextButton:
             if previousScene == .voteLocation {
-                guard let addCandidateLocationUsecase = addCandidateLocationUsecase else { return Observable.empty() }
+                guard let addCandidateLocationUsecase = addCandidateLocationUsecase,
+                      let meetId = meetId,
+                      let firstLocation = candidateLocations.first else {
+                    return Observable.empty()
+                }
                 return Observable.concat([
                     .just(.setLoading(true)),
                     addCandidateLocationUsecase
-                        .execute(meetId: meetId!, with: candidateLocations.first!)
+                        .execute(meetId: meetId, with: firstLocation)
                         .asObservable()
                         .map { _ in
                             self.route.onNext(.back)
