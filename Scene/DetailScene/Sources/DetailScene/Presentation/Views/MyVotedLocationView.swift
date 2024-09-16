@@ -24,7 +24,7 @@ public final class MyVotedLocationView: UIView {
     
     private lazy var stackContainer: UIView = { 
         let view = UIView()
-        view.backgroundColor = .neutral200
+        view.backgroundColor = .neutralWhite
         view.layer.cornerRadius = 15
         return view
     }()
@@ -70,7 +70,7 @@ public final class MyVotedLocationView: UIView {
         
         self.addSubview(stackContainer)
         stackContainer.snp.makeConstraints {
-            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
 
@@ -79,7 +79,7 @@ public final class MyVotedLocationView: UIView {
         stackContainer.addSubview(locationStack)
         locationStack.snp.makeConstraints {
             $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(8)
+            $0.leading.equalToSuperview().offset(0)
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-8)
         }
@@ -109,8 +109,16 @@ extension MyVotedLocationView {
 
 public final class LocationView: UIView {
     // MARK: - Properties
+    let viewModel: VoteLocationInfo.PlaceInfo
     
     // MARK: - UI Components
+    private lazy var stack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .vertical
+        stack.spacing = 8
+        return stack
+    }()
+    
     private lazy var locationLabel: UILabel = {
         let label = UILabel()
         label.text = "장소명"
@@ -122,18 +130,19 @@ public final class LocationView: UIView {
     private lazy var descriptionLabel: UILabel = {
         let label = UILabel()
         label.text = "강서구 강서로"
-        label.font = .m14
+        label.font = .m11
         label.textColor = .neutral600
         return label
     }()
     
     // MARK: - Initializers
     public init(with viewModel: VoteLocationInfo.PlaceInfo) {
+        self.viewModel = viewModel
+        
         super.init(frame: .zero)
         
         setUI()
-        locationLabel.text = viewModel.getTitle()
-        descriptionLabel.text = viewModel.getAddress()
+        attribute()
     }
     
     required init?(coder: NSCoder) {
@@ -142,22 +151,26 @@ public final class LocationView: UIView {
     
     // MARK: - Privates
     private func attribute() {
-        
+        locationLabel.text = viewModel.getTitle()
+
+        let address = viewModel.getAddress() ?? ""
+        descriptionLabel.text = address
+        descriptionLabel.isHidden = address.isEmpty
     }
     
     private func setUI() {
-        self.addSubview(locationLabel)
-        locationLabel.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(8)
-            $0.leading.equalToSuperview().offset(16)
-            $0.trailing.equalToSuperview().offset(-16)
-        }
+        self.backgroundColor = .neutral200
+        self.layer.cornerRadius = 15
         
-        self.addSubview(descriptionLabel)
-        descriptionLabel.snp.makeConstraints {
-            $0.top.equalTo(locationLabel.snp.bottom).offset(4)
-            $0.leading.trailing.equalTo(locationLabel)
-            $0.bottom.equalToSuperview().offset(-8)
+        self.addSubview(stack)
+        stack.addArrangedSubview(locationLabel)
+        stack.addArrangedSubview(descriptionLabel)
+                
+        stack.snp.makeConstraints {
+            $0.top.equalToSuperview().offset(12)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-12)
         }
     }
 }
