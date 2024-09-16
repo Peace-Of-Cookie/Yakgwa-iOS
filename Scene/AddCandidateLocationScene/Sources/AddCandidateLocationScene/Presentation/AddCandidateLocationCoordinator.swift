@@ -36,7 +36,7 @@ public final class AddCandidateLocationCoordinator: BaseCoordinator {
         self.viewController.sendRoutingEvent = { [weak self] event in
             switch event {
             case .back:
-                print("뒤로 가기")
+                self?.navigationController?.popViewController(animated: true)
             case .add(let locations):
                 self?.routeToAddAppointmentLocationScene(with: locations)
             }
