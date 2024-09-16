@@ -1,8 +1,8 @@
 //
-//  AddCandinateLocationViewController.swift
+//  AddCandidateLocationViewController.swift
 //
 //
-//  Created by Kim Dongjoo on 8/6/24.
+//  Created by Kim Dongjoo on 9/11/24.
 //
 
 import UIKit
@@ -10,7 +10,7 @@ import UIKit
 import CoreKit
 import ReactorKit
 
-public final class AddCandinateLocationViewController: UIViewController, View {
+public final class AddCandidateLocationViewController: UIViewController, View {
     // MARK: - Properties
     public var disposeBag: DisposeBag = DisposeBag()
     var sendRoutingEvent: ((AddCandinateLocationRouter) -> Void)?
@@ -144,7 +144,7 @@ public final class AddCandinateLocationViewController: UIViewController, View {
                 cell.configure(
                     title: element.title,
                     address: element.address,
-                    isBookmarked: false, 
+                    isBookmarked: false,
                     isSelected: element.isSelected
                 )
             }
@@ -169,6 +169,16 @@ public final class AddCandinateLocationViewController: UIViewController, View {
                     self?.popupView.didTapFisrtButton(completion: {
                         self?.popupView.isHidden = true
                     })
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+
                 }
             })
             .disposed(by: disposeBag)
@@ -186,7 +196,7 @@ public final class AddCandinateLocationViewController: UIViewController, View {
     }
 }
 
-extension AddCandinateLocationViewController: YakgwaNavigationDetailDelegate {
+extension AddCandidateLocationViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailRightButton() { }
     
     public func didTapDetailLeftButton() {

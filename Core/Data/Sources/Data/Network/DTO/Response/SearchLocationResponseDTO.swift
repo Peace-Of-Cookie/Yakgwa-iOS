@@ -1,14 +1,14 @@
 //
-//  FiSearchLocationsDTOle.swift
+//  SearchLocationResponseDTO.swift
 //
 //
-//  Created by Kim Dongjoo on 8/6/24.
+//  Created by Kim Dongjoo on 9/11/24.
 //
 
 import Foundation
 import Domain
 
-public struct SearchLocationDTO: Decodable {
+public struct SearchLocationResponseDTO: Decodable {
     let time: String
     let status: Int
     let code: String
@@ -33,7 +33,7 @@ public struct SearchLocationDTO: Decodable {
     }
 }
 
-extension SearchLocationDTO {
+extension SearchLocationResponseDTO {
     func toDomain() -> [Location] {
         return result.map { locationDTO in
             Location(

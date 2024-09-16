@@ -12,12 +12,13 @@ import Util
 import Domain
 import Data
 
-import AddCandinateLocationScene
+import AddCandidateLocationScene
 import DetailScene
 
 public final class AddAppointmentLocationCoordinator: BaseCoordinator {
     // MARK: - Properties
     let viewController: AddAppointmentLocationViewController
+    public var onLocationsSelected: (([Location]) -> Void)?
     
     // MARK: - Initializers
     public init(
@@ -52,15 +53,18 @@ public final class AddAppointmentLocationCoordinator: BaseCoordinator {
 extension AddAppointmentLocationCoordinator {
     private func routeToAddCandinateLocationScene() {
         let fetchLocationUsecase: FetchLocationsUsecaseProtocol = FetchLocationsUsecase(
-            repository: AddCandinateLocationRepository(
+            repository: FetchLocationRepository(
                 remoteDataSource: RemoteFetchLocationsDataSource()
             )
         )
-        let reactor = AddCandinateLocationReactor(fetchLocationUsecase: fetchLocationUsecase)
-        let viewController = AddCandinateLocationViewController(reactor: reactor)
+        let reactor = AddCandinateLocationReactor(
+            fetchLocationUsecase: fetchLocationUsecase,
+            previousScene: .createAppointment
+        )
+        let viewController = AddCandidateLocationViewController(reactor: reactor)
         
         if let navigationController = self.navigationController {
-            let coordinator = AddCandinateLocationCoordinator(
+            let coordinator = AddCandidateLocationCoordinator(
                 navigationController: navigationController,
                 viewController: viewController
             )

@@ -16,15 +16,15 @@ protocol LocationVoteRouting {
 
 enum LocationVoteRouter {
     case back
-    case addCandindate
+    case addCandindate(MeetID)
 }
 
 public final class LocationVoteReactor: Reactor, LocationVoteRouting {
     public enum Action {
         case viewDidAppear
-        case addCondidateButtonDidTap
         case voteButtonDidTap
         case didTapCandidateCell(Int)
+        case returnToScene([Location])
     }
     
     public enum Mutation {
@@ -87,10 +87,6 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
                 Observable.just(Mutation.setLoading(false))
             ])
             
-        case .addCondidateButtonDidTap:
-            self.route.onNext(.addCandindate)
-            return .empty()
-            
         case .voteButtonDidTap:
             return Observable.concat([
                 .just(.setLoading(true)),
@@ -107,17 +103,25 @@ public final class LocationVoteReactor: Reactor, LocationVoteRouting {
                 .just(.setLoading(false))
             ])
         case .didTapCandidateCell(let index):
-            let candidate = candidates[index]
-            
-            // 이미 선택된 경우
-            if let existingIndex = self.selectLocation.firstIndex(of: candidate) {
-                self.selectLocation.remove(at: existingIndex)
-                return Observable.just(Mutation.removeFromSelect(candidate))
+            if index == self.candidates.count {
+                self.route.onNext(.addCandindate(self.meetId))
+                return .empty()
+            } else {
+                let candidate = candidates[index]
+                
+                // 이미 선택된 경우
+                if let existingIndex = self.selectLocation.firstIndex(of: candidate) {
+                    self.selectLocation.remove(at: existingIndex)
+                    return Observable.just(Mutation.removeFromSelect(candidate))
+                }
+                
+                selectLocation.append(candidate)
+                
+                return Observable.just(Mutation.addToSelect(candidate))
             }
-            
-            selectLocation.append(candidate)
-            
-            return Observable.just(Mutation.addToSelect(candidate))
+        
+        case .returnToScene(let locations):
+            return .empty()
         }
     }
     

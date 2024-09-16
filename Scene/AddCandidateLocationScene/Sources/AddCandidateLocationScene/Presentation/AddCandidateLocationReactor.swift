@@ -1,8 +1,8 @@
 //
-//  AddCandinateLocationReactor.swift
+//  AddCandidateLocationReactor.swift
+//  
 //
-//
-//  Created by Kim Dongjoo on 8/6/24.
+//  Created by Kim Dongjoo on 9/11/24.
 //
 
 import CoreKit
@@ -10,7 +10,7 @@ import Domain
 
 import ReactorKit
 
-protocol AddCandinateLocationRouting {
+protocol AddCandidateLocationRouting {
     var route: PublishSubject<AddCandinateLocationRouter> { get }
 }
 
@@ -26,7 +26,12 @@ public enum AddCandidatePopupMessage: String, Error {
     case error = "에러가 발생했어요"
 }
 
-public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRouting {
+public enum PreviousScene {
+    case createAppointment
+    case voteLocation
+}
+
+public final class AddCandinateLocationReactor: Reactor, AddCandidateLocationRouting {
     public enum Action {
         case didTapNextButton
         case editQuery(String)
@@ -49,6 +54,7 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
     
     public enum PopupMessage {
         case tooManyCandidates
+        case networkError(Error)
     }
     
     // MARK: - Properties
@@ -56,14 +62,24 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
     let route: PublishSubject<AddCandinateLocationRouter> = PublishSubject<AddCandinateLocationRouter>()
     
     let fetchLocationUsecase: FetchLocationsUsecaseProtocol
+    let addCandidateLocationUsecase: AddCandidateLocationUsecaseProtocol?
+    
+    var previousScene: PreviousScene?
+    var meetId: MeetID?
     
     var searchResults: [Location] = []
     var candidateLocations: [Location] = []
     
     public init(
-        fetchLocationUsecase: FetchLocationsUsecaseProtocol
+        fetchLocationUsecase: FetchLocationsUsecaseProtocol,
+        addCandidateLocationUsecase: AddCandidateLocationUsecaseProtocol? = nil,
+        previousScene: PreviousScene?,
+        meetId: MeetID? = nil
     ) {
         self.fetchLocationUsecase = fetchLocationUsecase
+        self.addCandidateLocationUsecase = addCandidateLocationUsecase
+        self.previousScene = previousScene
+        self.meetId = meetId
     }
     
     public func mutate(action: Action) -> Observable<Mutation> {
@@ -83,6 +99,27 @@ public final class AddCandinateLocationReactor: Reactor, AddCandinateLocationRou
             ])
             
         case .didTapNextButton:
+            if previousScene == .voteLocation {
+                guard let addCandidateLocationUsecase = addCandidateLocationUsecase,
+                      let meetId = meetId,
+                      let firstLocation = candidateLocations.first else {
+                    return Observable.empty()
+                }
+                return Observable.concat([
+                    .just(.setLoading(true)),
+                    addCandidateLocationUsecase
+                        .execute(meetId: meetId, with: firstLocation)
+                        .asObservable()
+                        .map { _ in
+                            self.route.onNext(.back)
+                            return Mutation.setLoading(false)
+                        }
+                        .catch { error -> Observable<Mutation> in
+                            return Observable.just(.setPopupMessage(.networkError(error)))
+                        },
+                    .just(.setLoading(false))
+                ])
+            }
             route.onNext(.add(candidateLocations))
             return Observable.empty()
             
@@ -145,3 +182,4 @@ extension AddCandinateLocationReactor {
 extension AddCandinateLocationReactor {
     
 }
+

@@ -2,7 +2,7 @@
 //  LocationViewModel.swift
 //
 //
-//  Created by Kim Dongjoo on 8/6/24.
+//  Created by Kim Dongjoo on 9/11/24.
 //
 
 import Foundation
@@ -25,5 +25,4 @@ extension LocationViewModel {
         }
         self.isSelected = isSelected
     }
-    
 }

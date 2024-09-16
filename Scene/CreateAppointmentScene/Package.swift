@@ -18,17 +18,15 @@ let package = Package(
             targets: ["AddAppointmentLocationScene"]),
         .library(
             name: "SelectAppointmentDateScene",
-            targets: ["SelectAppointmentDateScene"]),
-        .library(
-            name: "AddCandinateLocationScene",
-            targets: ["AddCandinateLocationScene"])
+            targets: ["SelectAppointmentDateScene"])
     ],
     dependencies: [
         .package(path: "./CoreKit"),
         .package(path: "./Domain"),
         .package(path: "./Data"),
         .package(path: "./DetailScene"),
-        .package(url: "https://github.com/airbnb/HorizonCalendar.git", .upToNextMajor(from: "1.0.0"))
+        .package(url: "https://github.com/airbnb/HorizonCalendar.git", .upToNextMajor(from: "1.0.0")),
+        .package(path: "./AddCandidateLocationScene")
     ],
     targets: [
         .target(
@@ -54,7 +52,7 @@ let package = Package(
                 .product(name: "CoreKit", package: "CoreKit"),
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "Data", package: "Data"),
-                "AddCandinateLocationScene",
+                "AddCandidateLocationScene",
                 "DetailScene"
             ]
         ),
@@ -65,13 +63,6 @@ let package = Package(
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "HorizonCalendar", package: "HorizonCalendar"),
                 "AddAppointmentLocationScene"
-            ]
-        ),
-        .target(
-            name: "AddCandinateLocationScene",
-            dependencies: [
-                .product(name: "CoreKit", package: "CoreKit"),
-                .product(name: "Domain", package: "Domain")
             ]
         ),
         .testTarget(
@@ -85,9 +76,6 @@ let package = Package(
             dependencies: ["AddAppointmentLocationScene"]),
         .testTarget(
             name: "SelectAppointmentDateSceneTests",
-            dependencies: ["SelectAppointmentDateScene"]),
-        .testTarget(
-            name: "AddCandinateLocationSceneTests",
-            dependencies: ["AddCandinateLocationScene"])
+            dependencies: ["SelectAppointmentDateScene"])
     ]
 )

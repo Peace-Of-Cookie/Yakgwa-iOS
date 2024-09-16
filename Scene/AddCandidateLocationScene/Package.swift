@@ -4,27 +4,29 @@
 import PackageDescription
 
 let package = Package(
-    name: "VoteScene",
+    name: "AddCandidateLocationScene",
     platforms: [.iOS(.v17)],
     products: [
         .library(
-            name: "VoteScene",
-            targets: ["VoteScene"]),
+            name: "AddCandidateLocationScene",
+            targets: ["AddCandidateLocationScene"]),
     ],
     dependencies: [
         .package(path: "./CoreKit"),
-        .package(path: "./AddCandidateLocationScene")
+        .package(path: "./Domain"),
+        .package(path: "./Data")
     ],
     targets: [
         .target(
-            name: "VoteScene",
+            name: "AddCandidateLocationScene",
             dependencies: [
                 .product(name: "CoreKit", package: "CoreKit"),
-                .product(name: "AddCandidateLocationScene", package: "AddCandidateLocationScene")
+                .product(name: "Domain", package: "Domain"),
+                .product(name: "Data", package: "Data")
             ]
         ),
         .testTarget(
-            name: "VoteSceneTests",
-            dependencies: ["VoteScene"]),
+            name: "AddCandidateLocationSceneTests",
+            dependencies: ["AddCandidateLocationScene"]),
     ]
 )

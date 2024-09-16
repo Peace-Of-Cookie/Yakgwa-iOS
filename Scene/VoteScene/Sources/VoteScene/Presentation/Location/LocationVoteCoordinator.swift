@@ -10,6 +10,9 @@ import UIKit
 import CoreKit
 import Util
 import Domain
+import Data
+
+import AddCandidateLocationScene
 
 public final class LocationVoteCoordinator: BaseCoordinator {
     // MARK: - Properties
@@ -36,13 +39,52 @@ public final class LocationVoteCoordinator: BaseCoordinator {
             switch event {
             case .back:                
                 self?.navigationController?.popViewController(animated: true)
-            case .addCandindate:
-                print("후보 추가 화면")
+            case .addCandindate(let meetId):
+                self?.routeToAddCandinateLocationScene(meetId: meetId)
             }
         }
     }
 }
 
 extension LocationVoteCoordinator {
-    
+    private func routeToAddCandinateLocationScene(meetId: MeetID) {
+        let fetchLocationUsecase: FetchLocationsUsecaseProtocol = FetchLocationsUsecase(
+            repository: FetchLocationRepository(
+                remoteDataSource: RemoteFetchLocationsDataSource(
+                )
+            )
+        )
+        
+        let addCandidateLocationUsecase: AddCandidateLocationUsecaseProtocol = AddCandidateLocationUsecase(
+            reposiroty: AddCandidateLocationRepository(
+                remoteDataSource: RemoteAddCandidateLocationDataSource(
+                )
+            )
+        )
+        
+        let reactor = AddCandinateLocationReactor(
+            fetchLocationUsecase: fetchLocationUsecase,
+            addCandidateLocationUsecase: addCandidateLocationUsecase,
+            previousScene: .voteLocation,
+            meetId: meetId
+        )
+        let viewController = AddCandidateLocationViewController(reactor: reactor)
+        
+        if let navigationController = self.navigationController {
+            let coordinator = AddCandidateLocationCoordinator(
+                navigationController: navigationController,
+                viewController: viewController
+            )
+            
+            navigationController.delegate = self
+            coordinator.parentCoordinator = self
+            coordinator.onLocationsSelected = { [weak self] locations in
+                self?.viewController.reactor?.action.onNext(.returnToScene(locations))
+            }
+            coordinator.start()
+            addChildCoordinator(coordinator)
+        }
+        
+        viewController.tabBarController?.tabBar.isHidden = true
+    }
 }
