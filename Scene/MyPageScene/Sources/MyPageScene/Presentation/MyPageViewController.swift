@@ -31,7 +31,7 @@ public final class MyPageViewController: UIViewController {
     }
     
     private func setUI() {
-        self.view.backgroundColor = .primary100
+        self.view.backgroundColor = .neutral200
     }
 }
 
