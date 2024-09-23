@@ -8,9 +8,13 @@
 import UIKit
 
 import CoreKit
+import ReactorKit
+import Domain
 
-public final class MyPageViewController: UIViewController {
+public final class MyPageViewController: UIViewController, View {
     // MARK: - Properties
+    public var disposeBag: DisposeBag = DisposeBag()
+    var sendRoutingEvent: ((MyPageRouter) -> Void)?
     
     // MARK: - UI Components
     private lazy var sceneTitleLabel: UILabel = {
@@ -88,7 +92,7 @@ public final class MyPageViewController: UIViewController {
     
     private lazy var historyMenuView: MenuView = {
         let view = MenuView()
-        view.configure(title: "나의 장소", description: "마음에 드는 장소를 미리 찾아보고 저장해요")
+        view.configure(title: "약속 히스토리", description: "지금까지 있었던 약속들을 모아서 볼 수 있어요")
         return view
     }()
     
@@ -102,7 +106,7 @@ public final class MyPageViewController: UIViewController {
     private lazy var privacyPolicyMenuStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
-        stack.spacing = 16
+        stack.spacing = 10
         return stack
     }()
     
@@ -155,9 +159,28 @@ public final class MyPageViewController: UIViewController {
         return button
     }()
     
+    private lazy var activityIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView()
+        indicator.style = .large
+        indicator.color = .neutralBlack
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private lazy var popupView: YakgwaPopUpView = {
+        let view = YakgwaPopUpView()
+        view.isHidden = true
+        return view
+    }()
+    
     // MARK: - Initializers
-    public init() {
+    public init(
+        reactor: MyPageReactor
+    ) {
+        defer { self.reactor = reactor }
         super.init(nibName: nil, bundle: nil)
+        
+        setUI()
     }
     
     required init?(coder: NSCoder) {
@@ -167,8 +190,6 @@ public final class MyPageViewController: UIViewController {
     // MARK: - Life cycles
     public override func viewDidLoad() {
         super.viewDidLoad()
-        
-        setUI()
     }
     
     private func setUI() {
@@ -255,6 +276,65 @@ public final class MyPageViewController: UIViewController {
             $0.centerX.equalToSuperview()
             $0.bottom.equalToSuperview().offset(-16)
         }
+        
+        self.view.addSubview(activityIndicator)
+        activityIndicator.snp.makeConstraints {
+            $0.center.equalToSuperview()
+        }
+        
+        self.view.addSubview(popupView)
+        popupView.snp.makeConstraints {
+            $0.edges.equalToSuperview()
+        }
+    }
+    
+    // MARK: - Binding
+    public func bind(reactor: MyPageReactor) {
+        // Action
+        self.rx.viewDidAppear
+            .map { _ in Reactor.Action.viewDidAppear }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        // State
+        reactor.state
+            .map { $0.userInfo }
+            .distinctUntilChanged()
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] userInfo in
+                self?.nameLabel.text = "\(userInfo.getName())님"
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.isLoading }
+            .distinctUntilChanged()
+            .bind(to: activityIndicator.rx.isAnimating)
+            .disposed(by: disposeBag)
+        
+        reactor.pulse(\.$popupMessage)
+            .compactMap { $0 }
+            .subscribe(onNext: { [weak self] message in
+                self?.popupView.isHidden = false
+                switch message {
+                case .networkError(let error):
+                    self?.popupView.configure(
+                        description: error.localizedDescription,
+                        firstButtonTitle: "닫기"
+                    )
+                    
+                    self?.popupView.didTapFisrtButton(completion: {
+                        self?.popupView.isHidden = true
+                    })
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        // Routing
+        reactor.route
+            .subscribe(onNext: { [weak self] router in
+                self?.sendRoutingEvent?(router)
+            })
+            .disposed(by: disposeBag)
     }
 }
 

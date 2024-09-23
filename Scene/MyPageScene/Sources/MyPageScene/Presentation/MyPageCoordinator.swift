@@ -11,10 +11,10 @@ import CoreKit
 import Util
 
 
-public final class MyPageCoordinator: Coordinator {
+public final class MyPageCoordinator: BaseCoordinator {
     // MARK: - Properties
-    public var navigationController: UINavigationController?
-    public var childCoordinators: [Coordinator] = []
+//    public var navigationController: UINavigationController?
+//    public var childCoordinators: [Coordinator] = []
     
     let viewController: MyPageViewController
     
@@ -23,12 +23,12 @@ public final class MyPageCoordinator: Coordinator {
         navigationController: UINavigationController,
         viewController: MyPageViewController
     ) {
-        self.navigationController = navigationController
         self.viewController = viewController
+        super.init(navigationController: navigationController)
     }
     
     // MARK: - Functions
-    public func start() {
+    public override func start() {
         self.navigationController?.viewControllers = [self.viewController]
     }
 }

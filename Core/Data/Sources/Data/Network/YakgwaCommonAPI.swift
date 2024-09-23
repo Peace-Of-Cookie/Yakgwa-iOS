@@ -64,7 +64,7 @@ extension YakgwaCommonAPI: YakgwaAPI {
         case .fetchMyVoteLocation:
             return .vote
         case .fetchUserInfo:
-            return .user
+            return .none
         }
     }
     
@@ -95,7 +95,7 @@ extension YakgwaCommonAPI: YakgwaAPI {
         case .fetchMyVoteLocation(let meetId):
             return "/\(meetId)/places"
         case .fetchUserInfo:
-            return ""
+            return "/user"
         }
     }
     

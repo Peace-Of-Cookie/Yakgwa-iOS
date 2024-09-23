@@ -67,13 +67,21 @@ public final class MainTabBarCoordinator: BaseCoordinator {
         homeCoordinator.parentCoordinator = self
         childCoordinators.append(homeCoordinator)
         
-        let myPageViewController = MyPageViewController()
+        let myPageReactor = MyPageReactor(
+            fetchUserInfoUsecase: FetchUserInfoUsecase(
+                repository: FetchUserInfoRepository(
+                    remoteDataSource: RemoteFetchUserInfoDataSource()
+                )
+            )
+        )
+        
+        let myPageViewController = MyPageViewController(reactor: myPageReactor)
         let myPageCoordinator = MyPageCoordinator(
             navigationController: UINavigationController(),
             viewController: myPageViewController
         )
         myPageCoordinator.start()
-        // myPageCoordinator.parentCoordinator = self
+        myPageCoordinator.parentCoordinator = self
         childCoordinators.append(myPageCoordinator)
         
         guard let homeNavController = homeCoordinator.navigationController,
