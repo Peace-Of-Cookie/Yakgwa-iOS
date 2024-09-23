@@ -16,8 +16,9 @@ public final class FetchUserInfoRepository: FetchUserInfoRepositoryProtocol {
         self.remoteDataSource = remoteDataSource
     }
     
-    public func fetchUserInfo() -> Single<Void> {
-        return remoteDataSource.fetchUserInfo()
-            .map { _ in }
+    public func fetchUserInfo() -> Single<UserInfo> {
+        return remoteDataSource
+            .fetchUserInfo()
+            .map { $0.toDomain() }
     }
 }

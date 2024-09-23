@@ -10,5 +10,5 @@ import Network
 import RxSwift
 
 public protocol FetchUserInfoRepositoryProtocol {
-    func fetchUserInfo() -> Single<Void>
+    func fetchUserInfo() -> Single<UserInfo>
 }

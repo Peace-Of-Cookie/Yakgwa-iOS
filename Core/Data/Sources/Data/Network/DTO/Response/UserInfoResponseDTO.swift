@@ -18,6 +18,7 @@
  }
  */
 import Foundation
+import Domain
 
 public struct FetchUserInfoResponseDTO: Decodable {
     let time: String
@@ -29,5 +30,14 @@ public struct FetchUserInfoResponseDTO: Decodable {
     struct UserInfoDTO: Decodable {
         let name: String
         let imageUrl: String
+    }
+}
+
+extension FetchUserInfoResponseDTO {
+    public func toDomain() -> UserInfo {
+        return UserInfo(
+            name: result.name,
+            imageUrl: result.imageUrl
+        )
     }
 }

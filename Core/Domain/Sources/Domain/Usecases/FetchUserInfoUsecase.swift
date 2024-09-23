@@ -14,7 +14,7 @@ public final class FetchUserInfoUsecase: FetchUserInfoUsecaseProtocol {
         self.repository = repository
     }
     
-    public func execute() -> Single<Void> {
+    public func execute() -> Single<UserInfo> {
         return repository.fetchUserInfo()
     }
 }

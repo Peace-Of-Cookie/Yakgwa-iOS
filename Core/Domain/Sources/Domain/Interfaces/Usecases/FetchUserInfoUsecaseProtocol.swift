@@ -8,5 +8,5 @@
 import RxSwift
 
 public protocol FetchUserInfoUsecaseProtocol {
-    func execute() -> Single<Void>
+    func execute() -> Single<UserInfo>
 }
