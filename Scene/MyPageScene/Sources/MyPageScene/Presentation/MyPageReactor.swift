@@ -15,7 +15,8 @@ protocol MyPageRouting {
 }
 
 enum MyPageRouter {
-    
+    /// 약속 생성 화면
+    case create
 }
 
 public final class MyPageReactor: Reactor, MyPageRouting {
