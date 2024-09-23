@@ -49,9 +49,14 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
         return textView
     }()
     
-    private lazy var bottomSheetButton: BottomSheetButton = {
-        let button = BottomSheetButton(title: "다음으로")
-        return button
+//    private lazy var bottomSheetButton: BottomSheetButton = {
+//        let button = BottomSheetButton(title: "다음으로")
+//        return button
+//    }()
+//    
+    private lazy var bottomSheetButton: CreateBottomSheetButton = {
+        let butotn = CreateBottomSheetButton()
+        return butotn
     }()
     
     private lazy var popupView: YakgwaPopUpView = {
@@ -140,10 +145,15 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
     
     public func bind(reactor: InputAppointmentReactor) {
         // Action
-        bottomSheetButton.rx.tap
+        bottomSheetButton.rx.next_rx_tap
             .map { Reactor.Action.didTapNextButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
+        
+//        bottomSheetButon.rx.back_rx_tap
+//            .map { Reactor.Action.didTap }
+//            .bind(to: reactor.action)
+//            .disposed(by: disposeBag)
         
         titleTextField.rx.text
             .map { Reactor.Action.updateTitle($0 ?? "") }
