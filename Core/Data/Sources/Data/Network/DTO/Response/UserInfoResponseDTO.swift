@@ -19,7 +19,7 @@
  */
 import Foundation
 
-public struct UserInfoResponseDTO: Decodable {
+public struct FetchUserInfoResponseDTO: Decodable {
     let time: String
     let status: Int
     let code: String
