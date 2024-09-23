@@ -32,6 +32,8 @@ public enum YakgwaCommonAPI {
     case fetchMyVoteTime(Int)
     /// 내가 투표한 장소 조회
     case fetchMyVoteLocation(Int)
+    /// 사용자 정보 조회
+    case userInfo
 }
 
 extension YakgwaCommonAPI: YakgwaAPI {
@@ -61,6 +63,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return .vote
         case .fetchMyVoteLocation:
             return .vote
+        case .userInfo:
+            return .user
         }
     }
     
@@ -90,6 +94,8 @@ extension YakgwaCommonAPI: YakgwaAPI {
             return "/\(meetId)/times"
         case .fetchMyVoteLocation(let meetId):
             return "/\(meetId)/places"
+        case .userInfo:
+            return ""
         }
     }
     
