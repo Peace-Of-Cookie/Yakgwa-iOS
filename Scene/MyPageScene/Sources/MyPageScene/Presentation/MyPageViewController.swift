@@ -47,8 +47,14 @@ public final class MyPageViewController: UIViewController {
     
     private lazy var profileImageView: UIImageView = {
         let view = UIImageView()
-        view.image = UIImage(named: "default_profile_image", in: .module, with: nil)
+        view.image = UIImage(named: "default_profile", in: .module, with: nil)
         return view
+    }()
+    
+    private lazy var profileEditButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(named: "edit_button_icon", in: .module, with: nil), for: .normal)
+        return button
     }()
     
     private lazy var profileLabelStack: UIStackView = {
@@ -96,23 +102,57 @@ public final class MyPageViewController: UIViewController {
     private lazy var privacyPolicyMenuStack: UIStackView = {
         let stack = UIStackView()
         stack.axis = .vertical
+        stack.spacing = 16
         return stack
     }()
     
-    private lazy var privacyPolicyLabel: UILabel = {
-        let label = UILabel()
-        label.text = "개인정보처리방침"
-        label.font = .m12
-        label.textColor = .neutralBlack
-        return label
+    private lazy var privacyPolicyLabel: UIButton = {
+        let button = UIButton()
+        button.setTitle("개인정보처리방침", for: .normal)
+        button.titleLabel?.font = .m12
+        button.setTitleColor(.neutralBlack, for: .normal)
+        button.contentHorizontalAlignment = .left
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        return button
     }()
     
-    private lazy var termsOfUseLabel: UILabel = {
-        let label = UILabel()
-        label.text = "이용약관"
-        label.font = .m12
-        label.textColor = .neutralBlack
-        return label
+    private lazy var termsOfUseLabel: UIButton = {
+        let button = UIButton()
+        button.setTitle("이용약관", for: .normal)
+        button.titleLabel?.font = .m12
+        button.setTitleColor(.neutralBlack, for: .normal)
+        button.contentHorizontalAlignment = .left
+        button.contentEdgeInsets = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        return button
+    }()
+    
+    private lazy var authStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 24
+        return stack
+    }()
+    
+    private lazy var logoutButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("로그아웃", for: .normal)
+        button.titleLabel?.font = .m11
+        button.setTitleColor(.neutral500, for: .normal)
+        return button
+    }()
+    
+    private lazy var separatorView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .neutral300
+        return view
+    }()
+    
+    private lazy var resignButton: UIButton = {
+        let button = UIButton()
+        button.setTitle("탈퇴하기", for: .normal)
+        button.titleLabel?.font = .m11
+        button.setTitleColor(.neutral500, for: .normal)
+        return button
     }()
     
     // MARK: - Initializers
@@ -158,7 +198,6 @@ public final class MyPageViewController: UIViewController {
             $0.top.equalToSuperview().offset(16)
             $0.leading.equalToSuperview().offset(16)
             $0.centerX.equalToSuperview()
-            $0.bottom.equalToSuperview().offset(-16)
         }
         
         myPageStack.addArrangedSubview(profileContainer)
@@ -168,6 +207,12 @@ public final class MyPageViewController: UIViewController {
             $0.width.height.equalTo(56)
             $0.top.leading.equalTo(16)
             $0.centerY.equalToSuperview()
+        }
+        
+        self.profileContainer.addSubview(profileEditButton)
+        profileEditButton.snp.makeConstraints {
+            $0.width.height.equalTo(20)
+            $0.bottom.trailing.equalTo(profileImageView)
         }
         
         self.profileContainer.addSubview(profileLabelStack)
@@ -185,7 +230,7 @@ public final class MyPageViewController: UIViewController {
         
         privacyPolicyMenuView.addSubview(privacyPolicyMenuStack)
         privacyPolicyMenuStack.snp.makeConstraints {
-            $0.top.equalToSuperview().offset(12)
+            $0.top.equalToSuperview().offset(20)
             $0.leading.equalToSuperview().offset(16)
             $0.center.equalToSuperview()
         }
@@ -195,6 +240,21 @@ public final class MyPageViewController: UIViewController {
         
         myPageStack.addArrangedSubview(privacyPolicyMenuView)
         
+        contentView.addSubview(authStack)
+        authStack.addArrangedSubview(logoutButton)
+        authStack.addArrangedSubview(separatorView)
+        authStack.addArrangedSubview(resignButton)
+        
+        separatorView.snp.makeConstraints {
+            $0.width.equalTo(1)
+            $0.height.equalTo(10)
+        }
+        
+        authStack.snp.makeConstraints {
+            $0.top.equalTo(myPageStack.snp.bottom).offset(16)
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-16)
+        }
     }
 }
 
