@@ -389,9 +389,9 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
         // Day Range
         .dayRangeItemProvider(for: dateRanges) { dayRangeLayoutContext in
             DayRangeIndicatorView.calendarItemModel(
-              invariantViewProperties: .init(),
-              viewModel: .init(
-                framesOfDaysToHighlight: dayRangeLayoutContext.daysAndFrames.map { $0.frame })
+                invariantViewProperties: .init(),
+                viewModel: .init(
+                    framesOfDaysToHighlight: dayRangeLayoutContext.daysAndFrames.map { $0.frame })
             )
         }
     }
@@ -442,12 +442,29 @@ extension SelectAppointmentDateViewController {
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.locale = Locale(identifier: "ko_KR")
         
+        let currentDate = Date()
+        
         switch type {
         case .date:
             datePicker.datePickerMode = .date
+            datePicker.minimumDate = Calendar.current.startOfDay(for: currentDate)
+            
         case .time:
             datePicker.datePickerMode = .time
             datePicker.minuteInterval = 5
+            
+            let selectedDateText = dateSearchTextField.getTextFieldText()
+            
+            if !selectedDateText.isEmpty,
+               let selectedDate = getDate(from: selectedDateText) {
+                if Calendar.current.isDate(selectedDate, inSameDayAs: currentDate) {
+                    datePicker.minimumDate = currentDate
+                } else {
+                    datePicker.minimumDate = nil
+                }
+            } else {
+                datePicker.minimumDate = currentDate
+            }
         }
         
         let dateFormatter = DateFormatter()
@@ -480,6 +497,13 @@ extension SelectAppointmentDateViewController {
         pickerSheet.setValue(vc, forKey: "contentViewController")
         
         self.present(pickerSheet, animated: true, completion: nil)
+    }
+    
+    private func getDate(from string: String) -> Date? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.locale = Locale(identifier: "ko_KR")
+        dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+        return dateFormatter.date(from: string)
     }
 }
 
