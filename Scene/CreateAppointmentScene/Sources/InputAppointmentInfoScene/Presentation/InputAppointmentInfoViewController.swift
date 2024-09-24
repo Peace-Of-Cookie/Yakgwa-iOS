@@ -49,11 +49,6 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
         return textView
     }()
     
-//    private lazy var bottomSheetButton: BottomSheetButton = {
-//        let button = BottomSheetButton(title: "다음으로")
-//        return button
-//    }()
-//    
     private lazy var bottomSheetButton: CreateBottomSheetButton = {
         let butotn = CreateBottomSheetButton()
         return butotn
@@ -150,10 +145,10 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-//        bottomSheetButon.rx.back_rx_tap
-//            .map { Reactor.Action.didTap }
-//            .bind(to: reactor.action)
-//            .disposed(by: disposeBag)
+        bottomSheetButton.rx.back_rx_tap
+            .map { Reactor.Action.didTapBackButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
         
         titleTextField.rx.text
             .map { Reactor.Action.updateTitle($0 ?? "") }
@@ -195,8 +190,7 @@ public final class InputAppointmentInfoViewController: UIViewController, View {
 
 extension InputAppointmentInfoViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
-        let preViewController = self.navigationController?.popViewController(animated: true)
-        preViewController?.tabBarController?.tabBar.isHidden = false
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
     public func didTapDetailRightButton() { }

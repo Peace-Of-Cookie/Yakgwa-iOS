@@ -38,7 +38,7 @@ public final class SelectAppointmentDateCoordinator: BaseCoordinator {
         self.viewController.sendRoutingEvent = { [weak self] event in
             switch event {
             case .back:
-                print("뒤로 가기")
+                self?.navigationController?.popViewController(animated: true)
             case .location(let newAppointment):
                 self?.routeToAppointmentLocationScene(with: newAppointment)
             }

@@ -314,8 +314,7 @@ public final class AppointmentDetailViewController: UIViewController, View {
 
 extension AppointmentDetailViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
-        print("didTapDetailLeftButton")
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
     public func didTapDetailRightButton() { }

@@ -25,6 +25,7 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
     public enum Action {
         case viewDidAppear
         case didTapNextButton
+        case didTapBackButton
         case selectTheme(Int)
     }
     
@@ -84,6 +85,10 @@ public final class SelectAppointmentThemeReactor: Reactor, SelectAppointmentThem
             }
             
             route.onNext(.date(newAppointment))
+            return Observable.empty()
+            
+        case .didTapBackButton:
+            route.onNext(.back)
             return Observable.empty()
             
         case .selectTheme(let index):

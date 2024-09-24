@@ -66,9 +66,9 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
         return view
     }()
     
-    private lazy var bottomSheetButton: BottomSheetButton = {
-        let button = BottomSheetButton(title: "다음으로")
-        return button
+    private lazy var bottomSheetButton: CreateBottomSheetButton = {
+        let butotn = CreateBottomSheetButton()
+        return butotn
     }()
     
     private lazy var calendarView: CalendarView = {
@@ -188,8 +188,13 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        self.bottomSheetButton.rx.tap
+        self.bottomSheetButton.rx.next_rx_tap
             .map { Reactor.Action.didTapNextButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.bottomSheetButton.rx.back_rx_tap
+            .map { Reactor.Action.didTapBackButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -414,8 +419,7 @@ public final class SelectAppointmentDateViewController: UIViewController, View {
 
 extension SelectAppointmentDateViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
-        print("didTapDetailLeftButton")
-        self.navigationController?.popViewController(animated: true)
+        self.navigationController?.popToRootViewController(animated: true)
     }
     
     public func didTapDetailRightButton() { }

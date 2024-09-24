@@ -31,6 +31,7 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
         case setAppointmentDate(Date)
         case setAppointmentTime(Date)
         case didTapNextButton
+        case didTapBackButton
     }
     
     public enum Mutation {
@@ -115,6 +116,10 @@ public final class SelectAppointmentDateReactor: Reactor,SelectAppointmentDateRo
             }
             
             route.onNext(.location(newAppointment))
+            return Observable.empty()
+            
+        case .didTapBackButton:
+            route.onNext(.back)
             return Observable.empty()
         }
     }

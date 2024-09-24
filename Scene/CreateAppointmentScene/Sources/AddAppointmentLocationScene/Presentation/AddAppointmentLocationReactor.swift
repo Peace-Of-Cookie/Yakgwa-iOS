@@ -27,6 +27,7 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
     public enum Action {
         case didTapCreateButton
         case didTapSearchButton
+        case didTapBackButton
         case editQuery(String)
         case didTapLocationCell(Int)
         case returnToScene([Location])
@@ -108,6 +109,9 @@ public final class AddAppointmentLocationReactor: Reactor, AddAppointmentLocatio
                     },
                 .just(.setLoading(false))
             ])
+        case .didTapBackButton:
+            route.onNext(.back)
+            return Observable.empty()
             
         case .didTapSearchButton:
             if currentState.locations.count >= 3 {
