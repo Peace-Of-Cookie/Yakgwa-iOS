@@ -258,6 +258,24 @@ public final class DateVoteViewController: UIViewController, View {
             })
             .disposed(by: disposeBag)
         
+        reactor.state.map { $0.enableDate }
+            .subscribe(onNext: {[weak self] enableDate in
+                
+                guard let self = self else { return }
+                let dateString: String
+                if enableDate.count == 1, let first = enableDate.first {
+                    dateString = String(format: "%04d.%02d", first.0, first.1)
+                } else if enableDate.count == 2 {
+                    let first = enableDate[0]
+                    let second = enableDate[1]
+                    dateString = String(format: "%04d.%02d - %04d.%02d", first.0, first.1, second.0, second.1)
+                } else {
+                    dateString = ""
+                }
+                self.calendarTitleLabel.text = dateString
+            })
+            .disposed(by: disposeBag)
+        
         // Routing
         reactor.route
             .subscribe(onNext: { [weak self] router in
