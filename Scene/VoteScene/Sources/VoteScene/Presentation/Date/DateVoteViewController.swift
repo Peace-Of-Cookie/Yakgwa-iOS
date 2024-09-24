@@ -196,13 +196,20 @@ public final class DateVoteViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         dateCollectionView.rx.itemSelected
-            .map { [weak self] indexPath -> Reactor.Action in
-                guard let self = self else {
-                    return Reactor.Action.dateSelected(Date())
-                }
+            .map { [weak self] indexPath -> Date? in
+                guard let self = self else { return nil }
                 let selectedDate = self.dates[indexPath.item]
-                return Reactor.Action.dateSelected(selectedDate)
+                return selectedDate
             }
+            .compactMap { $0 }
+            .filter { [weak self] date in
+                guard let self = self else { return false }
+                if let startDate = self.startDate, let endDate = self.endDate {
+                    return date >= startDate && date <= endDate
+                }
+                return false
+            }
+            .map { Reactor.Action.dateSelected($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
