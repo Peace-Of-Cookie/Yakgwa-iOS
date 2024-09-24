@@ -13,13 +13,18 @@ let package = Package(
     ],
     dependencies: [
         .package(path: "./CoreKit"),
+        .package(path: "./Domain"),
+        .package(path: "./Data")
     ],
     targets: [
         .target(
             name: "MyPageScene",
             dependencies: [
-                .product(name: "CoreKit", package: "CoreKit")
-            ]
+                .product(name: "CoreKit", package: "CoreKit"),
+                .product(name: "Data", package: "Data"),
+                .product(name: "Domain", package: "Domain")
+            ],
+            resources: [.process("Assets")]
         ),
         .testTarget(
             name: "MyPageSceneTests",

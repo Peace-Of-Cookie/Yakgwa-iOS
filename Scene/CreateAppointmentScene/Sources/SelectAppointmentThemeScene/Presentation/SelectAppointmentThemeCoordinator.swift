@@ -37,7 +37,7 @@ public final class SelectAppointmentThemeCoordinator: BaseCoordinator {
         self.viewController.sendRoutingEvent = { [weak self] event in
             switch event {
             case .back:
-                print("뒤로 가기")
+                self?.navigationController?.popViewController(animated: true)
             case .date(let newAppointment):
                 self?.routeToSelectAppointmentDateScene(with: newAppointment)
             }

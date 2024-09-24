@@ -24,6 +24,7 @@ enum InputAppointmentInfoRouter {
 public final class InputAppointmentReactor: Reactor, InputAppointmentRouting {
     public enum Action {
         case didTapNextButton
+        case didTapBackButton
         case updateTitle(String)
         case updateDescription(String)
     }
@@ -70,6 +71,10 @@ public final class InputAppointmentReactor: Reactor, InputAppointmentRouting {
                 date: nil
             )
             route.onNext(.theme(newAppointment))
+            return Observable.empty()
+            
+        case .didTapBackButton:
+            route.onNext(.back)
             return Observable.empty()
         }
     }

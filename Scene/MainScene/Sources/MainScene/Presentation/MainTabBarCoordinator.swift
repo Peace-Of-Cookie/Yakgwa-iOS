@@ -67,13 +67,26 @@ public final class MainTabBarCoordinator: BaseCoordinator {
         homeCoordinator.parentCoordinator = self
         childCoordinators.append(homeCoordinator)
         
-        let myPageViewController = MyPageViewController()
+        let myPageReactor = MyPageReactor(
+            fetchUserInfoUsecase: FetchUserInfoUsecase(
+                repository: FetchUserInfoRepository(
+                    remoteDataSource: RemoteFetchUserInfoDataSource()
+                )
+            )
+        )
+        
+        let myPageViewController = MyPageViewController(reactor: myPageReactor)
         let myPageCoordinator = MyPageCoordinator(
             navigationController: UINavigationController(),
             viewController: myPageViewController
         )
+        
+        myPageCoordinator.centerButtonTapped = {[weak myPageCoordinator] in
+            myPageCoordinator?.routeToCreateAppointment()
+        }
+        
         myPageCoordinator.start()
-        // myPageCoordinator.parentCoordinator = self
+        myPageCoordinator.parentCoordinator = self
         childCoordinators.append(myPageCoordinator)
         
         guard let homeNavController = homeCoordinator.navigationController,
@@ -126,14 +139,12 @@ extension MainTabBarCoordinator {
     }
     
     private func handleCenterButtonTap() {
-        // guard let selectedIndex = self.viewController.selectedIndex else { return }
         let selectedIndex = self.viewController.selectedIndex
         
         if selectedIndex == 0, let homeCoordinator = childCoordinators[selectedIndex] as? HomeCoordinator {
             homeCoordinator.centerButtonTapped?()
         } else if selectedIndex == 1, let myPageCoordinator = childCoordinators[selectedIndex] as? MyPageCoordinator {
-            print("마이페이지에서 centerButtonTapped 이벤트 발생!")
-            // myPageCoordinator.centerButtonTapped?()
+            myPageCoordinator.centerButtonTapped?()
         }
     }
 }

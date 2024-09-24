@@ -43,9 +43,9 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
         return view
     }()
     
-    private lazy var bottomSheetButton: BottomSheetButton = {
-        let button = BottomSheetButton(title: "다음으로")
-        return button
+    private lazy var bottomSheetButton: CreateBottomSheetButton = {
+        let butotn = CreateBottomSheetButton()
+        return butotn
     }()
     
     private lazy var activityIndicator: UIActivityIndicatorView = {
@@ -154,8 +154,13 @@ public final class SelectAppointmentThemeViewController: UIViewController, View 
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
-        self.bottomSheetButton.rx.tap
+        self.bottomSheetButton.rx.next_rx_tap
             .map { Reactor.Action.didTapNextButton }
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
+        
+        self.bottomSheetButton.rx.back_rx_tap
+            .map { Reactor.Action.didTapBackButton }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -219,7 +224,7 @@ extension SelectAppointmentThemeViewController: UICollectionViewDelegate {
 
 extension SelectAppointmentThemeViewController: YakgwaNavigationDetailDelegate {
     public func didTapDetailLeftButton() {
-        navigationController?.popViewController(animated: true)
+        navigationController?.popToRootViewController(animated: true)
     }
     
     public func didTapDetailRightButton() { }
