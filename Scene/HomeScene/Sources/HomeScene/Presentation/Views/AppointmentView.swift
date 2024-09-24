@@ -193,7 +193,7 @@ public class AppointmentView: UIView {
         tagView.setTag(appointment.getThemeName() ?? "")
         
         if let cellStatus = appointment.getStatus() {
-            if cellStatus == "BEFORE_CONFIRM" {
+            if cellStatus == "BEFORE_VOTE" {
                 
                 dDayLabel.isHidden = true
                 
@@ -210,6 +210,28 @@ public class AppointmentView: UIView {
                 }
 
                 infoStack.addArrangedSubview(infoLabel)
+                
+                infoLabel.text = "아직 투표 전이에요"
+                detailButton.title = "시간 및 장소 투표하기"
+            } else if cellStatus == "VOTE" {
+                dDayLabel.isHidden = true
+                
+                self.addSubview(detailButton)
+                detailButton.snp.makeConstraints {
+                    $0.leading.equalToSuperview().offset(16)
+                    $0.bottom.equalToSuperview().offset(-16)
+                    $0.centerX.equalToSuperview()
+                }
+                
+                infoStack.snp.makeConstraints {
+                    $0.bottom.equalTo(detailButton.snp.top).offset(-32)
+                    $0.centerX.equalToSuperview()
+                }
+
+                infoStack.addArrangedSubview(infoLabel)
+                
+                infoLabel.text = "친구들의 투표를 기다리고 있어요"
+                detailButton.title = "모임 내용 자세히 보기"
             } else {
                 infoStack.snp.makeConstraints {
                     $0.top.equalTo(descriptionLabel.snp.bottom).offset(8)
