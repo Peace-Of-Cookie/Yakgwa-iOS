@@ -163,7 +163,7 @@ public class HomeViewController: UIViewController, View {
                 cellType: AppointmentCell.self)
             ) { index, appointment, cell in
                 
-                cell.configure(with: appointment)
+                cell.configure(with: AppointmentDetailViewModel(with: appointment))
                 
                 cell.appointmentView.detailButton.rx.tap
                     .map { Reactor.Action.didTapDetailButton(index) }
