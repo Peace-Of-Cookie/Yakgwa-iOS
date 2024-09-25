@@ -50,7 +50,7 @@ public final class AppointmentCell: UICollectionViewCell {
     }
     
     // MARK: - Publics
-    public func configure(with appointment: AppointmentDetail) {
-        appointmentView.configure(with: appointment)
+    public func configure(with viewModel: AppointmentDetailViewModel) {
+        appointmentView.configure(with: viewModel)
     }
 }

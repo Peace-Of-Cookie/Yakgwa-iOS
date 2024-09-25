@@ -187,12 +187,16 @@ public class AppointmentView: UIView {
     }
     
     // MARK: - Publics
-    public func configure(with appointment: AppointmentDetail) {
-        titleLabel.text = appointment.getTitle()
-        descriptionLabel.text = appointment.getDescription() ?? ""
-        tagView.setTag(appointment.getThemeName() ?? "")
+    public func configure(with appointment: AppointmentDetailViewModel) {
+        titleLabel.text = appointment.title
+        descriptionLabel.text = appointment.description
+        tagView.setTag(appointment.theme)
+        dateLabel.text = appointment.date
+        timeLabel.text = appointment.time
+        dDayLabel.text = appointment.remainVoteTime
+        locationLabel.text = appointment.location
         
-        if let cellStatus = appointment.getStatus() {
+        if let cellStatus = appointment.state {
             if cellStatus == "BEFORE_VOTE" {
                 infoStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
                 
