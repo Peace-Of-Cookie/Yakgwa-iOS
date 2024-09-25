@@ -194,6 +194,7 @@ public class AppointmentView: UIView {
         
         if let cellStatus = appointment.getStatus() {
             if cellStatus == "BEFORE_VOTE" {
+                infoStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
                 
                 dDayLabel.isHidden = true
                 
@@ -213,7 +214,9 @@ public class AppointmentView: UIView {
                 
                 infoLabel.text = "아직 투표 전이에요"
                 detailButton.title = "시간 및 장소 투표하기"
-            } else if cellStatus == "VOTE" {
+            } else if (cellStatus == "VOTE" || cellStatus == "BEFORE_CONFIRM") {
+                infoStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+                
                 dDayLabel.isHidden = true
                 
                 self.addSubview(detailButton)
@@ -233,8 +236,18 @@ public class AppointmentView: UIView {
                 infoLabel.text = "친구들의 투표를 기다리고 있어요"
                 detailButton.title = "모임 내용 자세히 보기"
             } else {
-                infoStack.snp.makeConstraints {
-                    $0.top.equalTo(descriptionLabel.snp.bottom).offset(8)
+                infoStack.arrangedSubviews.forEach { $0.removeFromSuperview() }
+                dDayLabel.isHidden = false
+                
+                self.addSubview(detailButton)
+                detailButton.snp.makeConstraints {
+                    $0.leading.equalToSuperview().offset(16)
+                    $0.bottom.equalToSuperview().offset(-16)
+                    $0.centerX.equalToSuperview()
+                }
+                
+                infoStack.snp.remakeConstraints {
+                    $0.bottom.equalTo(detailButton.snp.top).offset(-16)
                     $0.centerX.equalToSuperview()
                 }
                 infoStack.addArrangedSubview(dateStack)
@@ -252,13 +265,7 @@ public class AppointmentView: UIView {
                 locationStack.addArrangedSubview(locationImageView)
                 locationStack.addArrangedSubview(locationLabel)
                 
-                self.addSubview(detailButton)
-                detailButton.snp.makeConstraints {
-                    $0.top.equalTo(infoStack.snp.bottom).offset(16)
-                    $0.bottom.equalToSuperview().offset(-16)
-                    $0.leading.equalToSuperview().offset(16)
-                    $0.centerX.equalToSuperview()
-                }
+                detailButton.title = "모임 내용 자세히 보기"
             }
         }
     }
