@@ -196,13 +196,20 @@ public final class DateVoteViewController: UIViewController, View {
             .disposed(by: disposeBag)
         
         dateCollectionView.rx.itemSelected
-            .map { [weak self] indexPath -> Reactor.Action in
-                guard let self = self else {
-                    return Reactor.Action.dateSelected(Date())
-                }
+            .map { [weak self] indexPath -> Date? in
+                guard let self = self else { return nil }
                 let selectedDate = self.dates[indexPath.item]
-                return Reactor.Action.dateSelected(selectedDate)
+                return selectedDate
             }
+            .compactMap { $0 }
+            .filter { [weak self] date in
+                guard let self = self else { return false }
+                if let startDate = self.startDate, let endDate = self.endDate {
+                    return date >= startDate && date <= endDate
+                }
+                return false
+            }
+            .map { Reactor.Action.dateSelected($0) }
             .bind(to: reactor.action)
             .disposed(by: disposeBag)
         
@@ -255,6 +262,24 @@ public final class DateVoteViewController: UIViewController, View {
         reactor.state.map { $0.selectedTimes }
             .subscribe(onNext: {[weak self] result in
                 self?.timeCollectionView.reloadData()
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.enableDate }
+            .subscribe(onNext: {[weak self] enableDate in
+                
+                guard let self = self else { return }
+                let dateString: String
+                if enableDate.count == 1, let first = enableDate.first {
+                    dateString = String(format: "%04d.%02d", first.0, first.1)
+                } else if enableDate.count == 2 {
+                    let first = enableDate[0]
+                    let second = enableDate[1]
+                    dateString = String(format: "%04d.%02d - %04d.%02d", first.0, first.1, second.0, second.1)
+                } else {
+                    dateString = ""
+                }
+                self.calendarTitleLabel.text = dateString
             })
             .disposed(by: disposeBag)
         

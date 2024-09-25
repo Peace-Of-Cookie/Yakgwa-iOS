@@ -42,6 +42,7 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
         var showDateTimePicker: Date? = nil
         var selectedTimes: [Date: [Int]] = [:]
         var isLoading: Bool = false
+        var enableDate: [(Int, Int)] = []
         @Pulse var popupMessage: (PopupMessage?)
     }
     
@@ -130,6 +131,23 @@ public final class DateVoteReactor: Reactor, DateVoteRouting {
             
         case .setDate(let dates):
             newState.candidateDates = dates
+            // 두 날짜의 연도와 월을 구함
+            let calendar = Calendar.current
+            let startYear = calendar.component(.year, from: dates.0)
+            let startMonth = calendar.component(.month, from: dates.0)
+            let endYear = calendar.component(.year, from: dates.1)
+            let endMonth = calendar.component(.month, from: dates.1)
+            
+            // (연도, 월) 형태로 저장
+            let startMonthTuple = (startYear, startMonth)
+            let endMonthTuple = (endYear, endMonth)
+            
+            // 중복 없이 month 배열에 추가
+            if startMonthTuple == endMonthTuple {
+                newState.enableDate = [startMonthTuple]
+            } else {
+                newState.enableDate = [startMonthTuple, endMonthTuple]
+            }
             
         case .selectedDate(let date):
             newState.showDateTimePicker = date
