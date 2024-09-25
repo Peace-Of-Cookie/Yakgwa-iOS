@@ -94,6 +94,10 @@ public final class YakgwaSearchView: UIView {
         self.titleLabel.text = text
         self.titleLabel.textColor = .neutral500
     }
+    
+    public func getTextFieldText() -> String {
+            return titleLabel.text ?? ""
+        }
 }
 
 public extension Reactive where Base: YakgwaSearchView {
