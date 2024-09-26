@@ -61,13 +61,13 @@ public final class ConfirmDateView: UIView {
     // MARK: - Privates
     private func setUI() {
         self.backgroundColor = .neutralWhite
+        self.layer.cornerRadius = 25
         
-        self.layer.cornerRadius = 16
-        
-        self.addSubview(timeLabel)
-        timeLabel.snp.makeConstraints {
-            $0.leading.equalToSuperview().offset(16)
+        self.addSubview(titleLabel)
+        titleLabel.snp.makeConstraints {
             $0.top.equalToSuperview().offset(16)
+            $0.leading.equalToSuperview().offset(16)
+            $0.centerX.equalToSuperview()
         }
         
         self.addSubview(dateStack)
@@ -76,7 +76,9 @@ public final class ConfirmDateView: UIView {
         dateStack.addArrangedSubview(timeLabel)
         dateStack.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
-            $0.top.equalTo(timeLabel.snp.bottom).offset(16)
+            $0.top.equalTo(titleLabel.snp.bottom).offset(16)
+            $0.bottom.equalToSuperview().offset(-16)
+            $0.centerX.equalToSuperview()
         }
     }
     

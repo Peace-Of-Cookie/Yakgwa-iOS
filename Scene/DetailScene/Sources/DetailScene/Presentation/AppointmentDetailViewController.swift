@@ -93,6 +93,21 @@ public final class AppointmentDetailViewController: UIViewController, View {
         return view
     }()
     
+    private lazy var confirmLocationView: ConfirmLocationView = {
+        let view = ConfirmLocationView()
+        return view
+    }()
+    
+    private lazy var beforeConfirmDateView: BeforeConfirmView = {
+        let view = BeforeConfirmView(type: .date)
+        return view
+    }()
+    
+    private lazy var beforeConfirmLocationView: BeforeConfirmView = {
+        let view = BeforeConfirmView(type: .location)
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: AppointmentDetailViewReactor
@@ -219,21 +234,21 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] showDateVoteInfo in
                 guard let self = self else { return }
-                if showDateVoteInfo {
-                    // myVotedDateView를 보여줌
-                    if self.voteStack.arrangedSubviews.contains(self.dateVoteView) {
-                        self.voteStack.removeArrangedSubview(self.dateVoteView)
-                        self.dateVoteView.removeFromSuperview()
-                        self.voteStack.insertArrangedSubview(self.myVotedDateView, at: 0)
-                    }
-                } else {
-                    // dateVoteView를 보여줌
-                    if self.voteStack.arrangedSubviews.contains(self.myVotedDateView) {
-                        self.voteStack.removeArrangedSubview(self.myVotedDateView)
-                        self.myVotedDateView.removeFromSuperview()
-                        self.voteStack.insertArrangedSubview(self.dateVoteView, at: 0)
-                    }
-                }
+//                if showDateVoteInfo {
+//                    // myVotedDateView를 보여줌
+//                    if self.voteStack.arrangedSubviews.contains(self.dateVoteView) {
+//                        self.voteStack.removeArrangedSubview(self.dateVoteView)
+//                        self.dateVoteView.removeFromSuperview()
+//                        self.voteStack.insertArrangedSubview(self.myVotedDateView, at: 0)
+//                    }
+//                } else {
+//                    // dateVoteView를 보여줌
+//                    if self.voteStack.arrangedSubviews.contains(self.myVotedDateView) {
+//                        self.voteStack.removeArrangedSubview(self.myVotedDateView)
+//                        self.myVotedDateView.removeFromSuperview()
+//                        self.voteStack.insertArrangedSubview(self.dateVoteView, at: 0)
+//                    }
+//                }
             })
             .disposed(by: disposeBag)
         
@@ -241,22 +256,22 @@ public final class AppointmentDetailViewController: UIViewController, View {
         reactor.state.map { $0.showLocationVoteInfo }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] showLocationVoteInfo in
-                guard let self = self else { return }
-                if showLocationVoteInfo {
-                    // myVotedLocationView를 보여줌
-                    if self.voteStack.arrangedSubviews.contains(self.locationVoteView) {
-                        self.voteStack.removeArrangedSubview(self.locationVoteView)
-                        self.locationVoteView.removeFromSuperview()
-                        self.voteStack.insertArrangedSubview(self.myVotedLocationView, at: 1)
-                    }
-                } else {
-                    // locationVoteView를 보여줌
-                    if self.voteStack.arrangedSubviews.contains(self.myVotedLocationView) {
-                        self.voteStack.removeArrangedSubview(self.myVotedLocationView)
-                        self.myVotedLocationView.removeFromSuperview()
-                        self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
-                    }
-                }
+//                guard let self = self else { return }
+//                if showLocationVoteInfo {
+//                    // myVotedLocationView를 보여줌
+//                    if self.voteStack.arrangedSubviews.contains(self.locationVoteView) {
+//                        self.voteStack.removeArrangedSubview(self.locationVoteView)
+//                        self.locationVoteView.removeFromSuperview()
+//                        self.voteStack.insertArrangedSubview(self.myVotedLocationView, at: 1)
+//                    }
+//                } else {
+//                    // locationVoteView를 보여줌
+//                    if self.voteStack.arrangedSubviews.contains(self.myVotedLocationView) {
+//                        self.voteStack.removeArrangedSubview(self.myVotedLocationView)
+//                        self.myVotedLocationView.removeFromSuperview()
+//                        self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
+//                    }
+//                }
             })
             .disposed(by: disposeBag)
         
@@ -312,6 +327,32 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] status in
                 print("날짜 투표 상태: \(status)")
+                guard let self = self else { return }
+                switch status {
+                case .confirm:
+                    if let firstView = voteStack.arrangedSubviews.first {
+                        voteStack.removeArrangedSubview(firstView)
+                        firstView.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.confirmDateView, at: 0)
+                    
+                case .beforeConfirm:
+                    if let firstView = voteStack.arrangedSubviews.first {
+                        voteStack.removeArrangedSubview(firstView)
+                        firstView.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.beforeConfirmDateView, at: 0)
+                    
+                case .beforeVote:
+                    if let firstView = voteStack.arrangedSubviews.first {
+                        voteStack.removeArrangedSubview(firstView)
+                        firstView.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.dateVoteView, at: 0)
+                    
+                default:
+                    break
+                }
             })
             .disposed(by: disposeBag)
         
@@ -319,6 +360,31 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] status in
                 print("장소 투표 상태: \(status)")
+                guard let self = self else { return }
+                switch status {
+                case .confirm:
+                    if let secondVIew = voteStack.arrangedSubviews.last {
+                        voteStack.removeArrangedSubview(secondVIew)
+                        secondVIew.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.confirmLocationView, at: 1)
+                    
+                case .beforeConfirm:
+                    if let secondVIew = voteStack.arrangedSubviews.last {
+                        voteStack.removeArrangedSubview(secondVIew)
+                        secondVIew.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.beforeConfirmLocationView, at: 1)
+                    
+                case .beforeVote:
+                    if let secondVIew = voteStack.arrangedSubviews.last {
+                        voteStack.removeArrangedSubview(secondVIew)
+                        secondVIew.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
+                default:
+                    break
+                }
             })
             .disposed(by: disposeBag)
         
