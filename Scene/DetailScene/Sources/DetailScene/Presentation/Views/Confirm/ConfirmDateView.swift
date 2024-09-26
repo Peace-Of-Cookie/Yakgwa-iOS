@@ -8,6 +8,7 @@
 import UIKit
 
 import CoreKit
+import Domain
 
 public final class ConfirmDateView: UIView {
     // MARK: - UI Components
@@ -24,6 +25,7 @@ public final class ConfirmDateView: UIView {
         stack.axis = .horizontal
         stack.spacing = 6
         stack.alignment = .center
+        stack.distribution = .fillProportionally
         return stack
     }()
     
@@ -42,7 +44,7 @@ public final class ConfirmDateView: UIView {
 
     lazy var timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "오후 8시"
+        label.text = "오후 0시"
         label.font = .r16
         return label
     }()
@@ -73,14 +75,32 @@ public final class ConfirmDateView: UIView {
         self.addSubview(dateStack)
         dateStack.addArrangedSubview(dateLabel)
         dateStack.addArrangedSubview(dateSeparator)
+        dateSeparator.snp.makeConstraints {
+            $0.width.equalTo(1)
+            $0.height.equalTo(12)
+        }
         dateStack.addArrangedSubview(timeLabel)
         dateStack.snp.makeConstraints {
             $0.leading.equalToSuperview().offset(16)
             $0.top.equalTo(titleLabel.snp.bottom).offset(16)
             $0.bottom.equalToSuperview().offset(-16)
-            $0.centerX.equalToSuperview()
         }
     }
     
     // MARK: - Publics
+    func configure(with entity: VoteDateInfo) {
+        if let date = entity.getTimeInfo()?.first?.getVoteTime() {
+            let dateFormatter = DateFormatter()
+            dateFormatter.locale = Locale(identifier: "ko_KR")
+            dateFormatter.dateFormat = "yyyy년 MM월 dd일"
+            self.dateLabel.text = dateFormatter.string(from: date)
+            
+            let timeFormatter = DateFormatter()
+            timeFormatter.locale = Locale(identifier: "ko_KR")
+            timeFormatter.amSymbol = "오전"
+            timeFormatter.pmSymbol = "오후"
+            timeFormatter.dateFormat = "a h시"
+            self.timeLabel.text = timeFormatter.string(from: date)
+        }
+    }
 }

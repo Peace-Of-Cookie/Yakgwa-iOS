@@ -8,6 +8,7 @@
 import UIKit
 
 import CoreKit
+import Domain
 
 public final class ConfirmLocationView: UIView {
     // MARK: - Properties
@@ -71,6 +72,18 @@ public final class ConfirmLocationView: UIView {
             $0.top.equalTo(locationLabel.snp.bottom).offset(8)
             $0.leading.equalToSuperview().offset(16)
             $0.bottom.equalToSuperview().offset(-16)
+        }
+    }
+    
+    // MARK: - Functions
+    func configure(with entity: VoteLocationInfo) {
+        let location = entity.getPlaceInfo()
+        if let title = location.first?.getTitle() {
+            locationLabel.text = title
+        }
+        
+        if let address = location.first?.getAddress() {
+            addressLabel.text = address
         }
     }
 }
