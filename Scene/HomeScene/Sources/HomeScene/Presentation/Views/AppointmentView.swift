@@ -99,8 +99,9 @@ public class AppointmentView: UIView {
 
     private lazy var dateLabel: UILabel = {
         let label = UILabel()
-        label.text = "2024년 5월 4일"
+        label.text = "date"
         label.font = .r16
+        label.textColor = .neutralBlack
         return label
     }()
 
@@ -112,8 +113,9 @@ public class AppointmentView: UIView {
 
     private lazy var timeLabel: UILabel = {
         let label = UILabel()
-        label.text = "오후 8시"
+        label.text = "time"
         label.font = .r16
+        label.textColor = .neutralBlack
         return label
     }()
 
@@ -133,8 +135,9 @@ public class AppointmentView: UIView {
 
     private lazy var locationLabel: UILabel = {
         let label = UILabel()
-        label.text = "닥터로빈"
+        label.text = "location"
         label.font = .r16
+        label.textColor = .neutralBlack
         return label
     }()
     
