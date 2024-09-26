@@ -88,6 +88,11 @@ public final class AppointmentDetailViewController: UIViewController, View {
         return view
     }()
     
+    private lazy var confirmDateView: ConfirmDateView = {
+        let view = ConfirmDateView()
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: AppointmentDetailViewReactor

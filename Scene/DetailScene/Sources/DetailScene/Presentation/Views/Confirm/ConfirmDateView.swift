@@ -1,0 +1,84 @@
+//
+//  ConfirmDateView.swift
+//  DetailScene
+//
+//  Created by Kim Dongjoo on 9/26/24.
+//
+
+import UIKit
+
+import CoreKit
+
+public final class ConfirmDateView: UIView {
+    // MARK: - UI Components
+    private lazy var titleLabel: UILabel = {
+        let label = UILabel()
+        label.font = .sb14
+        label.textColor = .neutralBlack
+        label.text = "약속 시간"
+        return label
+    }()
+    
+    private lazy var dateStack: UIStackView = {
+        let stack = UIStackView()
+        stack.axis = .horizontal
+        stack.spacing = 6
+        stack.alignment = .center
+        return stack
+    }()
+    
+    lazy var dateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "2024년 5월 4일"
+        label.font = .r16
+        return label
+    }()
+
+    private lazy var dateSeparator: UIView = {
+        let view = UIView()
+        view.backgroundColor = .neutral300
+        return view
+    }()
+
+    lazy var timeLabel: UILabel = {
+        let label = UILabel()
+        label.text = "오후 8시"
+        label.font = .r16
+        return label
+    }()
+    
+    // MARK: - Initializers
+    public init() {
+        super.init(frame: .zero)
+        
+        setUI()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+    
+    // MARK: - Privates
+    private func setUI() {
+        self.backgroundColor = .neutralWhite
+        
+        self.layer.cornerRadius = 16
+        
+        self.addSubview(timeLabel)
+        timeLabel.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.top.equalToSuperview().offset(16)
+        }
+        
+        self.addSubview(dateStack)
+        dateStack.addArrangedSubview(dateLabel)
+        dateStack.addArrangedSubview(dateSeparator)
+        dateStack.addArrangedSubview(timeLabel)
+        dateStack.snp.makeConstraints {
+            $0.leading.equalToSuperview().offset(16)
+            $0.top.equalTo(timeLabel.snp.bottom).offset(16)
+        }
+    }
+    
+    // MARK: - Publics
+}
