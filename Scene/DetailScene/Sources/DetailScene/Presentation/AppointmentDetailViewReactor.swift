@@ -48,6 +48,8 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         var showLocationVoteInfo: Bool = false
         var showDateVoteInfo: Bool = false
         var voted: Bool = false
+        var dateVoteStatus: MeetStatus?
+        var locationVoteStatus: MeetStatus?
         var isLoading: Bool = false
         @Pulse var popupMessage: (PopupMessage?)
     }
@@ -149,10 +151,12 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         case .fetchMyVoteLocations(let info):
             newState.locationVoteInfo = info
             newState.showLocationVoteInfo = info.getCount() > 0
+            newState.locationVoteStatus = info.getMeetStatus()
             
         case .fetchMyVoteDates(let info):
             newState.dateVoteInfo = info
             newState.showDateVoteInfo = info.getTimeInfoCount() > 0
+            newState.dateVoteStatus = info.getMeetStatus()
         }
         
         if let locationVoteInfo = newState.locationVoteInfo,

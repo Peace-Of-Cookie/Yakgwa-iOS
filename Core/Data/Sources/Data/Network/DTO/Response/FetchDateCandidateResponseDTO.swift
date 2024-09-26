@@ -32,25 +32,25 @@ import Foundation
 import Domain
 
 public struct FetchDateCandidateResponseDTO: Decodable {
-    public let time: String
-    public let status: Int
-    public let code: String
-    public let message: String
-    public let result: Result
+    let time: String
+    let status: Int
+    let code: String
+    let message: String
+    let result: Result
 
     public struct Result: Decodable {
-        public let meetStatus: String
-        public let timeInfos: [TimeInfo]?
-        public let voteDate: VoteDate?
+        let meetStatus: MeetStatus
+        let timeInfos: [TimeInfo]?
+        let voteDate: VoteDate?
 
         public struct TimeInfo: Decodable {
-            public let timeId: Int?
-            public let voteTime: String?
+            let timeId: Int?
+            let voteTime: String?
         }
 
         public struct VoteDate: Decodable {
-            public let startVoteDate: String
-            public let endVoteDate: String
+            let startVoteDate: String
+            let endVoteDate: String
         }
     }
 }

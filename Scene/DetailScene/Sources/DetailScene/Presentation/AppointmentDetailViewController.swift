@@ -231,29 +231,29 @@ public final class AppointmentDetailViewController: UIViewController, View {
                 }
             })
             .disposed(by: disposeBag)
-            
-            // LocationVoteInfo에 따른 뷰 교체
-            reactor.state.map { $0.showLocationVoteInfo }
-                .distinctUntilChanged()
-                .subscribe(onNext: { [weak self] showLocationVoteInfo in
-                    guard let self = self else { return }
-                    if showLocationVoteInfo {
-                        // myVotedLocationView를 보여줌
-                        if self.voteStack.arrangedSubviews.contains(self.locationVoteView) {
-                            self.voteStack.removeArrangedSubview(self.locationVoteView)
-                            self.locationVoteView.removeFromSuperview()
-                            self.voteStack.insertArrangedSubview(self.myVotedLocationView, at: 1)
-                        }
-                    } else {
-                        // locationVoteView를 보여줌
-                        if self.voteStack.arrangedSubviews.contains(self.myVotedLocationView) {
-                            self.voteStack.removeArrangedSubview(self.myVotedLocationView)
-                            self.myVotedLocationView.removeFromSuperview()
-                            self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
-                        }
+        
+        // LocationVoteInfo에 따른 뷰 교체
+        reactor.state.map { $0.showLocationVoteInfo }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] showLocationVoteInfo in
+                guard let self = self else { return }
+                if showLocationVoteInfo {
+                    // myVotedLocationView를 보여줌
+                    if self.voteStack.arrangedSubviews.contains(self.locationVoteView) {
+                        self.voteStack.removeArrangedSubview(self.locationVoteView)
+                        self.locationVoteView.removeFromSuperview()
+                        self.voteStack.insertArrangedSubview(self.myVotedLocationView, at: 1)
                     }
-                })
-                .disposed(by: disposeBag)
+                } else {
+                    // locationVoteView를 보여줌
+                    if self.voteStack.arrangedSubviews.contains(self.myVotedLocationView) {
+                        self.voteStack.removeArrangedSubview(self.myVotedLocationView)
+                        self.myVotedLocationView.removeFromSuperview()
+                        self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
+                    }
+                }
+            })
+            .disposed(by: disposeBag)
         
         reactor.state
             .compactMap { $0.locationVoteInfo }
@@ -300,6 +300,20 @@ public final class AppointmentDetailViewController: UIViewController, View {
                 if voted {
                     self?.appointmentDetailView.changeVoteState()
                 }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.dateVoteStatus }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] status in
+                print("날짜 투표 상태: \(status)")
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.locationVoteStatus }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] status in
+                print("장소 투표 상태: \(status)")
             })
             .disposed(by: disposeBag)
         
