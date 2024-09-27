@@ -137,18 +137,18 @@ public final class AppointmentDetailViewController: UIViewController, View {
             $0.leading.trailing.equalToSuperview()
         }
         
-        self.view.addSubview(bottomSheetButton)
-        bottomSheetButton.snp.makeConstraints {
-            $0.height.equalTo(92)
-            $0.bottom.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
-        }
+//        self.view.addSubview(bottomSheetButton)
+//        bottomSheetButton.snp.makeConstraints {
+//            $0.height.equalTo(92)
+//            $0.bottom.equalToSuperview()
+//            $0.leading.trailing.equalToSuperview()
+//        }
         
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints {
             $0.top.equalTo(navigationBar.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(bottomSheetButton.snp.top)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
         
         scrollView.addSubview(contentView)
