@@ -9,9 +9,13 @@ import UIKit
 
 import CoreKit
 import Domain
+import RxSwift
+import RxCocoa
 
 final class TiedVoteView: UIView {
     // MARK: - Properties
+    var id: Int
+    var radioButtonTapRelay = PublishRelay<Int>()
     
     // MARK: - UI Components
     private lazy var stack: UIStackView = {
@@ -22,10 +26,11 @@ final class TiedVoteView: UIView {
         return stack
     }()
     
-    private lazy var radioButton: UIButton = {
+    lazy var radioButton: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "radio_deselect_icon", in: .module, with: nil), for: .normal)
         button.setImage(UIImage(named: "radio_select_icon", in: .module, with: nil), for: .selected)
+        button.addTarget(self, action: #selector(radioButtonTapped), for: .touchUpInside)
         return button
     }()
     
@@ -52,7 +57,8 @@ final class TiedVoteView: UIView {
     }()
     
     // MARK: - Initializers
-    init() {
+    init(id: Int) {
+        self.id = id
         super.init(frame: .zero)
         
         setUI()
@@ -120,5 +126,11 @@ final class TiedVoteView: UIView {
         let addressComponents = address.split(separator: " ").prefix(2) // 앞 두 단어만 추출
         let truncatedAddress = addressComponents.joined(separator: " ") // 다시 문자열로 결합
         self.subLabel.text = truncatedAddress
+    }
+    
+    // MARK: - Action
+    @objc 
+    private func radioButtonTapped() {
+        radioButtonTapRelay.accept(self.id)
     }
 }

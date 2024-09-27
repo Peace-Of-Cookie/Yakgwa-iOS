@@ -256,7 +256,7 @@ public final class AppointmentDetailViewController: UIViewController, View {
                 case .confirm:
                     self?.confirmLocationView.configure(with: info)
                 case .beforeConfirm:
-                    self?.beforeConfirmLocationView.configure(with: info)
+                    self?.beforeConfirmLocationView.configure(with: info, reactor: reactor)
                     return
                 default:
                     return
@@ -275,7 +275,7 @@ public final class AppointmentDetailViewController: UIViewController, View {
                 case .confirm:
                     self?.confirmDateView.configure(with: info)
                 case .beforeConfirm:
-                    self?.beforeConfirmDateView.configure(with: info)
+                    self?.beforeConfirmDateView.configure(with: info, reactor: reactor)
                     return
                 default:
                     return

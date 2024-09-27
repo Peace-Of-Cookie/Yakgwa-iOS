@@ -9,6 +9,7 @@ import UIKit
 
 import CoreKit
 import Domain
+import RxSwift
 
 enum BeforeConfirmViewType {
     case date
@@ -18,6 +19,7 @@ enum BeforeConfirmViewType {
 final class BeforeConfirmView: UIView {
     // MARK: - Properties
     private let type: BeforeConfirmViewType
+    private let disposeBag = DisposeBag()
     
     // MARK: - UI Components
     private lazy var titleLabel: UILabel = {
@@ -104,19 +106,53 @@ final class BeforeConfirmView: UIView {
     }
     
     // MARK: - Internal
-    func configure(with entity: VoteDateInfo) {
+    func configure(with entity: VoteDateInfo, reactor: AppointmentDetailViewReactor) {
         entity.getTimeInfo()?.forEach { timeInfo in
-            let tiedVoteView = TiedVoteView()
+            let tiedVoteView = TiedVoteView(id: timeInfo.getDateID() ?? 0)
             tiedVoteView.configure(with: timeInfo)
             voteStack.addArrangedSubview(tiedVoteView)
+            
+            tiedVoteView.radioButtonTapRelay
+                .map { id in AppointmentDetailViewReactor.Action.didTapDateRadioButton(id) }
+                .bind(to: reactor.action)
+                .disposed(by: disposeBag)
+            
+            reactor.state.map { $0.selectedDateSlootId }
+                .compactMap({ $0 })
+                .distinctUntilChanged()
+                .subscribe(onNext: { [weak self] id in
+                    self?.updateRadioButtonStates(selectedVoteId: id)
+                })
+                .disposed(by: disposeBag)
         }
     }
     
-    func configure(with entity: VoteLocationInfo) {
+    func configure(with entity: VoteLocationInfo, reactor: AppointmentDetailViewReactor) {
         entity.getPlaceInfo().forEach { placeInfo in
-            let tiedVoteView = TiedVoteView()
+            let tiedVoteView = TiedVoteView(id: placeInfo.getPlaceSlotId() ?? 0)
             tiedVoteView.configure(with: placeInfo)
             voteStack.addArrangedSubview(tiedVoteView)
+            
+            tiedVoteView.radioButtonTapRelay
+                .map { id in AppointmentDetailViewReactor.Action.didTapLocationRadioButton(id) }
+                .bind(to: reactor.action)
+                .disposed(by: disposeBag)
+            
+            reactor.state.map { $0.selectedLocationSlotId }
+                .compactMap({ $0 })
+                .distinctUntilChanged()
+                .subscribe(onNext: { [weak self] id in
+                    self?.updateRadioButtonStates(selectedVoteId: id)
+                })
+                .disposed(by: disposeBag)
+        }
+    }
+    
+    private func updateRadioButtonStates(selectedVoteId: Int) {
+        for view in voteStack.arrangedSubviews {
+            if let tiedVoteView = view as? TiedVoteView {
+                tiedVoteView.radioButton.isSelected = (tiedVoteView.id == selectedVoteId)
+            }
         }
     }
 }

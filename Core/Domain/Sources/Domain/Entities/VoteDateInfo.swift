@@ -57,4 +57,8 @@ extension VoteDateInfo.TimeInfo {
     public func getVoteTime() -> Date? {
         return voteTime
     }
+    
+    public func getDateID() -> Int? {
+        return timeId
+    }
 }
