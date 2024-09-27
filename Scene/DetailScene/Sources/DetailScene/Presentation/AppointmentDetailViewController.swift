@@ -249,6 +249,7 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .compactMap { $0.locationVoteInfo }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] info in
+                print("장소투표정보: \(info)")
                 switch info.getMeetStatus() {
                 case .vote:
                     self?.myVotedLocationView.configure(with: info)
@@ -266,6 +267,7 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .compactMap { $0.dateVoteInfo }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] info in
+                print("날짜투표정보:\(info)")
                 switch info.getMeetStatus() {
                 case .vote:
                     self?.myVotedDateView.configure(with: info)
@@ -315,7 +317,6 @@ public final class AppointmentDetailViewController: UIViewController, View {
         reactor.state.map { $0.dateVoteStatus }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] status in
-                print("날짜 투표 상태: \(status)")
                 guard let self = self else { return }
                 switch status {
                 case .confirm:
@@ -338,7 +339,12 @@ public final class AppointmentDetailViewController: UIViewController, View {
                         firstView.removeFromSuperview()
                     }
                     self.voteStack.insertArrangedSubview(self.dateVoteView, at: 0)
-                    
+                case .vote:
+                    if let firstView = voteStack.arrangedSubviews.first {
+                        voteStack.removeArrangedSubview(firstView)
+                        firstView.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.myVotedDateView, at: 0)
                 default:
                     break
                 }
@@ -348,7 +354,6 @@ public final class AppointmentDetailViewController: UIViewController, View {
         reactor.state.map { $0.locationVoteStatus }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] status in
-                print("장소 투표 상태: \(status)")
                 guard let self = self else { return }
                 switch status {
                 case .confirm:
@@ -371,6 +376,13 @@ public final class AppointmentDetailViewController: UIViewController, View {
                         secondVIew.removeFromSuperview()
                     }
                     self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
+                
+                case .vote:
+                    if let secondVIew = voteStack.arrangedSubviews.last {
+                        voteStack.removeArrangedSubview(secondVIew)
+                        secondVIew.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.myVotedLocationView, at: 1)
                 default:
                     break
                 }
