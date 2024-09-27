@@ -8,6 +8,7 @@
 import UIKit
 
 import CoreKit
+import Domain
 
 enum BeforeConfirmViewType {
     case date
@@ -42,14 +43,14 @@ final class BeforeConfirmView: UIView {
     
     private lazy var confirmButton: YakGwaButton = {
         let button = YakGwaButton(style: .secondary)
-        button.setImage(UIImage(named: "radio_deselect_icon", in: .module, with: nil), for: .normal)
-        button.setImage(UIImage(named: "radio_select_icon", in: .module, with: nil), for: .selected)
         return button
     }()
     
     init(type: BeforeConfirmViewType) {
         self.type = type
         super.init(frame: .zero)
+        
+        setUI()
     }
     
     required init?(coder: NSCoder) {
@@ -90,15 +91,32 @@ final class BeforeConfirmView: UIView {
         voteStack.snp.makeConstraints {
             $0.top.equalTo(descriptionLabel.snp.bottom).offset(16)
             $0.leading.equalTo(titleLabel)
+            $0.centerX.equalToSuperview()
         }
         
         self.addSubview(confirmButton)
         confirmButton.snp.makeConstraints {
             $0.top.equalTo(voteStack.snp.bottom).offset(16)
             $0.leading.equalTo(titleLabel)
-            $0.bottom.equalTo(16)
+            $0.centerX.equalToSuperview()
+            $0.bottom.equalToSuperview().offset(-16)
         }
     }
     
     // MARK: - Internal
+    func configure(with entity: VoteDateInfo) {
+        entity.getTimeInfo()?.forEach { timeInfo in
+            let tiedVoteView = TiedVoteView()
+            tiedVoteView.configure(with: timeInfo)
+            voteStack.addArrangedSubview(tiedVoteView)
+        }
+    }
+    
+    func configure(with entity: VoteLocationInfo) {
+        entity.getPlaceInfo().forEach { placeInfo in
+            let tiedVoteView = TiedVoteView()
+            tiedVoteView.configure(with: placeInfo)
+            voteStack.addArrangedSubview(tiedVoteView)
+        }
+    }
 }
