@@ -32,6 +32,7 @@ public final class ConfirmDateView: UIView {
     lazy var dateLabel: UILabel = {
         let label = UILabel()
         label.text = "2024년 5월 4일"
+        label.textColor = .neutralBlack
         label.font = .r16
         return label
     }()
@@ -45,6 +46,7 @@ public final class ConfirmDateView: UIView {
     lazy var timeLabel: UILabel = {
         let label = UILabel()
         label.text = "오후 0시"
+        label.textColor = .neutralBlack
         label.font = .r16
         return label
     }()
