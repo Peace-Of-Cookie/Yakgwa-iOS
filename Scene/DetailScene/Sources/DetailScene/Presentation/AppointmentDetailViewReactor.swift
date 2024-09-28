@@ -31,6 +31,8 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         case didTapInviteButton
         case didTapDateVoteButton
         case didTapLocationVoteButton
+        case didTapDateRadioButton(Int)
+        case didTapLocationRadioButton(Int)
     }
     
     public enum Mutation {
@@ -39,6 +41,10 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         case fetchMyVoteLocations(VoteLocationInfo)
         case fetchMyVoteDates(VoteDateInfo)
         case setPopupMessage(PopupMessage)
+        case setSelectedDateSlotId(Int)
+        case setSelectedLocationSlotId(Int)
+        // case confirmDate(Int)
+        // case confirmLocation(Int)
     }
     
     public struct State {
@@ -48,8 +54,12 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         var showLocationVoteInfo: Bool = false
         var showDateVoteInfo: Bool = false
         var voted: Bool = false
+        var dateVoteStatus: MeetStatus?
+        var locationVoteStatus: MeetStatus?
         var isLoading: Bool = false
         @Pulse var popupMessage: (PopupMessage?)
+        var selectedDateSlootId: Int?
+        var selectedLocationSlotId: Int?
     }
     
     public enum PopupMessage {
@@ -130,6 +140,14 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         case .didTapLocationVoteButton:
             route.onNext(.locationVote(meetId))
             return .empty()
+            
+        case .didTapDateRadioButton(let slotID):
+            print("투표 날짜 선택: \(slotID)")
+            return .just(.setSelectedDateSlotId(slotID))
+            
+        case .didTapLocationRadioButton(let slotID):
+            print("투표 장소 선택: \(slotID)")
+            return .just(.setSelectedLocationSlotId(slotID))
         }
     }
     
@@ -149,10 +167,18 @@ public final class AppointmentDetailViewReactor: Reactor, AppointmentDetailViewR
         case .fetchMyVoteLocations(let info):
             newState.locationVoteInfo = info
             newState.showLocationVoteInfo = info.getCount() > 0
+            newState.locationVoteStatus = info.getMeetStatus()
             
         case .fetchMyVoteDates(let info):
             newState.dateVoteInfo = info
             newState.showDateVoteInfo = info.getTimeInfoCount() > 0
+            newState.dateVoteStatus = info.getMeetStatus()
+        
+        case .setSelectedDateSlotId(let id):
+            newState.selectedDateSlootId = id
+        
+        case .setSelectedLocationSlotId(let id):
+            newState.selectedLocationSlotId = id
         }
         
         if let locationVoteInfo = newState.locationVoteInfo,

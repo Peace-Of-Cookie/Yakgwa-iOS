@@ -88,6 +88,26 @@ public final class AppointmentDetailViewController: UIViewController, View {
         return view
     }()
     
+    private lazy var confirmDateView: ConfirmDateView = {
+        let view = ConfirmDateView()
+        return view
+    }()
+    
+    private lazy var confirmLocationView: ConfirmLocationView = {
+        let view = ConfirmLocationView()
+        return view
+    }()
+    
+    private lazy var beforeConfirmDateView: BeforeConfirmView = {
+        let view = BeforeConfirmView(type: .date)
+        return view
+    }()
+    
+    private lazy var beforeConfirmLocationView: BeforeConfirmView = {
+        let view = BeforeConfirmView(type: .location)
+        return view
+    }()
+    
     // MARK: - Initializers
     public init(
         reactor: AppointmentDetailViewReactor
@@ -117,18 +137,18 @@ public final class AppointmentDetailViewController: UIViewController, View {
             $0.leading.trailing.equalToSuperview()
         }
         
-        self.view.addSubview(bottomSheetButton)
-        bottomSheetButton.snp.makeConstraints {
-            $0.height.equalTo(92)
-            $0.bottom.equalToSuperview()
-            $0.leading.trailing.equalToSuperview()
-        }
+//        self.view.addSubview(bottomSheetButton)
+//        bottomSheetButton.snp.makeConstraints {
+//            $0.height.equalTo(92)
+//            $0.bottom.equalToSuperview()
+//            $0.leading.trailing.equalToSuperview()
+//        }
         
         self.view.addSubview(scrollView)
         scrollView.snp.makeConstraints {
             $0.top.equalTo(navigationBar.snp.bottom).offset(8)
             $0.leading.trailing.equalToSuperview()
-            $0.bottom.equalTo(bottomSheetButton.snp.top)
+            $0.bottom.equalTo(self.view.safeAreaLayoutGuide)
         }
         
         scrollView.addSubview(contentView)
@@ -214,52 +234,33 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] showDateVoteInfo in
                 guard let self = self else { return }
-                if showDateVoteInfo {
-                    // myVotedDateView를 보여줌
-                    if self.voteStack.arrangedSubviews.contains(self.dateVoteView) {
-                        self.voteStack.removeArrangedSubview(self.dateVoteView)
-                        self.dateVoteView.removeFromSuperview()
-                        self.voteStack.insertArrangedSubview(self.myVotedDateView, at: 0)
-                    }
-                } else {
-                    // dateVoteView를 보여줌
-                    if self.voteStack.arrangedSubviews.contains(self.myVotedDateView) {
-                        self.voteStack.removeArrangedSubview(self.myVotedDateView)
-                        self.myVotedDateView.removeFromSuperview()
-                        self.voteStack.insertArrangedSubview(self.dateVoteView, at: 0)
-                    }
-                }
             })
             .disposed(by: disposeBag)
-            
-            // LocationVoteInfo에 따른 뷰 교체
-            reactor.state.map { $0.showLocationVoteInfo }
-                .distinctUntilChanged()
-                .subscribe(onNext: { [weak self] showLocationVoteInfo in
-                    guard let self = self else { return }
-                    if showLocationVoteInfo {
-                        // myVotedLocationView를 보여줌
-                        if self.voteStack.arrangedSubviews.contains(self.locationVoteView) {
-                            self.voteStack.removeArrangedSubview(self.locationVoteView)
-                            self.locationVoteView.removeFromSuperview()
-                            self.voteStack.insertArrangedSubview(self.myVotedLocationView, at: 1)
-                        }
-                    } else {
-                        // locationVoteView를 보여줌
-                        if self.voteStack.arrangedSubviews.contains(self.myVotedLocationView) {
-                            self.voteStack.removeArrangedSubview(self.myVotedLocationView)
-                            self.myVotedLocationView.removeFromSuperview()
-                            self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
-                        }
-                    }
-                })
-                .disposed(by: disposeBag)
+        
+        // LocationVoteInfo에 따른 뷰 교체
+        reactor.state.map { $0.showLocationVoteInfo }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] showLocationVoteInfo in
+
+            })
+            .disposed(by: disposeBag)
         
         reactor.state
             .compactMap { $0.locationVoteInfo }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] info in
-                self?.myVotedLocationView.configure(with: info)
+                print("장소투표정보: \(info)")
+                switch info.getMeetStatus() {
+                case .vote:
+                    self?.myVotedLocationView.configure(with: info)
+                case .confirm:
+                    self?.confirmLocationView.configure(with: info)
+                case .beforeConfirm:
+                    self?.beforeConfirmLocationView.configure(with: info, reactor: reactor)
+                    return
+                default:
+                    return
+                }
             })
             .disposed(by: disposeBag)
         
@@ -267,7 +268,19 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .compactMap { $0.dateVoteInfo }
             .distinctUntilChanged()
             .subscribe(onNext: { [weak self] info in
-                self?.myVotedDateView.configure(with: info)
+                print("날짜투표정보:\(info)")
+                switch info.getMeetStatus() {
+                case .vote:
+                    self?.myVotedDateView.configure(with: info)
+                case .confirm:
+                    self?.confirmDateView.configure(with: info)
+                case .beforeConfirm:
+                    self?.beforeConfirmDateView.configure(with: info, reactor: reactor)
+                    return
+                default:
+                    return
+                }
+                
             })
             .disposed(by: disposeBag)
         
@@ -299,6 +312,81 @@ public final class AppointmentDetailViewController: UIViewController, View {
             .subscribe(onNext: { [weak self] voted in
                 if voted {
                     self?.appointmentDetailView.changeVoteState()
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.dateVoteStatus }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] status in
+                guard let self = self else { return }
+                switch status {
+                case .confirm:
+                    if let firstView = voteStack.arrangedSubviews.first {
+                        voteStack.removeArrangedSubview(firstView)
+                        firstView.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.confirmDateView, at: 0)
+                    
+                case .beforeConfirm:
+                    if let firstView = voteStack.arrangedSubviews.first {
+                        voteStack.removeArrangedSubview(firstView)
+                        firstView.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.beforeConfirmDateView, at: 0)
+                    
+                case .beforeVote:
+                    if let firstView = voteStack.arrangedSubviews.first {
+                        voteStack.removeArrangedSubview(firstView)
+                        firstView.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.dateVoteView, at: 0)
+                case .vote:
+                    if let firstView = voteStack.arrangedSubviews.first {
+                        voteStack.removeArrangedSubview(firstView)
+                        firstView.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.myVotedDateView, at: 0)
+                default:
+                    break
+                }
+            })
+            .disposed(by: disposeBag)
+        
+        reactor.state.map { $0.locationVoteStatus }
+            .distinctUntilChanged()
+            .subscribe(onNext: { [weak self] status in
+                guard let self = self else { return }
+                switch status {
+                case .confirm:
+                    if let secondVIew = voteStack.arrangedSubviews.last {
+                        voteStack.removeArrangedSubview(secondVIew)
+                        secondVIew.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.confirmLocationView, at: 1)
+                    
+                case .beforeConfirm:
+                    if let secondVIew = voteStack.arrangedSubviews.last {
+                        voteStack.removeArrangedSubview(secondVIew)
+                        secondVIew.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.beforeConfirmLocationView, at: 1)
+                    
+                case .beforeVote:
+                    if let secondVIew = voteStack.arrangedSubviews.last {
+                        voteStack.removeArrangedSubview(secondVIew)
+                        secondVIew.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.locationVoteView, at: 1)
+                
+                case .vote:
+                    if let secondVIew = voteStack.arrangedSubviews.last {
+                        voteStack.removeArrangedSubview(secondVIew)
+                        secondVIew.removeFromSuperview()
+                    }
+                    self.voteStack.insertArrangedSubview(self.myVotedLocationView, at: 1)
+                default:
+                    break
                 }
             })
             .disposed(by: disposeBag)

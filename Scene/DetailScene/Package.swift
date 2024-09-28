@@ -26,7 +26,8 @@ let package = Package(
                 .product(name: "Data", package: "Data"),
                 .product(name: "Domain", package: "Domain"),
                 .product(name: "VoteScene", package: "VoteScene")
-            ]
+            ],
+            resources: [.process("Assets")]
         ),
         .testTarget(
             name: "DetailSceneTests",

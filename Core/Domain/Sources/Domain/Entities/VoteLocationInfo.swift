@@ -27,13 +27,6 @@ public struct VoteLocationInfo: Equatable {
         }
     }
     
-    public enum MeetStatus: String {
-        case confirm = "CONFIRM"
-        case beforeConfirm = "BEFORE_CONFIRM"
-        case vote = "VOTE"
-        case beforeVote = "BEFORE_VOTE"
-    }
-    
     public init(meetStatus: String?, placeInfos: [PlaceInfo]) {
         self.meetStatus = MeetStatus(rawValue: meetStatus ?? "")
         self.placeInfos = placeInfos

@@ -8,7 +8,7 @@
 import Foundation
 
 public struct VoteDateInfo: Equatable {
-    let meetStatus: String?
+    let meetStatus: MeetStatus?
     let timeInfo: [TimeInfo]?
     let startVoteDate: Date?
     let endVoteDate: Date?
@@ -23,7 +23,7 @@ public struct VoteDateInfo: Equatable {
         }
     }
     
-    public init(meetStatus: String?, timeInfo: [TimeInfo]?, startVoteDate: Date?, endVoteDate: Date?) {
+    public init(meetStatus: MeetStatus?, timeInfo: [TimeInfo]?, startVoteDate: Date?, endVoteDate: Date?) {
         self.meetStatus = meetStatus
         self.timeInfo = timeInfo
         self.startVoteDate = startVoteDate
@@ -47,10 +47,18 @@ extension VoteDateInfo {
     public func getTimeInfo() -> [TimeInfo]? {
         return timeInfo
     }
+    
+    public func getMeetStatus() -> MeetStatus? {
+        return meetStatus
+    }
 }
 
 extension VoteDateInfo.TimeInfo {
     public func getVoteTime() -> Date? {
         return voteTime
+    }
+    
+    public func getDateID() -> Int? {
+        return timeId
     }
 }
